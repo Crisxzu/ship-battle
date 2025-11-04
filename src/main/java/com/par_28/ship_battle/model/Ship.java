@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.model;
-import java.util.List;  
+import java.util.List; 
+import java.util.ArrayList; 
 import com.par_28.ship_battle.model.enums.Direction;
 
 /**
@@ -11,7 +12,7 @@ import com.par_28.ship_battle.model.enums.Direction;
  *
  * Concrete subclasses of Ship must define their specific name and length
  * in their constructors.
- *
+
  * @author James
  * @version 1.0
  * @since 1.0
@@ -21,19 +22,27 @@ import com.par_28.ship_battle.model.enums.Direction;
  * @see Destroyer
  */
 
-
 abstract class Ship {
+    /**
+     * The length of the ship in cells.
+     */
     protected Integer length;
+
+    /**
+     * The name of the ship.
+     */
     protected String name;
+
+    /**
+     * The hit points (HP) of the ship. When this reaches zero, the ship is destroyed.
+     */
     protected Integer life;
     protected Direction direction;
-    protected List<Coordinate> positions;
+    protected List<Coordinate> positions = new ArrayList<>();
 
     Ship(String name, Integer length){
         this.name = name;
         this.length = length;
-        this.life = 5;
-        this.direction = direction;
-        this.positions = positions;
+        this.life = this.length;
     }
 }

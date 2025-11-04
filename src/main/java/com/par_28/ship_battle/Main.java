@@ -10,7 +10,7 @@ public class Main {
      * Entry point of the game.
      * <p>
      * Create player, initialize game and launch it.
-     *
+     * </p>
      * @param args inline arguments (not used though)
      * @see com.par_28.ship_battle.controller.ConsoleGameController
      */

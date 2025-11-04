@@ -37,10 +37,21 @@ abstract class Ship {
      * The hit points (HP) of the ship. When this reaches zero, the ship is destroyed.
      */
     protected Integer life;
+
+    /**
+     * The orientation of the ship on the board (horizontal or vertical).
+     */
     protected Direction direction;
+
+    /**
+     * The list of coordinates occupied by the ship on the board.
+     */
     protected List<Coordinate> positions = new ArrayList<>();
 
-    Ship(String name, Integer length){
+    /**
+     * Reduces the ship's life by one when it takes a hit.
+     */
+    Ship(String name, Integer length) {
         this.name = name;
         this.length = length;
         this.life = this.length;

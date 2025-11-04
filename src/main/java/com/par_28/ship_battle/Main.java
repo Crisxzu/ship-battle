@@ -1,8 +1,16 @@
 package com.par_28.ship_battle;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+/**
+ * Main entry point of our game ShipBattle
+ */
 public class Main {
+    /**
+     * Entry point of the game
+     *
+     * Create player, initialize game and launch it
+     *
+     * @param args inline arguments (not used though)
+     */
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.

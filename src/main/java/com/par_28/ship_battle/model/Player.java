@@ -1,6 +1,6 @@
 package com.par_28.ship_battle.model;
 
-import java.util.ArrayList;
+import java.util.*;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 

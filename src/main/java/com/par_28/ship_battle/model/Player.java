@@ -7,6 +7,8 @@ import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 /**
  * Player model representing a game player
  * 
+ * a player has a name, a grid to place ships on, a tracking grid to track attacks on opponent,
+ * 
  * @see com.par_28.ship_battle.model.Grid
  * @see com.par_28.ship_battle.model.Ship
  * @see com.par_28.ship_battle.model.Coordinate

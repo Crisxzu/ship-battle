@@ -7,11 +7,12 @@ import com.par_28.ship_battle.controller.ConsoleGameController;
  */
 public class Main {
     /**
-     * Entry point of the game
-     *
-     * Create player, initialize game and launch it
+     * Entry point of the game.
+     * <p>
+     * Create player, initialize game and launch it.
      *
      * @param args inline arguments (not used though)
+     * @see com.par_28.ship_battle.controller.ConsoleGameController
      */
     public static void main(String[] args) {
         ConsoleGameController consoleGameController = new ConsoleGameController();

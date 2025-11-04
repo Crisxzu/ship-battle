@@ -2,6 +2,7 @@ package com.par_28.ship_battle.model;
 
 
 import com.par_28.ship_battle.model.enums.GameState;
+import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Class representing the game state and logic
@@ -29,6 +30,11 @@ public class Game {
      * Current state of the game
      */
     private GameState gameState;
+
+    /**
+     * Number of turns played
+     */
+    private int nbTurns = 0;
 
     /**
      * Constructor to initialize game with two players
@@ -62,16 +68,20 @@ public class Game {
 
     /**
      * Play a turn for the current player by attacking the opponent at the given coordinate
-     * 
-     * If the opponent is defeated after the attack, the game state is set to GAME_OVER.
+     *
+     * <p>
+     * After the attack, if the opponent has no remaining ships, the game state is updated to GAME_OVER.
      * Otherwise, the turn switches to the other player.
      * The current player records the result of the attack on their tracking grid.
-     * 
+     * Each call to this method increments the turn counter.
+     * </p>
+     *
      * @param coord Coordinate to attack
      * @return AttackResponse response of the attack with hit/miss and ship info
      * @throws IllegalStateException if game is already over
+     * @throws InvalidCoordinateException if the coordinate is invalid
      */
-    public AttackResponse playTurn(Coordinate coord) {
+    public AttackResponse playTurn(Coordinate coord) throws IllegalStateException, InvalidCoordinateException {
         if(gameState == GameState.GAME_OVER) {
             throw new IllegalStateException("Game is already over");
         }
@@ -87,6 +97,8 @@ public class Game {
         else {
             switchPlayer();
         }
+
+        nbTurns++;
 
         return response;
     }
@@ -157,5 +169,14 @@ public class Game {
      */
     public GameState getGameState() {
         return gameState;
+    }
+
+    /**
+     * Get the number of turns played
+     * 
+     * @return int number of turns played
+     */
+    public int getNbTurns() {
+        return nbTurns;
     }
 }

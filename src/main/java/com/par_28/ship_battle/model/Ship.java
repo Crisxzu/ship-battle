@@ -46,7 +46,7 @@ abstract class Ship {
     /**
      * The list of coordinates occupied by the ship on the board.
      */
-    protected List<Coordinate> positions = new ArrayList<>();
+    protected List<Coordinate> positions;
 
     /**
      * Reduces the ship's life by one when it takes a hit.
@@ -56,4 +56,96 @@ abstract class Ship {
         this.length = length;
         this.life = this.length;
     }
+
+    /**
+     * Reduces the ship's life by one when it takes a hit.
+     */
+    public void receiveDamage() {
+        if (!isDestroyed()) {
+            this.life -= 1;
+        } 
+    }
+
+    /**
+     * Checks if the ship is destroyed (life <= 0).
+     *
+     * @return true if the ship is destroyed, false otherwise.
+     */
+    public boolean isDestroyed() {
+        return this.life <= 0;
+    }
+
+    /**
+        * Get the name of the ship.
+        *
+        * @return the name of the ship.
+    */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get the length of the ship.
+     *
+     * @return the length of the ship.
+     */
+    public Integer getLength() {
+        return length;
+    }
+
+    /**
+     * Get the current life (hit points) of the ship.
+     *
+     * @return the current life of the ship.
+     */
+    public Integer getLife() {
+        return life;
+    }
+
+    /**
+     * Get the direction of the ship.
+     *
+     * @return the direction of the ship.
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+
+    /**
+     * Set the direction of the ship.
+     *
+     * @param direction the new direction of the ship.
+     */
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    /**
+     * Set the positions occupied by the ship.
+     *
+     * @param positions the list of coordinates occupied by the ship.
+     */
+    public void setPositions(List<Coordinate> positions) {
+        this.positions = positions;
+    }
+
+    /**
+     * Get the list of coordinates occupied by the ship.
+     *
+     * @return the list of coordinates occupied by the ship.
+     */
+    public List<Coordinate> getPositions() {
+        return positions;
+    }
+
+    /**
+     * Check if the ship occupies a specific coordinate.
+     *
+     * @param coordinate the coordinate to check.
+     * @return true if the ship occupies the coordinate, false otherwise.
+     */
+    public boolean occupiesPositions(Coordinate coordinate) {
+        return positions != null && positions.contains(coordinate);
+    }
+
 }

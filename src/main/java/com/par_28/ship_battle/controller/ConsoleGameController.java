@@ -1,8 +1,8 @@
 package com.par_28.ship_battle.controller;
 
 import com.par_28.ship_battle.model.*;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
 import com.par_28.ship_battle.view.ConsoleView;
 
 import java.util.ArrayList;

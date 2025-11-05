@@ -1,6 +1,9 @@
 package com.par_28.ship_battle.model;
 
 import java.util.*;
+
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 
@@ -12,7 +15,7 @@ import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
  * @see com.par_28.ship_battle.model.Grid
  * @see com.par_28.ship_battle.model.Ship
  * @see com.par_28.ship_battle.model.Coordinate
- * @see com.par_28.ship_battle.model.Direction
+ * @see com.par_28.ship_battle.model.enums.Direction
  * @see com.par_28.ship_battle.model.AttackResponse
  */
 public class Player {

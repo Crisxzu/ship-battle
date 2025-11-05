@@ -6,7 +6,7 @@ import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Class representing the game state and logic
- *<p>
+ * <p>
  * A game consists of two players who take turns attacking each other's ships on a grid.
  * </p>
  * @see com.par_28.ship_battle.model.Player

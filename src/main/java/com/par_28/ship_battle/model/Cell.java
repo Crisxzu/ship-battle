@@ -2,10 +2,10 @@ package com.par_28.ship_battle.model;
 
 /**
  * Cell model representing a single square on a Grid.
- * 
+ * <p>
  * A Cell knows its {@link Coordinate}, whether it contains a {@link Ship},
  * and whether it has been shot.
- * 
+ * </p>
  * The class provides helpers to shoot the cell and to query its state.
  */
 public class Cell {
@@ -44,9 +44,9 @@ public class Cell {
 
     /**
      * Assign a ship to this cell.
-     *
-     * NOTE: this method does not validate placement overlaps—Grid should enforce that.
-     *
+     * <p>
+     * NOTE: this method does not validate placement overlaps — Grid should enforce that.
+     * </p>
      * @param ship Ship to set (nullable)
      */
     public void setShip(Ship ship) {
@@ -55,7 +55,9 @@ public class Cell {
 
     /**
      * Mark the cell as shot. If a ship is present, it should receive damage.
+     * <p>
      * This operation is idempotent (multiple calls remain 'shot').
+     * </p>
      */
     public void shoot() {
         if (!shot) {
@@ -85,7 +87,7 @@ public class Cell {
     }
 
     /**
-     * Convenience: is the cell empty (no ship)?
+     * Check whether the cell is empty (no ship).
      *
      * @return true if empty
      */

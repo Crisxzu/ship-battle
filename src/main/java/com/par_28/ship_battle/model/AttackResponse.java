@@ -4,8 +4,9 @@ import com.par_28.ship_battle.model.enums.AttackResult;
 
 /**
  * Represents the response to an attack on a ship.
+ * <p>
  * Contains the result of the attack and the targeted ship.
- * 
+ * </p>
  * @author James
  * @version 1.0
  * @since 1.0

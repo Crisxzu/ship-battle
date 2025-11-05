@@ -19,4 +19,16 @@ public class InvalidCoordinateException extends RuntimeException {
             coord
         ));
     }
+
+    /**
+     * Constructor to create exception with invalid coordinate string
+     * 
+     * @param coord Invalid coordinate string
+     */
+    public InvalidCoordinateException(String coord) {
+        super(String.format(
+            "Coordinate %s is invalid. You can use formats like 'x,y' or 'A1'",
+            coord
+        ));
+    }
 }

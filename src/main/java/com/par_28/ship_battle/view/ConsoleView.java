@@ -312,7 +312,7 @@ public class ConsoleView {
         System.out.println(attackResultStr);
 
         System.out.println("=> Grid of your opponent");
-        displayPlayerGrid(currentPlayer.getTrackingGrid().getCells());
+        displayPlayerGrid(currentPlayer.getTrackingGrid().getCells(), false);
 
         System.out.println("--------------");
 

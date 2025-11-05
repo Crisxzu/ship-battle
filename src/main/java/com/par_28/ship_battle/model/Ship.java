@@ -22,7 +22,7 @@ import com.par_28.ship_battle.model.enums.Direction;
  * @see Destroyer
  */
 
-abstract class Ship {
+public abstract class Ship {
     /**
      * The length of the ship in cells.
      */

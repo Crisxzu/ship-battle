@@ -16,7 +16,7 @@ public class ShipPlacementException extends RuntimeException {
     public ShipPlacementException(Coordinate coord) {
         super(
             String.format(
-                "You can't place a ship on %s. Please choose a position not adjacent and not occupied by a another ship.",
+                "You can't place a ship on %s. Please choose a position not adjacent, not occupied by a another ship and where the entire ship can fit in the board.",
                 coord
             )
         );

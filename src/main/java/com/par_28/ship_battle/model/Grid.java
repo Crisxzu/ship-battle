@@ -3,23 +3,27 @@ package com.par_28.ship_battle.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Grid model representing a player's board.
- * 
+ * <p>
  * The Grid holds a width x height matrix of {@link Cell} and provides operations
  * to place ships and to receive attacks.
- * 
+ * </p>
+ * <p>
  * Public methods throw {@link InvalidCoordinateException} when coordinates given
  * are out of bounds, and {@link ShipPlacementException} when a ship cannot be placed.
- * 
+ * </p>
  * @see com.par_28.ship_battle.model.Cell
  * @see com.par_28.ship_battle.model.Ship
  * @see com.par_28.ship_battle.model.Coordinate
  */
 public class Grid {
+    /**
+     * Grid dimensions and cells.
+     */
     private final int width;
     private final int height;
     private final Cell[][] cells;
@@ -37,10 +41,16 @@ public class Grid {
         this.width = width;
         this.height = height;
         this.cells = new Cell[width][height];
-        initialize();
+        initializeCells();
     }
 
-    private void initialize() {
+    /**
+     * Initialize the grid cells.
+     * <p>
+     * Each cell is created with its corresponding Coordinate.
+     * </p>
+     */
+    private void initializeCells() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 cells[x][y] = new Cell(new Coordinate(x, y));
@@ -68,7 +78,7 @@ public class Grid {
      * @return Cell at coordinate
      * @throws InvalidCoordinateException if coord is outside the grid
      */
-    public Cell getCell(Coordinate coord) {
+    public Cell getCell(Coordinate coord) throws InvalidCoordinateException {
         if (!isValidCoordinate(coord)) {
             throw new InvalidCoordinateException(coord);
         }
@@ -78,27 +88,33 @@ public class Grid {
     /**
      * Calculate the list of Coordinates occupied by a ship starting at {@code start}
      * with given {@code length} and {@link Direction}.
-     *
+     * <p>
      * Returns an empty list if the computed positions fall outside the grid.
-     *
+     * </p>
      * @param start starting coordinate
      * @param length ship length
      * @param direction placement direction
      * @return list of Coordinates or empty list if invalid
      */
-    public List<Coordinate> calculateShipPositions(Coordinate start, int length, Direction direction) {
+    private List<Coordinate> calculateShipPositions(Coordinate start, int length, Direction direction) {
         List<Coordinate> res = new ArrayList<>();
         if (start == null || length <= 0 || direction == null){
             return res;
-
-        } 
+        }
 
         int dx = 0, dy = 0;
-        if (direction == Direction.HORIZONTAL) dx = 1; else dy = 1;
+
+        if (direction == Direction.HORIZONTAL)
+            dx = 1; else dy = 1;
 
         int x = start.getX(), y = start.getY();
+
         for (int i = 0; i < length; i++) {
-            Coordinate c = new Coordinate(x + i*dx, y + i*dy);
+            Coordinate c = new Coordinate(
+            x + i*dx,
+            y + i*dy
+            );
+
             if (!isValidCoordinate(c)) {
                 return new ArrayList<>(); // invalid placement
             }
@@ -108,61 +124,106 @@ public class Grid {
     }
 
     /**
-     * Check whether a ship can be placed at start in the given direction.
-     * Validates coordinates and ensures no overlap with existing ships.
-     *
+     * Get the list of adjacent cells around a given coordinate.
+     * <p>
+     * Considers the 8 surrounding cells.
+     * </p>
+     * @param coord central coordinate
+     * @return list of adjacent Cells
+     */
+    private List<Cell> getAdjacentCells(Coordinate coord) {
+        List<Cell> adjacentCells = new ArrayList<>();
+        int x = coord.getX();
+        int y = coord.getY();
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dx == 0 && dy == 0) continue; // skip the cell itself
+                Coordinate adjacentCoord = new Coordinate(x + dx, y + dy);
+                if (isValidCoordinate(adjacentCoord)) {
+                    adjacentCells.add(getCell(adjacentCoord));
+                }
+            }
+        }
+        return adjacentCells;
+    }
+
+    /**
+     * Check if a ship can be placed at the given start and direction.
+     * <p>
+     * Returns the list of Coordinates the ship would occupy if placeable,
+     * or an empty list if not placeable.
+     * The ship cannot overlap or be adjacent to existing ships.
+     * And the start coordinate must be valid.
+     * </p>
      * @param ship ship to place
      * @param start starting coordinate
      * @param direction direction to place
-     * @return true if placeable, false otherwise
+     * @return list of Coordinates if placeable, empty list otherwise
      * @throws InvalidCoordinateException when start is invalid
      */
-    public boolean canPlaceShip(Ship ship, Coordinate start, Direction direction) {
+    private List<Coordinate> canPlaceShip(Ship ship, Coordinate start, Direction direction) {
         if (ship == null) {
-            return false;
+            return new ArrayList<>();
         }
-        if (!isValidCoordinate(start)) throw new InvalidCoordinateException(start);
+
+        if (!isValidCoordinate(start))
+            throw new InvalidCoordinateException(start);
+
         List<Coordinate> positions = calculateShipPositions(start, ship.getLength(), direction);
+
         if (positions.isEmpty()) {
-            return false;
+            return new ArrayList<>();
         }
+
         for (Coordinate c : positions) {
             Cell cell = getCell(c);
+
             if (cell.hasShip()){
-                return false;
-            } 
+                return new ArrayList<>();
+            }
+            
+            List<Cell> adjacentCells = getAdjacentCells(c);
+
+            for (Cell adjacentCell : adjacentCells) {
+                if (adjacentCell.hasShip()) {
+                    return new ArrayList<>();
+                }
+            }
+
         }
-        return true;
+
+        return positions;
     }
 
     /**
      * Place a ship on the grid at the given start and direction.
+     * 
+     * <p>
+     * If placement is successful, the ship's positions and direction are set,
+     * and the corresponding cells are updated to reference the ship.
+     * </p>
      *
      * @param ship ship to place
      * @param start starting coordinate
      * @param direction direction to place
      * @throws InvalidCoordinateException when start coordinate is invalid
      * @throws ShipPlacementException when placement is not possible (overlap or out of bounds)
+     * @see #canPlaceShip(Ship, Coordinate, Direction)
      */
-    public void placeShip(Ship ship, Coordinate start, Direction direction) {
-        if (!isValidCoordinate(start)) {
-            throw new InvalidCoordinateException(start);
-        }
-        List<Coordinate> positions = calculateShipPositions(start, ship.getLength(), direction);
-        if (positions.isEmpty()) {
-            throw new ShipPlacementException(start);
-        }
-        for (Coordinate c : positions) {
-            Cell cell = getCell(c);
-            if (cell.hasShip()) {
-                throw new ShipPlacementException(c);
+    public void placeShip(Ship ship, Coordinate start, Direction direction) throws ShipPlacementException, InvalidCoordinateException {
+        List<Coordinate> positions = canPlaceShip(ship, start, direction);
+
+        if(!positions.isEmpty()) {
+            // assign positions to ship and to cells
+            ship.setDirection(direction);
+            ship.setPositions(positions);
+            for (Coordinate c : positions) {
+                cells[c.getX()][c.getY()].setShip(ship);
             }
         }
-        // assign positions to ship and to cells
-        ship.setDirection(direction);
-        ship.setPositions(positions);
-        for (Coordinate c : positions) {
-            cells[c.getX()][c.getY()].setShip(ship);
+        else {
+            throw new ShipPlacementException(start);
         }
     }
 
@@ -173,19 +234,25 @@ public class Grid {
      * @return AttackResponse representing result (MISS, HIT, SUNK, etc.)
      * @throws InvalidCoordinateException when coord is outside grid
      */
-    public AttackResponse receiveAttack(Coordinate coord) {
+    public AttackResponse receiveAttack(Coordinate coord) throws InvalidCoordinateException {
         if (!isValidCoordinate(coord)) {
             throw new InvalidCoordinateException(coord);
         }
+
         Cell target = getCell(coord);
+
         if (target.isShot()) {
             return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip());
         }
+
         target.shoot();
+
         if (!target.hasShip()) {
             return new AttackResponse(AttackResult.MISS, null);
-        } else {
+        }
+        else {
             Ship s = target.getShip();
+
             if (s.isDestroyed()) {
                 return new AttackResponse(AttackResult.SUNK, s);
             } else {
@@ -194,14 +261,30 @@ public class Grid {
         }
     }
 
+    /**
+     * Get the grid's width.
+     * 
+     * @return width of the grid
+     */
     public int getWidth() { 
         return width; 
     }
+
+    /**
+     * Get the grid's height.
+     * 
+     * @return height of the grid
+     */
     public int getHeight() { 
         return height; 
     }
-    public Cell[][] gCells() {
+
+    /**
+     * Get the grid's cells.
+     * 
+     * @return 2D array of Cells
+     */
+    public Cell[][] getCells() {
         return cells;
-    
     }
 }

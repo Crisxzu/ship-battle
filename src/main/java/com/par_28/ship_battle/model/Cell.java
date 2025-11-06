@@ -9,8 +9,17 @@ package com.par_28.ship_battle.model;
  * The class provides helpers to shoot the cell and to query its state.
  */
 public class Cell {
+    /**
+     * Coordinate of the cell.
+     */
     private final Coordinate coordinate;
+    /**
+     * Ship occupying the cell, or null if empty.
+     */
     private Ship ship; // nullable
+    /**
+     * Whether the cell has been shot.
+     */
     private boolean shot;
 
     /**
@@ -84,14 +93,5 @@ public class Cell {
      */
     public boolean hasShip() {
         return ship != null;
-    }
-
-    /**
-     * Check whether the cell is empty (no ship).
-     *
-     * @return true if empty
-     */
-    public boolean isEmpty() {
-        return ship == null;
     }
 }

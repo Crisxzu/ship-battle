@@ -16,9 +16,12 @@ import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
  */
 public class Coordinate {
     /**
-     * Zero-based x and y values.
+     * Zero-based x value.
      */
     private final int x;
+    /**
+     * Zero-based y value.
+     */
     private final int y;
 
     /**

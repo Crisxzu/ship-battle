@@ -22,10 +22,16 @@ import com.par_28.ship_battle.model.exceptions.*;
  */
 public class Grid {
     /**
-     * Grid dimensions and cells.
+     * Width of the grid (number of columns).
      */
     private final int width;
+    /**
+     * Height of the grid (number of rows).
+     */
     private final int height;
+    /**
+     * 2D array of cells in the grid.
+     */
     private final Cell[][] cells;
 
     /**
@@ -33,10 +39,11 @@ public class Grid {
      *
      * @param width number of columns (must be > 0)
      * @param height number of rows (must be > 0)
+     * @throws InvalidGridDimension if width or height are not positive
      */
-    public Grid(int width, int height) {
+    public Grid(int width, int height) throws InvalidGridDimension {
         if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException("Grid dimensions must be positive");
+            throw new InvalidGridDimension(width, height);
         }
         this.width = width;
         this.height = height;

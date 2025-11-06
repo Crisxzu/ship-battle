@@ -139,7 +139,7 @@ public class ConsoleView {
     public void displayShipPlacement(Player currentPlayer, Ship ship) {
         System.out.println("--------------");
         System.out.printf(
-            "%s ! You have to place a %s and it takes % cells.\n",
+            "%s ! You have to place a %s and it takes %d cells.\n",
             currentPlayer.getName(),
             ship.getName(),
             ship.getLength()
@@ -194,8 +194,7 @@ public class ConsoleView {
      * @return String Entered coordinate string
      */
     public String askShipCoordinate() {
-        System.out.print("Please enter starting coordinate for the ship. (E.g., A5 or 1,5 1 for x and 5 for y)");
-
+        System.out.println("Please enter starting coordinate for the ship. (E.g., A5 or 1,5 1 for x and 5 for y)");
         return askCoordinate();
     }
 
@@ -210,25 +209,22 @@ public class ConsoleView {
      * @param showShips boolean whether to show ship positions or not
      */
     private void displayPlayerGrid(Cell[][] cells, boolean showShips) {
-        for(Cell[] row: cells) {
-            for(Cell cell: row) {
+        int width = cells.length;
+        int height = (width > 0) ? cells[0].length : 0;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Cell cell = cells[x][y];
                 String cellStr;
 
-                if(cell.isShot()) {
-                    if(cell.hasShip()) {
-                        cellStr = "X";
+                if (cell.isShot()) {
+                    cellStr = cell.hasShip() ? "X" : "O";
+                } else {
+                    if (cell.hasShip() && showShips) {
+                    cellStr = "◼︎";
+                    } else {
+                    cellStr = "~";
                     }
-                    else {
-                        cellStr = "O";
-                    }
-                }                
-                else {
-                    if(cell.hasShip() && showShips) {
-                        cellStr = "◼︎";
-                    }
-                    else {
-                        cellStr = "~";
-                    }                    
                 }
 
                 System.out.print(cellStr);

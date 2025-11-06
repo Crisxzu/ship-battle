@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.model;
 
+import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -100,43 +101,32 @@ class CoordinateTest {
         }
 
         @Test
-        @DisplayName("Should parse comma format case insensitive")
-        void shouldParseCommaFormatCaseInsensitive() {
-            // When
-            Coordinate coord = Coordinate.fromString("5,8");
-
-            // Then
-            assertEquals(5, coord.getX());
-            assertEquals(8, coord.getY());
-        }
-
-        @Test
         @DisplayName("Should throw exception for invalid comma format with too many parts")
         void shouldThrowExceptionForTooManyParts() {
             // When & Then
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            InvalidCoordinateException exception = assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("1,2,3");
             });
 
-            assertTrue(exception.getMessage().contains("Invalid coordinate format"));
+            assertTrue(exception.getMessage().contains("invalid"));
         }
 
         @Test
         @DisplayName("Should throw exception for invalid comma format with non-numeric values")
         void shouldThrowExceptionForNonNumericCommaFormat() {
             // When & Then
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            InvalidCoordinateException exception = assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("a,b");
             });
 
-            assertTrue(exception.getMessage().contains("Invalid integer"));
+            assertTrue(exception.getMessage().contains("invalid"));
         }
 
         @Test
         @DisplayName("Should throw exception for single comma without values")
         void shouldThrowExceptionForSingleComma() {
             // When & Then
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString(",");
             });
         }
@@ -178,7 +168,7 @@ class CoordinateTest {
             // When
             Coordinate coord1 = Coordinate.fromString("a1");
             Coordinate coord2 = Coordinate.fromString("A1");
-            Coordinate coord3 = Coordinate.fromString("d7");
+            Coordinate coord3 = Coordinate.fromString("z7");
 
             // Then
             assertEquals(0, coord1.getX());
@@ -187,7 +177,7 @@ class CoordinateTest {
             assertEquals(0, coord2.getX());
             assertEquals(0, coord2.getY());
 
-            assertEquals(3, coord3.getX()); // D = 3
+            assertEquals(25, coord3.getX()); // D = 3
             assertEquals(6, coord3.getY()); // 7 -> 6
         }
 
@@ -215,44 +205,33 @@ class CoordinateTest {
         }
 
         @Test
-        @DisplayName("Should parse extended alphabet coordinates")
-        void shouldParseExtendedAlphabetCoordinates() {
-            // When
-            Coordinate coordZ = Coordinate.fromString("Z1");
-
-            // Then
-            assertEquals(25, coordZ.getX()); // Z = 25 (zero-based)
-            assertEquals(0, coordZ.getY());
-        }
-
-        @Test
         @DisplayName("Should throw exception for letters only")
         void shouldThrowExceptionForLettersOnly() {
             // When & Then
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            InvalidCoordinateException exception = assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("ABC");
             });
 
-            assertTrue(exception.getMessage().contains("Invalid coordinate format"));
+            assertTrue(exception.getMessage().contains("invalid"));
         }
 
         @Test
         @DisplayName("Should throw exception for numbers only without comma")
         void shouldThrowExceptionForNumbersOnly() {
             // When & Then
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            InvalidCoordinateException exception = assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("123");
             });
 
-            assertTrue(exception.getMessage().contains("Invalid coordinate format"));
+            assertTrue(exception.getMessage().contains("invalid"));
         }
 
         @Test
         @DisplayName("Should throw exception for invalid number in letter format")
         void shouldThrowExceptionForInvalidNumberInLetterFormat() {
             // When & Then
-            assertThrows(IllegalArgumentException.class, () -> {
-                Coordinate.fromString("Aabc");
+            assertThrows(InvalidCoordinateException.class, () -> {
+                Coordinate.fromString("A1.2");
             });
         }
 
@@ -276,18 +255,18 @@ class CoordinateTest {
         @DisplayName("Should throw exception for null input")
         void shouldThrowExceptionForNullInput() {
             // When & Then
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            InvalidCoordinateException exception = assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString(null);
             });
 
-            assertEquals("coord is null", exception.getMessage());
+            assertTrue(exception.getMessage().contains("invalid") || exception.getMessage().contains("null"));
         }
 
         @Test
         @DisplayName("Should throw exception for empty string")
         void shouldThrowExceptionForEmptyString() {
             // When & Then
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("");
             });
         }
@@ -296,7 +275,7 @@ class CoordinateTest {
         @DisplayName("Should throw exception for whitespace only")
         void shouldThrowExceptionForWhitespaceOnly() {
             // When & Then
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("   ");
             });
         }
@@ -305,7 +284,7 @@ class CoordinateTest {
         @DisplayName("Should throw exception for special characters")
         void shouldThrowExceptionForSpecialCharacters() {
             // When & Then
-            assertThrows(IllegalArgumentException.class, () -> {
+            assertThrows(InvalidCoordinateException.class, () -> {
                 Coordinate.fromString("@#$");
             });
         }

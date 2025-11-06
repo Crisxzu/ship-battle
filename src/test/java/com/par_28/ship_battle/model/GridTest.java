@@ -1,6 +1,6 @@
 package com.par_28.ship_battle.model;
 
-import com.par_28.ship_battle.model.enums.AttackResult;
+import com.par_28.ship_battle.model.enums.*;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 import org.junit.jupiter.api.BeforeEach;

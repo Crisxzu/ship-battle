@@ -66,6 +66,8 @@ public class ConsoleView {
             }
             catch (InputMismatchException e) {
                 System.out.println("Please enter a valid choice and a number");
+            }
+            finally {
                 scanner.nextLine(); // Clear buffer if not we always take last input without asking
             }
         }
@@ -173,6 +175,8 @@ public class ConsoleView {
             }
             catch (InputMismatchException e) {
                 System.out.println("Please enter a valid choice and a number");
+            }
+            finally {
                 scanner.nextLine(); // Clear buffer if not we always take last input without asking
             }
         }
@@ -259,7 +263,8 @@ public class ConsoleView {
         List<String> names = new ArrayList<>();
 
         System.out.println("Player 1");
-        names.add(askName());
+        String name = askName();
+        names.add(name);
 
         System.out.println("Player 2");
         names.add(askName());

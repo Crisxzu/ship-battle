@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.model;
 
+import com.par_28.ship_battle.model.enums.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -6,59 +6,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for Player class
  * Tests player ship management, attack handling, and tracking
  */
-@ExtendWith(MockitoExtension.class)
 @DisplayName("Player Logic Tests")
 class PlayerTest {
 
-    @Mock
-    private Grid mockGrid;
-
-    @Mock
-    private Grid mockTrackingGrid;
-
-    @Mock
-    private Ship mockShip1;
-
-    @Mock
-    private Ship mockShip2;
-
-    @Mock
-    private Ship mockShip3;
-
-    @Mock
-    private Coordinate mockCoordinate;
-
-    @Mock
-    private Direction mockDirection;
-
-    @Mock
-    private AttackResponse mockAttackResponse;
-
-    @Mock
-    private Cell mockCell;
-
     private Player player;
-
-    // Note: Since Player constructor creates Grid objects internally,
-    // we cannot easily mock them without refactoring Player class to accept Grid objects
-    // These tests will use real Grid objects when they are implemented
-    // For now, we'll test what we can with the current structure
 
     @Nested
     @DisplayName("Player Initialization Tests")
@@ -95,6 +53,19 @@ class PlayerTest {
             assertNotNull(player.getGrid());
             assertNotNull(player.getTrackingGrid());
         }
+
+        @Test
+        @DisplayName("Should create grids with correct size")
+        void shouldCreateGridsWithCorrectSize() {
+            // When
+            player = new Player("TestPlayer", 15);
+
+            // Then
+            assertEquals(15, player.getGrid().getWidth());
+            assertEquals(15, player.getGrid().getHeight());
+            assertEquals(15, player.getTrackingGrid().getWidth());
+            assertEquals(15, player.getTrackingGrid().getHeight());
+        }
     }
 
     @Nested
@@ -109,46 +80,67 @@ class PlayerTest {
         @Test
         @DisplayName("Should add ship to player fleet")
         void shouldAddShipToFleet() {
+            // Given
+            Ship ship = new Carrier();
+
             // When
-            player.addShip(mockShip1);
+            player.addShip(ship);
 
             // Then
             assertEquals(1, player.getShips().size());
-            assertTrue(player.getShips().contains(mockShip1));
+            assertTrue(player.getShips().contains(ship));
         }
 
         @Test
         @DisplayName("Should add multiple ships to fleet")
         void shouldAddMultipleShips() {
+            // Given
+            Ship ship1 = new Carrier();
+            Ship ship2 = new Cruiser();
+            Ship ship3 = new Destroyer();
+
             // When
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
-            player.addShip(mockShip3);
+            player.addShip(ship1);
+            player.addShip(ship2);
+            player.addShip(ship3);
 
             // Then
             assertEquals(3, player.getShips().size());
-            assertTrue(player.getShips().contains(mockShip1));
-            assertTrue(player.getShips().contains(mockShip2));
-            assertTrue(player.getShips().contains(mockShip3));
+            assertTrue(player.getShips().contains(ship1));
+            assertTrue(player.getShips().contains(ship2));
+            assertTrue(player.getShips().contains(ship3));
         }
 
         @Test
         @DisplayName("Should place ship on grid")
         void shouldPlaceShipOnGrid() throws InvalidCoordinateException, ShipPlacementException {
-            // Note: This test requires Grid to be implemented
-            // For now, we document the expected behavior
-
             // Given
-            // player.addShip(mockShip1);
+            Ship ship = new Destroyer();
+            player.addShip(ship);
+            Coordinate coord = new Coordinate(2, 3);
 
             // When
-            // player.placeShipOnGrid(mockShip1, mockCoordinate, mockDirection);
+            player.placeShipOnGrid(ship, coord, Direction.HORIZONTAL);
 
             // Then
-            // verify(mockGrid).placeShip(mockShip1, mockCoordinate, mockDirection);
+            assertEquals(ship, player.getGrid().getCell(coord).getShip());
+            assertEquals(Direction.HORIZONTAL, ship.getDirection());
+            assertNotNull(ship.getPositions());
+            assertEquals(3, ship.getPositions().size());
+        }
 
-            // TODO: Uncomment when Grid class is implemented
-            assertTrue(true, "Test requires Grid implementation");
+        @Test
+        @DisplayName("Should throw exception when placing ship out of bounds")
+        void shouldThrowExceptionWhenPlacingShipOutOfBounds() {
+            // Given
+            Ship ship = new Carrier();
+            player.addShip(ship);
+            Coordinate coord = new Coordinate(8, 5);
+
+            // When & Then
+            assertThrows(ShipPlacementException.class, () -> {
+                player.placeShipOnGrid(ship, coord, Direction.HORIZONTAL);
+            });
         }
     }
 
@@ -162,8 +154,8 @@ class PlayerTest {
         }
 
         @Test
-        @DisplayName("Should be alive when no ships are added")
-        void shouldBeAliveWhenNoShips() {
+        @DisplayName("Should be dead when no ships are added")
+        void shouldBeDeadWhenNoShips() {
             // When
             boolean isDead = player.isDead();
 
@@ -175,10 +167,10 @@ class PlayerTest {
         @DisplayName("Should be alive when at least one ship is not destroyed")
         void shouldBeAliveWhenShipNotDestroyed() {
             // Given
-            when(mockShip1.isDestroyed()).thenReturn(false);
-            when(mockShip2.isDestroyed()).thenReturn(false);
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
+            Ship ship1 = new Carrier();
+            Ship ship2 = new Cruiser();
+            player.addShip(ship1);
+            player.addShip(ship2);
 
             // When
             boolean isDead = player.isDead();
@@ -191,17 +183,24 @@ class PlayerTest {
         @DisplayName("Should be alive when some ships are destroyed but not all")
         void shouldBeAliveWhenSomeShipsDestroyed() {
             // Given
-            when(mockShip1.isDestroyed()).thenReturn(true);
-            when(mockShip2.isDestroyed()).thenReturn(false);
-            when(mockShip3.isDestroyed()).thenReturn(true);
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
-            player.addShip(mockShip3);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            Ship ship3 = new Destroyer();
+            player.addShip(ship1);
+            player.addShip(ship2);
+            player.addShip(ship3);
+
+            // Destroy ship1
+            ship1.receiveDamage();
+            ship1.receiveDamage();
 
             // When
             boolean isDead = player.isDead();
 
             // Then
+            assertTrue(ship1.isDestroyed());
+            assertFalse(ship2.isDestroyed());
+            assertFalse(ship3.isDestroyed());
             assertFalse(isDead);
         }
 
@@ -209,35 +208,24 @@ class PlayerTest {
         @DisplayName("Should be dead when all ships are destroyed")
         void shouldBeDeadWhenAllShipsDestroyed() {
             // Given
-            when(mockShip1.isDestroyed()).thenReturn(true);
-            when(mockShip2.isDestroyed()).thenReturn(true);
-            when(mockShip3.isDestroyed()).thenReturn(true);
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
-            player.addShip(mockShip3);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            player.addShip(ship1);
+            player.addShip(ship2);
+
+            // Destroy all ships
+            ship1.receiveDamage();
+            ship1.receiveDamage();
+            ship2.receiveDamage();
+            ship2.receiveDamage();
 
             // When
             boolean isDead = player.isDead();
 
             // Then
+            assertTrue(ship1.isDestroyed());
+            assertTrue(ship2.isDestroyed());
             assertTrue(isDead);
-        }
-
-        @Test
-        @DisplayName("Should check all ships when determining if dead")
-        void shouldCheckAllShipsWhenDeterminingIfDead() {
-            // Given
-            when(mockShip1.isDestroyed()).thenReturn(false);
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
-            player.addShip(mockShip3);
-
-            // When
-            player.isDead();
-
-            // Then
-            verify(mockShip1).isDestroyed();
-            // Should stop checking after finding alive ship (optimization)
         }
     }
 
@@ -251,41 +239,47 @@ class PlayerTest {
         }
 
         @Test
-        @DisplayName("Should receive attack and delegate to grid")
-        void shouldReceiveAttackAndDelegateToGrid() throws InvalidCoordinateException {
-            // Note: This test requires Grid to be implemented
-            // For now, we document the expected behavior
-
+        @DisplayName("Should receive attack and return miss for empty cell")
+        void shouldReceiveAttackAndReturnMiss() throws InvalidCoordinateException {
             // Given
-            // when(mockGrid.receiveAttack(mockCoordinate)).thenReturn(mockAttackResponse);
+            Coordinate coord = new Coordinate(3, 4);
 
             // When
-            // AttackResponse response = player.receiveAttack(mockCoordinate);
+            AttackResponse response = player.receiveAttack(coord);
 
             // Then
-            // assertEquals(mockAttackResponse, response);
-            // verify(mockGrid).receiveAttack(mockCoordinate);
+            assertEquals(AttackResult.MISS, response.getResult());
+            assertFalse(response.isHit());
+        }
 
-            // TODO: Uncomment when Grid class is implemented
-            assertTrue(true, "Test requires Grid implementation");
+        @Test
+        @DisplayName("Should receive attack and return hit for cell with ship")
+        void shouldReceiveAttackAndReturnHit() throws InvalidCoordinateException, ShipPlacementException {
+            // Given
+            Ship ship = new Destroyer();
+            player.addShip(ship);
+            Coordinate coord = new Coordinate(2, 3);
+            player.placeShipOnGrid(ship, coord, Direction.HORIZONTAL);
+
+            // When
+            AttackResponse response = player.receiveAttack(coord);
+
+            // Then
+            assertEquals(AttackResult.HIT, response.getResult());
+            assertTrue(response.isHit());
+            assertEquals(ship, response.getShip());
         }
 
         @Test
         @DisplayName("Should throw InvalidCoordinateException for invalid coordinates")
         void shouldThrowExceptionForInvalidCoordinates() {
-            // Note: This test requires Grid to be implemented
-
             // Given
-            // when(mockGrid.receiveAttack(mockCoordinate))
-            //     .thenThrow(new InvalidCoordinateException("Invalid coordinate"));
+            Coordinate invalidCoord = new Coordinate(-1, 5);
 
             // When & Then
-            // assertThrows(InvalidCoordinateException.class, () -> {
-            //     player.receiveAttack(mockCoordinate);
-            // });
-
-            // TODO: Uncomment when Grid class is implemented
-            assertTrue(true, "Test requires Grid implementation");
+            assertThrows(InvalidCoordinateException.class, () -> {
+                player.receiveAttack(invalidCoord);
+            });
         }
     }
 
@@ -299,67 +293,84 @@ class PlayerTest {
         }
 
         @Test
-        @DisplayName("Should record attack on tracking grid")
-        void shouldRecordAttackOnTrackingGrid() {
-            // Note: This test requires Grid and Cell to be implemented
-            // For now, we document the expected behavior
-
+        @DisplayName("Should record miss attack on tracking grid")
+        void shouldRecordMissAttackOnTrackingGrid() throws InvalidCoordinateException {
             // Given
-            // when(mockTrackingGrid.getCell(mockCoordinate)).thenReturn(mockCell);
-            // when(mockAttackResponse.isHit()).thenReturn(false);
+            Coordinate coord = new Coordinate(3, 4);
+            AttackResponse response = new AttackResponse(AttackResult.MISS, null);
 
             // When
-            // player.recordAttack(mockCoordinate, mockAttackResponse);
+            player.recordAttack(coord, response);
 
             // Then
-            // verify(mockTrackingGrid).getCell(mockCoordinate);
-            // verify(mockCell).shoot();
-
-            // TODO: Uncomment when Grid and Cell classes are implemented
-            assertTrue(true, "Test requires Grid and Cell implementation");
+            Cell trackingCell = player.getTrackingGrid().getCell(coord);
+            assertTrue(trackingCell.isShot());
+            assertFalse(trackingCell.hasShip());
         }
 
         @Test
         @DisplayName("Should record hit attack and mark ship on tracking grid")
-        void shouldRecordHitAttackWithShip() {
-            // Note: This test requires Grid and Cell to be implemented
-
+        void shouldRecordHitAttackWithShip() throws InvalidCoordinateException {
             // Given
-            // when(mockTrackingGrid.getCell(mockCoordinate)).thenReturn(mockCell);
-            // when(mockAttackResponse.isHit()).thenReturn(true);
-            // when(mockAttackResponse.getShip()).thenReturn(mockShip1);
+            Ship ship = new Destroyer();
+            Coordinate coord = new Coordinate(3, 4);
+            AttackResponse response = new AttackResponse(AttackResult.HIT, ship);
 
             // When
-            // player.recordAttack(mockCoordinate, mockAttackResponse);
+            player.recordAttack(coord, response);
 
             // Then
-            // verify(mockTrackingGrid).getCell(mockCoordinate);
-            // verify(mockCell).shoot();
-            // verify(mockCell).setShip(mockShip1);
-
-            // TODO: Uncomment when Grid and Cell classes are implemented
-            assertTrue(true, "Test requires Grid and Cell implementation");
+            Cell trackingCell = player.getTrackingGrid().getCell(coord);
+            assertTrue(trackingCell.isShot());
+            assertTrue(trackingCell.hasShip());
+            assertEquals(ship, trackingCell.getShip());
         }
 
         @Test
-        @DisplayName("Should record miss attack without marking ship")
-        void shouldRecordMissAttackWithoutShip() {
-            // Note: This test requires Grid and Cell to be implemented
-
+        @DisplayName("Should record sunk attack with ship")
+        void shouldRecordSunkAttackWithShip() throws InvalidCoordinateException {
             // Given
-            // when(mockTrackingGrid.getCell(mockCoordinate)).thenReturn(mockCell);
-            // when(mockAttackResponse.isHit()).thenReturn(false);
+            Ship ship = new Torpedo();
+            ship.receiveDamage();
+            ship.receiveDamage();
+            Coordinate coord = new Coordinate(5, 6);
+            AttackResponse response = new AttackResponse(AttackResult.SUNK, ship);
 
             // When
-            // player.recordAttack(mockCoordinate, mockAttackResponse);
+            player.recordAttack(coord, response);
 
             // Then
-            // verify(mockTrackingGrid).getCell(mockCoordinate);
-            // verify(mockCell).shoot();
-            // verify(mockCell, never()).setShip(any());
+            Cell trackingCell = player.getTrackingGrid().getCell(coord);
+            assertTrue(trackingCell.isShot());
+            assertTrue(trackingCell.hasShip());
+            assertEquals(ship, trackingCell.getShip());
+            assertTrue(ship.isDestroyed());
+        }
 
-            // TODO: Uncomment when Grid and Cell classes are implemented
-            assertTrue(true, "Test requires Grid and Cell implementation");
+        @Test
+        @DisplayName("Should record multiple attacks on tracking grid")
+        void shouldRecordMultipleAttacks() throws InvalidCoordinateException {
+            // Given
+            Coordinate coord1 = new Coordinate(2, 3);
+            Coordinate coord2 = new Coordinate(4, 5);
+            Ship ship = new Cruiser();
+            AttackResponse missResponse = new AttackResponse(AttackResult.MISS, null);
+            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, ship);
+
+            // When
+            player.recordAttack(coord1, missResponse);
+            player.recordAttack(coord2, hitResponse);
+
+            // Then
+            Cell trackingCell1 = player.getTrackingGrid().getCell(coord1);
+            Cell trackingCell2 = player.getTrackingGrid().getCell(coord2);
+
+            assertTrue(trackingCell1.isShot());
+            assertFalse(trackingCell1.hasShip());
+
+            assertTrue(trackingCell2.isShot());
+            assertTrue(trackingCell2.hasShip());
+            assertEquals(ship, trackingCell2.getShip());
         }
     }
 
@@ -391,6 +402,8 @@ class PlayerTest {
 
             // Then
             assertNotNull(grid);
+            assertEquals(10, grid.getWidth());
+            assertEquals(10, grid.getHeight());
         }
 
         @Test
@@ -404,6 +417,8 @@ class PlayerTest {
 
             // Then
             assertNotNull(trackingGrid);
+            assertEquals(10, trackingGrid.getWidth());
+            assertEquals(10, trackingGrid.getHeight());
         }
 
         @Test
@@ -411,11 +426,13 @@ class PlayerTest {
         void shouldReturnShipsList() {
             // Given
             player = new Player("TestPlayer", 10);
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
+            Ship ship1 = new Carrier();
+            Ship ship2 = new Cruiser();
+            player.addShip(ship1);
+            player.addShip(ship2);
 
             // When
-            List<Ship> ships = player.getShips();
+            var ships = player.getShips();
 
             // Then
             assertNotNull(ships);
@@ -436,58 +453,66 @@ class PlayerTest {
         @DisplayName("Should manage complete ship placement workflow")
         void shouldManageCompleteShipPlacementWorkflow() throws InvalidCoordinateException, ShipPlacementException {
             // Given
-            when(mockShip1.isDestroyed()).thenReturn(false);
-            when(mockShip2.isDestroyed()).thenReturn(false);
+            Ship ship1 = new Destroyer();
+            Ship ship2 = new Cruiser();
 
             // When
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
-            // player.placeShipOnGrid(mockShip1, mockCoordinate, mockDirection);
-            // player.placeShipOnGrid(mockShip2, mockCoordinate, mockDirection);
+            player.addShip(ship1);
+            player.addShip(ship2);
+            player.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            player.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.VERTICAL);
 
             // Then
             assertEquals(2, player.getShips().size());
             assertFalse(player.isDead());
-
-            // TODO: Uncomment grid placement when Grid is implemented
+            assertEquals(3, ship1.getPositions().size());
+            assertEquals(4, ship2.getPositions().size());
         }
 
         @Test
         @DisplayName("Should handle multiple attacks correctly")
-        void shouldHandleMultipleAttacks() throws InvalidCoordinateException {
+        void shouldHandleMultipleAttacks() throws InvalidCoordinateException, ShipPlacementException {
             // Given
-            player.addShip(mockShip1);
-            when(mockShip1.isDestroyed()).thenReturn(false);
+            Ship ship = new Destroyer();
+            player.addShip(ship);
+            player.placeShipOnGrid(ship, new Coordinate(2, 3), Direction.HORIZONTAL);
 
             // When - Receive multiple attacks
-            // AttackResponse response1 = player.receiveAttack(mockCoordinate);
-            // player.recordAttack(mockCoordinate, response1);
+            AttackResponse response1 = player.receiveAttack(new Coordinate(2, 3));
+            player.recordAttack(new Coordinate(2, 3), response1);
 
-            // AttackResponse response2 = player.receiveAttack(mockCoordinate);
-            // player.recordAttack(mockCoordinate, response2);
+            AttackResponse response2 = player.receiveAttack(new Coordinate(3, 3));
+            player.recordAttack(new Coordinate(3, 3), response2);
 
             // Then
+            assertEquals(AttackResult.HIT, response1.getResult());
+            assertEquals(AttackResult.HIT, response2.getResult());
             assertFalse(player.isDead());
-
-            // TODO: Uncomment when Grid and Cell are implemented
+            assertEquals(1, ship.getLife());
         }
 
         @Test
         @DisplayName("Should transition from alive to dead when all ships destroyed")
-        void shouldTransitionFromAliveToDead() {
+        void shouldTransitionFromAliveToDead() throws InvalidCoordinateException, ShipPlacementException {
             // Given
-            player.addShip(mockShip1);
-            player.addShip(mockShip2);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            player.addShip(ship1);
+            player.addShip(ship2);
+            player.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            player.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
 
-            when(mockShip1.isDestroyed()).thenReturn(false);
-            when(mockShip2.isDestroyed()).thenReturn(false);
             assertFalse(player.isDead(), "Player should be alive initially");
 
-            // When - Ships get destroyed
-            when(mockShip1.isDestroyed()).thenReturn(true);
+            // When - Destroy first ship
+            player.receiveAttack(new Coordinate(0, 0));
+            player.receiveAttack(new Coordinate(1, 0));
+
             assertFalse(player.isDead(), "Player should still be alive with one ship");
 
-            when(mockShip2.isDestroyed()).thenReturn(true);
+            // When - Destroy second ship
+            player.receiveAttack(new Coordinate(5, 5));
+            player.receiveAttack(new Coordinate(6, 5));
 
             // Then
             assertTrue(player.isDead(), "Player should be dead when all ships destroyed");

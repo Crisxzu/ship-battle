@@ -149,7 +149,7 @@ public class Player {
     /**
      * Get player's ships
      * 
-     * @return List<Ship> Player's ships
+     * @return Player's ships
      */
     public List<Ship> getShips() {
         return ships;

@@ -50,6 +50,8 @@ public abstract class Ship {
 
     /**
      * Reduces the ship's life by one when it takes a hit.
+     * @param name  Name of the ship
+     * @param length Length of the ship
      */
     Ship(String name, Integer length) {
         this.name = name;
@@ -67,7 +69,7 @@ public abstract class Ship {
     }
 
     /**
-     * Checks if the ship is destroyed (life <= 0).
+     * Checks if the ship is destroyed.
      *
      * @return true if the ship is destroyed, false otherwise.
      */

@@ -253,7 +253,7 @@ public class ConsoleView {
      * Prompts each player to enter their name.
      * </p>
      * 
-     * @return List<String> List of entered player names
+     * @return List of entered player names
      */
     public List<String> askPlayersName() {
         List<String> names = new ArrayList<>();

@@ -1,53 +1,30 @@
 package com.par_28.ship_battle.model;
 
-import com.par_28.ship_battle.model.enums.GameState;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for Game class
  * Tests the core game logic including turn management, game state, and win conditions
  */
-@ExtendWith(MockitoExtension.class)
 @DisplayName("Game Logic Tests")
 class GameTest {
 
-    @Mock
-    private Player mockPlayer1;
-
-    @Mock
-    private Player mockPlayer2;
-
-    @Mock
-    private Ship mockShip1;
-
-    @Mock
-    private Ship mockShip2;
-
-    @Mock
-    private AttackResponse mockAttackResponse;
-
-    @Mock
-    private Coordinate mockCoordinate;
-
+    private Player player1;
+    private Player player2;
     private Game game;
 
     @BeforeEach
     void setUp() {
-        game = new Game(mockPlayer1, mockPlayer2);
+        player1 = new Player("Player 1", 10);
+        player2 = new Player("Player 2", 10);
+        game = new Game(player1, player2);
     }
 
     @Nested
@@ -93,31 +70,25 @@ class GameTest {
         @DisplayName("Should start game when both players have ships")
         void shouldStartGameWhenBothPlayersHaveShips() {
             // Given
-            List<Ship> ships1 = new ArrayList<>();
-            ships1.add(mockShip1);
-            List<Ship> ships2 = new ArrayList<>();
-            ships2.add(mockShip2);
-
-            when(mockPlayer1.getShips()).thenReturn(ships1);
-            when(mockPlayer2.getShips()).thenReturn(ships2);
+            player1.addShip(new Carrier());
+            player2.addShip(new Cruiser());
 
             // When
             game.start();
 
             // Then
             assertEquals(GameState.PLAYER1_TURN, game.getGameState());
-            assertEquals(mockPlayer1, game.getCurrentPlayer());
+            assertEquals(player1, game.getCurrentPlayer());
         }
 
         @Test
         @DisplayName("Should throw exception when starting game without player1 ships")
         void shouldThrowExceptionWhenPlayer1HasNoShips() {
             // Given
-            when(mockPlayer1.getShips()).thenReturn(new ArrayList<>());
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip1));
+            player2.addShip(new Carrier());
 
             // When & Then
-            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
                 game.start();
             });
 
@@ -128,11 +99,21 @@ class GameTest {
         @DisplayName("Should throw exception when starting game without player2 ships")
         void shouldThrowExceptionWhenPlayer2HasNoShips() {
             // Given
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(new ArrayList<>());
+            player1.addShip(new Carrier());
 
             // When & Then
-            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
+                game.start();
+            });
+
+            assertEquals("Both players must have ships to start the game", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when starting game without ships for both players")
+        void shouldThrowExceptionWhenPlayersHasNoShips() {
+            // When & Then
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
                 game.start();
             });
 
@@ -143,12 +124,12 @@ class GameTest {
         @DisplayName("Should throw exception when starting already started game")
         void shouldThrowExceptionWhenGameAlreadyStarted() {
             // Given
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip2));
+            player1.addShip(new Carrier());
+            player2.addShip(new Cruiser());
             game.start();
 
             // When & Then
-            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
                 game.start();
             });
 
@@ -161,9 +142,13 @@ class GameTest {
     class TurnManagementTests {
 
         @BeforeEach
-        void startGame() {
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip2));
+        void startGame() throws Exception {
+            Ship ship1 = new Destroyer();
+            Ship ship2 = new Cruiser();
+            player1.addShip(ship1);
+            player2.addShip(ship2);
+            player1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            player2.placeShipOnGrid(ship2, new Coordinate(0, 0), Direction.HORIZONTAL);
             game.start();
         }
 
@@ -171,42 +156,38 @@ class GameTest {
         @DisplayName("Should play turn and attack opponent")
         void shouldPlayTurnAndAttackOpponent() throws InvalidCoordinateException {
             // Given
-            when(mockPlayer2.receiveAttack(mockCoordinate)).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(false);
+            Coordinate coord = new Coordinate(0, 0);
 
             // When
-            AttackResponse response = game.playTurn(mockCoordinate);
+            AttackResponse response = game.playTurn(coord);
 
             // Then
-            assertEquals(mockAttackResponse, response);
-            verify(mockPlayer2).receiveAttack(mockCoordinate);
-            verify(mockPlayer1).recordAttack(mockCoordinate, mockAttackResponse);
+            assertNotNull(response);
+            assertEquals(AttackResult.HIT, response.getResult());
         }
 
         @Test
         @DisplayName("Should switch player after turn")
         void shouldSwitchPlayerAfterTurn() throws InvalidCoordinateException {
             // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(false);
+            Coordinate coord = new Coordinate(9, 9); // Miss
 
             // When
-            game.playTurn(mockCoordinate);
+            game.playTurn(coord);
 
             // Then
             assertEquals(GameState.PLAYER2_TURN, game.getGameState());
-            assertEquals(mockPlayer2, game.getCurrentPlayer());
+            assertEquals(player2, game.getCurrentPlayer());
         }
 
         @Test
         @DisplayName("Should increment turn counter after each turn")
         void shouldIncrementTurnCounter() throws InvalidCoordinateException {
             // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(false);
+            Coordinate coord = new Coordinate(9, 9);
 
             // When
-            game.playTurn(mockCoordinate);
+            game.playTurn(coord);
 
             // Then
             assertEquals(1, game.getNbTurns());
@@ -214,30 +195,54 @@ class GameTest {
 
         @Test
         @DisplayName("Should end game when opponent dies")
-        void shouldEndGameWhenOpponentDies() throws InvalidCoordinateException {
-            // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(true);
+        void shouldEndGameWhenOpponentDies() throws Exception {
+            // Given - Create a game with small ships that can be destroyed quickly
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(0, 0), Direction.HORIZONTAL);
 
-            // When
-            game.playTurn(mockCoordinate);
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When - Destroy player2's ship
+            testGame.playTurn(new Coordinate(0, 0)); // Hit
+            testGame.playTurn(new Coordinate(9, 9)); // Miss - switch turn
+            testGame.playTurn(new Coordinate(1, 0)); // Hit and sink
 
             // Then
-            assertEquals(GameState.GAME_OVER, game.getGameState());
-            assertTrue(game.isGameOver());
+            assertEquals(GameState.GAME_OVER, testGame.getGameState());
+            assertTrue(testGame.isGameOver());
         }
 
         @Test
         @DisplayName("Should throw exception when playing turn on finished game")
-        void shouldThrowExceptionWhenPlayingTurnOnFinishedGame() throws InvalidCoordinateException {
+        void shouldThrowExceptionWhenPlayingTurnOnFinishedGame() throws Exception {
             // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(true);
-            game.playTurn(mockCoordinate);
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(0, 0), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // Destroy player2's ship
+            testGame.playTurn(new Coordinate(0, 0));
+            testGame.playTurn(new Coordinate(9, 9));
+            testGame.playTurn(new Coordinate(1, 0));
 
             // When & Then
-            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-                game.playTurn(mockCoordinate);
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
+                testGame.playTurn(new Coordinate(5, 5));
             });
 
             assertEquals("Game is already over", exception.getMessage());
@@ -250,7 +255,7 @@ class GameTest {
             Player opponent = game.getOpponent();
 
             // Then
-            assertEquals(mockPlayer2, opponent);
+            assertEquals(player2, opponent);
         }
     }
 
@@ -260,8 +265,8 @@ class GameTest {
 
         @BeforeEach
         void startGame() {
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip2));
+            player1.addShip(new Carrier());
+            player2.addShip(new Cruiser());
             game.start();
         }
 
@@ -276,7 +281,7 @@ class GameTest {
 
             // Then
             assertEquals(GameState.PLAYER2_TURN, game.getGameState());
-            assertEquals(mockPlayer2, game.getCurrentPlayer());
+            assertEquals(player2, game.getCurrentPlayer());
         }
 
         @Test
@@ -290,23 +295,23 @@ class GameTest {
 
             // Then
             assertEquals(GameState.PLAYER1_TURN, game.getGameState());
-            assertEquals(mockPlayer1, game.getCurrentPlayer());
+            assertEquals(player1, game.getCurrentPlayer());
         }
 
         @Test
         @DisplayName("Should alternate players correctly over multiple turns")
         void shouldAlternatePlayersCorrectly() {
             // When & Then
-            assertEquals(mockPlayer1, game.getCurrentPlayer());
+            assertEquals(player1, game.getCurrentPlayer());
 
             game.switchPlayer();
-            assertEquals(mockPlayer2, game.getCurrentPlayer());
+            assertEquals(player2, game.getCurrentPlayer());
 
             game.switchPlayer();
-            assertEquals(mockPlayer1, game.getCurrentPlayer());
+            assertEquals(player1, game.getCurrentPlayer());
 
             game.switchPlayer();
-            assertEquals(mockPlayer2, game.getCurrentPlayer());
+            assertEquals(player2, game.getCurrentPlayer());
         }
     }
 
@@ -315,9 +320,13 @@ class GameTest {
     class GameOverTests {
 
         @BeforeEach
-        void startGame() {
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip2));
+        void startGame() throws Exception {
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            player1.addShip(ship1);
+            player2.addShip(ship2);
+            player1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            player2.placeShipOnGrid(ship2, new Coordinate(0, 0), Direction.HORIZONTAL);
             game.start();
         }
 
@@ -344,48 +353,46 @@ class GameTest {
         @Test
         @DisplayName("Should return player1 as winner when player2 is dead")
         void shouldReturnPlayer1AsWinnerWhenPlayer2IsDead() throws InvalidCoordinateException {
-            // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(true);
-            when(mockPlayer1.isDead()).thenReturn(false);
-            game.playTurn(mockCoordinate);
-
-            // When
-            Player winner = game.getWinner();
+            // When - Destroy player2's ship
+            game.playTurn(new Coordinate(0, 0)); // Hit
+            game.playTurn(new Coordinate(9, 9)); // Miss - switch turn
+            game.playTurn(new Coordinate(1, 0)); // Hit and sink
 
             // Then
-            assertEquals(mockPlayer2, winner);
+            Player winner = game.getWinner();
+            assertEquals(player1, winner);
+            assertTrue(player2.isDead());
+            assertFalse(player1.isDead());
         }
 
         @Test
         @DisplayName("Should return player2 as winner when player1 is dead")
         void shouldReturnPlayer2AsWinnerWhenPlayer1IsDead() throws InvalidCoordinateException {
-            // Given
-            game.switchPlayer(); // Switch to player 2
-            when(mockPlayer1.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer1.isDead()).thenReturn(true);
-            when(mockPlayer2.isDead()).thenReturn(false);
-            game.playTurn(mockCoordinate);
+            // Given - Switch to player 2
+            game.switchPlayer();
 
-            // When
-            Player winner = game.getWinner();
+            // When - Destroy player1's ship
+            game.playTurn(new Coordinate(0, 0)); // Hit
+            game.playTurn(new Coordinate(9, 9)); // Miss - switch turn
+            game.playTurn(new Coordinate(1, 0)); // Hit and sink
 
             // Then
-            assertEquals(mockPlayer1, winner);
+            Player winner = game.getWinner();
+            assertEquals(player2, winner);
+            assertTrue(player1.isDead());
+            assertFalse(player2.isDead());
         }
 
         @Test
         @DisplayName("Should be game over when state is GAME_OVER")
         void shouldBeGameOverWhenStateIsGameOver() throws InvalidCoordinateException {
-            // Given
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer2.isDead()).thenReturn(true);
-            game.playTurn(mockCoordinate);
-
-            // When
-            boolean isGameOver = game.isGameOver();
+            // When - Destroy player2's ship
+            game.playTurn(new Coordinate(0, 0));
+            game.playTurn(new Coordinate(9, 9));
+            game.playTurn(new Coordinate(1, 0));
 
             // Then
+            boolean isGameOver = game.isGameOver();
             assertTrue(isGameOver);
             assertEquals(GameState.GAME_OVER, game.getGameState());
         }
@@ -397,38 +404,52 @@ class GameTest {
 
         @Test
         @DisplayName("Should complete a full game sequence")
-        void shouldCompleteFullGameSequence() throws InvalidCoordinateException {
+        void shouldCompleteFullGameSequence() throws Exception {
             // Given
-            when(mockPlayer1.getShips()).thenReturn(List.of(mockShip1));
-            when(mockPlayer2.getShips()).thenReturn(List.of(mockShip2));
-            when(mockPlayer2.receiveAttack(any())).thenReturn(mockAttackResponse);
-            when(mockPlayer1.receiveAttack(any())).thenReturn(mockAttackResponse);
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Torpedo();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
 
             // When - Start game
-            game.start();
-            assertEquals(GameState.PLAYER1_TURN, game.getGameState());
+            testGame.start();
+            assertEquals(GameState.PLAYER1_TURN, testGame.getGameState());
 
-            // Player 1 attacks
-            when(mockPlayer2.isDead()).thenReturn(false);
-            game.playTurn(mockCoordinate);
-            assertEquals(1, game.getNbTurns());
-            assertEquals(GameState.PLAYER2_TURN, game.getGameState());
+            // Player 1 attacks and misses
+            testGame.playTurn(new Coordinate(9, 9));
+            assertEquals(1, testGame.getNbTurns());
+            assertEquals(GameState.PLAYER2_TURN, testGame.getGameState());
 
-            // Player 2 attacks
-            when(mockPlayer1.isDead()).thenReturn(false);
-            game.playTurn(mockCoordinate);
-            assertEquals(2, game.getNbTurns());
-            assertEquals(GameState.PLAYER1_TURN, game.getGameState());
+            // Player 2 attacks and misses
+            testGame.playTurn(new Coordinate(9, 9));
+            assertEquals(2, testGame.getNbTurns());
+            assertEquals(GameState.PLAYER1_TURN, testGame.getGameState());
 
-            // Player 1 attacks and wins
-            when(mockPlayer2.isDead()).thenReturn(true);
-            game.playTurn(mockCoordinate);
+            // Player 1 attacks and hits
+            AttackResponse hitResponse = testGame.playTurn(new Coordinate(5, 5));
+            assertEquals(AttackResult.HIT, hitResponse.getResult());
+            assertEquals(3, testGame.getNbTurns());
+            assertEquals(GameState.PLAYER2_TURN, testGame.getGameState());
+
+            // Player 2 attacks and misses
+            testGame.playTurn(new Coordinate(8, 8));
+            assertEquals(4, testGame.getNbTurns());
+
+            // Player 1 attacks and sinks ship (wins)
+            AttackResponse sunkResponse = testGame.playTurn(new Coordinate(6, 5));
+            assertEquals(AttackResult.SUNK, sunkResponse.getResult());
 
             // Then
-            assertEquals(3, game.getNbTurns());
-            assertEquals(GameState.GAME_OVER, game.getGameState());
-            assertTrue(game.isGameOver());
-            assertNotNull(game.getWinner());
+            assertEquals(5, testGame.getNbTurns());
+            assertEquals(GameState.GAME_OVER, testGame.getGameState());
+            assertTrue(testGame.isGameOver());
+            assertEquals(p1, testGame.getWinner());
         }
     }
 }

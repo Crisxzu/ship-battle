@@ -95,7 +95,7 @@ public class Player {
     /**
      * Receive attack on player's grid
      * 
-     * @param coord
+     * @param coord Coordinate of the attack
      * @return AttackResponse response of the attack with hit/miss and ship info
      * @throws InvalidCoordinateException if the coordinate is invalid
      */

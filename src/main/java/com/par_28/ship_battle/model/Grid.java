@@ -105,7 +105,9 @@ public class Grid {
         int dx = 0, dy = 0;
 
         if (direction == Direction.HORIZONTAL)
-            dx = 1; else dy = 1;
+            dx = 1;
+        else
+            dy = 1;
 
         int x = start.getX(), y = start.getY();
 

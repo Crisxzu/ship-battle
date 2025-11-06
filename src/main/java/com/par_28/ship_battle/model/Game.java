@@ -16,9 +16,12 @@ import com.par_28.ship_battle.model.exceptions.*;
  */
 public class Game {
     /**
-     * Players in the game
+     * Player 1
      */
     private final Player player1;
+    /**
+     * Player 2
+     */
     private final Player player2;
 
     /**
@@ -51,15 +54,15 @@ public class Game {
     /**
      * Start the game if both players have ships placed and game is not already started
      * 
-     * @throws IllegalStateException if game is already started or players have no ships
+     * @throws IllegalGameStateException if game is already started or players have no ships
      */
-    public void start() throws IllegalStateException {
+    public void start() throws IllegalGameStateException {
         if(gameState != GameState.SETUP) {
-            throw new IllegalStateException("Game is already started");
+            throw new IllegalGameStateException("Game is already started");
         }
 
         if(player1.getShips().isEmpty() || player2.getShips().isEmpty()) {
-            throw new IllegalStateException("Both players must have ships to start the game");
+            throw new IllegalGameStateException("Both players must have ships to start the game");
         }
 
         gameState = GameState.PLAYER1_TURN;
@@ -78,12 +81,12 @@ public class Game {
      *
      * @param coord Coordinate to attack
      * @return AttackResponse response of the attack with hit/miss and ship info
-     * @throws IllegalStateException if game is already over
+     * @throws IllegalGameStateException if game is already over
      * @throws InvalidCoordinateException if the coordinate is invalid
      */
-    public AttackResponse playTurn(Coordinate coord) throws IllegalStateException, InvalidCoordinateException {
+    public AttackResponse playTurn(Coordinate coord) throws IllegalGameStateException, InvalidCoordinateException {
         if(gameState == GameState.GAME_OVER) {
-            throw new IllegalStateException("Game is already over");
+            throw new IllegalGameStateException("Game is already over");
         }
 
         Player opponent = getOpponent();

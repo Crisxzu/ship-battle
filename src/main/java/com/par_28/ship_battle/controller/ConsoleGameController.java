@@ -78,7 +78,7 @@ public class ConsoleGameController {
         try {
             game.start();
         }
-        catch (IllegalStateException e) {
+        catch (IllegalGameStateException e) {
             System.out.println("Ouch, bad thing happened : " + e.getMessage());
             return;
         }
@@ -92,7 +92,7 @@ public class ConsoleGameController {
                 AttackResponse response = game.playTurn(attackCoord);
                 view.displayAttackResponse(currentPlayer, response);
             }
-            catch (IllegalStateException | InvalidCoordinateException e) {
+            catch (IllegalGameStateException | InvalidCoordinateException e) {
                 System.out.println("Ouch, bad thing happened : " + e.getMessage());
             }
         }
@@ -112,7 +112,7 @@ public class ConsoleGameController {
      * - 2x Destroyer
      * </p>
      *
-     * @return List<Ship> List of default ships
+     * @return List of default ships
      */
     private List<Ship> getDefaultShips() {
         List<Ship> ships = new ArrayList<>();

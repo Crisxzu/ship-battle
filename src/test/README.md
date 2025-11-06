@@ -27,29 +27,46 @@ src/test/java/com/par_28/ship_battle/model/
 
 ## 🚀 État actuel
 
-### ✅ Tests complètement fonctionnels
+### ✅ Tous les tests sont fonctionnels !
 
-- **CoordinateTest.java** (138 tests)
-  - Classe `Coordinate` déjà implémentée
-  - Tous les tests peuvent s'exécuter immédiatement
-  - Couverture : création, parsing, égalité, hashCode, toString
+**Total : 151 tests - 100% de réussite**
 
-### ⏳ Tests en attente d'implémentation
+- **CoordinateTest.java** (43 tests)
+  - Tests de création de coordonnées
+  - Parsing format virgule (3,5) et lettre (A1, B5, AA10)
+  - Tests d'égalité, hashCode, toString
+  - Gestion complète des erreurs
 
-Les tests suivants sont **écrits et prêts** mais nécessitent que les classes correspondantes soient implémentées :
+- **ShipTest.java** (24 tests)
+  - Tests d'initialisation des 4 types de navires (Carrier, Cruiser, Destroyer, Torpedo)
+  - Tests de dégâts et destruction
+  - Gestion des directions (HORIZONTAL, VERTICAL)
+  - Gestion des positions
 
-- **GameTest.java** (20 tests avec mocks)
-  - Attend : classes `Player`, `Ship`, `AttackResponse`, enum `GameState`
+- **GridTest.java** (35 tests)
+  - Initialisation de grille (validation des dimensions)
+  - Validation des coordonnées
+  - Placement de navires (horizontal/vertical, détection de collision/adjacence)
+  - Gestion des attaques (MISS, HIT, SUNK, ALREADY_HIT)
 
-- **PlayerTest.java** (16 tests avec mocks)
-  - Attend : classes `Grid`, `Ship`, `Cell`, `AttackResponse`, enum `Direction`
+- **PlayerTest.java** (26 tests)
+  - Initialisation des joueurs avec grilles
+  - Gestion de flotte (ajout, placement de navires)
+  - Statut du joueur (vivant/mort selon l'état des navires)
+  - Réception et enregistrement des attaques
 
-- **GridTest.java** (24 tests avec mocks)
-  - Attend : classes `Cell`, `Ship`, `AttackResponse`, enums `Direction`, `AttackResult`
+- **GameTest.java** (23 tests)
+  - Initialisation et démarrage de partie
+  - Gestion des tours et alternance des joueurs
+  - Conditions de victoire et fin de partie
+  - Scénarios de jeu complets
 
-- **ShipTest.java** (23 tests avec mocks)
-  - Attend : classe abstraite `Ship` et ses sous-classes (`Carrier`, `Cruiser`, `Destroyer`, `Torpedo`)
-  - Attend : enum `Direction`
+### 📊 Résultats des tests
+
+```
+Tests run: 151, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
 
 ## 🔧 Technologies utilisées
 
@@ -58,118 +75,50 @@ Les tests suivants sont **écrits et prêts** mais nécessitent que les classes 
 - **Maven Surefire** (v3.1.2) - Exécution des tests
 - **JaCoCo** (v0.8.11) - Couverture de code (objectif : 80%)
 
-## 📝 Comment utiliser ces tests
+## 📝 Comment exécuter les tests
 
-### 1. Tests immédiatement exécutables
-
-Pour exécuter les tests de `Coordinate` qui fonctionnent déjà :
-
-```bash
-mvn test -Dtest=CoordinateTest
-```
-
-### 2. Une fois les classes manquantes implémentées
-
-Après que vos collègues aient implémenté les classes manquantes, vous pourrez activer progressivement les tests :
-
-#### Pour tester une classe spécifique :
-
-```bash
-# Tests de Game (après implémentation de GameState, AttackResponse, etc.)
-mvn test -Dtest=GameTest
-
-# Tests de Player (après implémentation de Grid, Ship, Cell, etc.)
-mvn test -Dtest=PlayerTest
-
-# Tests de Grid (après implémentation de Cell, Ship, Direction, etc.)
-mvn test -Dtest=GridTest
-
-# Tests de Ship (après implémentation de Ship et ses sous-classes)
-mvn test -Dtest=ShipTest
-```
-
-#### Pour exécuter tous les tests :
+### Exécuter tous les tests
 
 ```bash
 mvn test
 ```
 
-### 3. Décommenter les tests
+### Exécuter une classe de test spécifique
 
-Chaque fichier de test contient des sections **commentées** avec `// TODO: Uncomment when [ClassName] is implemented`.
+```bash
+# Tests de coordonnées
+mvn test -Dtest=CoordinateTest
 
-Une fois qu'une classe est implémentée, vous devez :
+# Tests de navires
+mvn test -Dtest=ShipTest
 
-1. Ouvrir le fichier de test correspondant
-2. Rechercher `TODO: Uncomment when`
-3. Décommenter le code de test
-4. Exécuter les tests
+# Tests de grille
+mvn test -Dtest=GridTest
 
-**Exemple dans `GridTest.java` :**
+# Tests de joueur
+mvn test -Dtest=PlayerTest
 
-```java
-// AVANT (code commenté)
-@Test
-void shouldInitializeGridWithCorrectDimensions() {
-    // When
-    // grid = new Grid(10, 10);
-
-    // Then
-    // assertEquals(10, grid.getWidth());
-
-    // TODO: Uncomment when Grid class is implemented
-    assertTrue(true, "Test requires Grid implementation");
-}
-
-// APRÈS (une fois Grid implémentée)
-@Test
-void shouldInitializeGridWithCorrectDimensions() {
-    // When
-    grid = new Grid(10, 10);
-
-    // Then
-    assertEquals(10, grid.getWidth());
-    assertEquals(10, grid.getHeight());
-}
+# Tests de partie
+mvn test -Dtest=GameTest
 ```
 
-## 🎯 Classes à implémenter (par priorité)
-
-### Priorité 1 : Enums de base
-- `GameState` (SETUP, PLAYER1_TURN, PLAYER2_TURN, GAME_OVER)
-- `Direction` (HORIZONTAL, VERTICAL)
-- `AttackResult` (MISS, HIT, SUNK, ALREADY_HIT, INVALID)
-
-### Priorité 2 : Modèles de base
-- `Cell` (représente une cellule de la grille)
-- `Grid` (représente la grille de jeu)
-- `AttackResponse` (résultat d'une attaque)
-
-### Priorité 3 : Hiérarchie des navires
-- `Ship` (classe abstraite)
-- `Carrier` (5 cases) - Porte-avions
-- `Cruiser` (4 cases) - Croiseur
-- `Destroyer` (3 cases) - Contre-torpilleur (x2 dans une partie)
-- `Torpedo` (2 cases) - Torpilleur
-
-## 📊 Couverture de code
-
-Le projet est configuré avec **JaCoCo** pour mesurer la couverture de code avec un objectif de **80%**.
-
-Pour générer le rapport de couverture :
+### Exécuter les tests avec rapport de couverture
 
 ```bash
 mvn clean test jacoco:report
 ```
 
-Le rapport sera disponible dans : `target/site/jacoco/index.html`
+Le rapport sera disponible dans `target/site/jacoco/index.html`
 
-## 🐛 Bugs connus à corriger
+## 📊 Couverture de code
 
-Dans `Player.java`, ligne 37, il manque l'import :
+Le projet est configuré avec **JaCoCo** pour mesurer la couverture de code avec un objectif de **80%**.
 
-```java
-import java.util.List;
+Pour générer et visualiser le rapport de couverture :
+
+```bash
+mvn clean test jacoco:report
+open target/site/jacoco/index.html
 ```
 
 ## 📖 Structure des tests
@@ -203,7 +152,7 @@ Cette structure offre :
 
 ## 🔍 Détail des scénarios testés
 
-### GameTest (20 tests)
+### GameTest (23 tests)
 - ✅ Initialisation du jeu
 - ✅ Démarrage de la partie
 - ✅ Gestion des tours
@@ -211,7 +160,7 @@ Cette structure offre :
 - ✅ Conditions de victoire
 - ✅ État de fin de partie
 
-### PlayerTest (16 tests)
+### PlayerTest (26 tests)
 - ✅ Initialisation du joueur
 - ✅ Ajout de navires
 - ✅ Placement de navires
@@ -219,7 +168,7 @@ Cette structure offre :
 - ✅ Réception d'attaques
 - ✅ Enregistrement des attaques
 
-### GridTest (24 tests)
+### GridTest (35 tests)
 - ✅ Initialisation de la grille
 - ✅ Validation des coordonnées
 - ✅ Accès aux cellules
@@ -228,7 +177,7 @@ Cette structure offre :
 - ✅ Détection de collisions
 - ✅ Gestion des attaques (MISS, HIT, SUNK, ALREADY_HIT)
 
-### ShipTest (23 tests)
+### ShipTest (24 tests)
 - ✅ Initialisation des navires
 - ✅ Réception de dégâts
 - ✅ Détection de destruction
@@ -236,7 +185,7 @@ Cette structure offre :
 - ✅ Gestion des positions
 - ✅ Tests pour chaque type de navire
 
-### CoordinateTest (138 tests) ✅ FONCTIONNELS
+### CoordinateTest (43 tests)
 - ✅ Création de coordonnées
 - ✅ Parsing format virgule (3,5)
 - ✅ Parsing format lettre (A1, B5, AA10)
@@ -255,39 +204,19 @@ Cette structure offre :
 5. **Coverage** : Tests de cas nominaux et cas d'erreur
 6. **Documentation** : Commentaires explicites dans le code
 
-## 🚦 Commencer à tester
+## 🚦 Démarrage rapide
 
-### Étape 1 : Tester Coordinate (fonctionne maintenant !)
+### Exécuter tous les tests
 
 ```bash
-mvn test -Dtest=CoordinateTest
+mvn test
 ```
 
-Vous devriez voir tous les tests passer en vert ✅
+Résultat attendu : **151 tests passent avec succès** ✅
 
-### Étape 2 : Après merge du code de vos collègues
-
-1. Identifiez quelles classes ont été implémentées
-2. Ouvrez les fichiers de test correspondants
-3. Décommentez les tests (recherchez `TODO: Uncomment`)
-4. Exécutez les tests
-5. Corrigez les bugs révélés par les tests
-6. Répétez jusqu'à ce que tous les tests passent
-
-### Étape 3 : Vérifier la couverture
+### Vérifier la couverture de code
 
 ```bash
 mvn clean test jacoco:report
 open target/site/jacoco/index.html
 ```
-
-## 📞 Questions ?
-
-Si vous avez des questions sur les tests ou leur utilisation :
-1. Lisez les commentaires dans les fichiers de test
-2. Consultez la spécification UML
-3. Examinez les tests de `CoordinateTest.java` comme exemple de référence
-
----
-
-**Note importante** : Ces tests sont des **squelettes** qui documentent le comportement attendu de chaque classe selon la spécification UML. Ils serviront de guide pour vos collègues lors de l'implémentation et permettront de valider que le code répond aux spécifications.

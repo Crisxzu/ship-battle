@@ -1,16 +1,21 @@
 package com.par_28.ship_battle.model;
 
-import java.util.ArrayList;
+import java.util.*;
+
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 
 /**
  * Player model representing a game player
- * 
+ * <p>
+ * a player has a name, a grid to place ships on, a tracking grid to track attacks on opponent,
+ * </p>
  * @see com.par_28.ship_battle.model.Grid
  * @see com.par_28.ship_battle.model.Ship
  * @see com.par_28.ship_battle.model.Coordinate
- * @see com.par_28.ship_battle.model.Direction
+ * @see com.par_28.ship_battle.model.enums.Direction
  * @see com.par_28.ship_battle.model.AttackResponse
  */
 public class Player {
@@ -90,7 +95,7 @@ public class Player {
     /**
      * Receive attack on player's grid
      * 
-     * @param coord
+     * @param coord Coordinate of the attack
      * @return AttackResponse response of the attack with hit/miss and ship info
      * @throws InvalidCoordinateException if the coordinate is invalid
      */
@@ -144,7 +149,7 @@ public class Player {
     /**
      * Get player's ships
      * 
-     * @return List<Ship> Player's ships
+     * @return Player's ships
      */
     public List<Ship> getShips() {
         return ships;

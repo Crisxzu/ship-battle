@@ -69,7 +69,9 @@ public class ConsoleGameController {
         Player player1 = new Player(names.get(0), gridSize);
         Player player2 = new Player(names.get(1), gridSize);
         Game game = new Game(player1, player2);
-        
+
+        view.displaySetupGameMessage();
+
         setupPlayerShip(player1);
         setupPlayerShip(player2);
 
@@ -82,12 +84,13 @@ public class ConsoleGameController {
         }
 
         while (!game.isGameOver()) {
-            view.displayTurnStartMessage(game.getCurrentPlayer(), game.getNbTurns() + 1);
+            Player currentPlayer = game.getCurrentPlayer();
+            view.displayTurnStartMessage(currentPlayer, game.getNbTurns() + 1);
             try {
                 Coordinate attackCoord = Coordinate.fromString(view.askCoordinate());
 
                 AttackResponse response = game.playTurn(attackCoord);
-                view.displayAttackResponse(game.getCurrentPlayer(), response);
+                view.displayAttackResponse(currentPlayer, response);
             }
             catch (IllegalStateException | InvalidCoordinateException e) {
                 System.out.println("Ouch, bad thing happened : " + e.getMessage());

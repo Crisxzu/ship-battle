@@ -1,15 +1,14 @@
 package com.par_28.ship_battle.model;
-import java.util.List; 
-import java.util.ArrayList; 
+import java.util.*;
 import com.par_28.ship_battle.model.enums.Direction;
 
 /**
  * Abstract class representing a ship in the Battleship game.
- *
+ * <p>
  * A ship has a name, length, hit points (HP), an orientation, and a set of
  * board positions. Ships can take damage and are destroyed when their hit
  * points are fully depleted.
- *
+ * </p>
  * Concrete subclasses of Ship must define their specific name and length
  * in their constructors.
 
@@ -78,9 +77,9 @@ public abstract class Ship {
     }
 
     /**
-        * Get the name of the ship.
-        *
-        * @return the name of the ship.
+    * Get the name of the ship.
+    *
+    * @return the name of the ship.
     */
     public String getName() {
         return name;

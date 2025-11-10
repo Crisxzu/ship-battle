@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Coordinate ToString Tests" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-10T10:07:29.205Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="Should convert to string in comma format" classname="com.par_28.ship_battle.model.CoordinateTest$ToStringTests" time="0.0"/>
+  <testcase name="Should convert large coordinates to string" classname="com.par_28.ship_battle.model.CoordinateTest$ToStringTests" time="0.0"/>
+  <testcase name="Should convert negative coordinates to string" classname="com.par_28.ship_battle.model.CoordinateTest$ToStringTests" time="0.001"/>
+  <testcase name="Should convert zero coordinates to string" classname="com.par_28.ship_battle.model.CoordinateTest$ToStringTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

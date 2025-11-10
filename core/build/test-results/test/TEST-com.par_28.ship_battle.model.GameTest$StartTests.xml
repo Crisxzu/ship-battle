@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Game Start Tests" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-11-10T10:07:29.269Z" hostname="MacBook-Pro.local" time="0.004">
+  <properties/>
+  <testcase name="Should start game when both players have ships" classname="com.par_28.ship_battle.model.GameTest$StartTests" time="0.001"/>
+  <testcase name="Should throw exception when starting game without ships for both players" classname="com.par_28.ship_battle.model.GameTest$StartTests" time="0.001"/>
+  <testcase name="Should throw exception when starting game without player2 ships" classname="com.par_28.ship_battle.model.GameTest$StartTests" time="0.0"/>
+  <testcase name="Should throw exception when starting already started game" classname="com.par_28.ship_battle.model.GameTest$StartTests" time="0.001"/>
+  <testcase name="Should throw exception when starting game without player1 ships" classname="com.par_28.ship_battle.model.GameTest$StartTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

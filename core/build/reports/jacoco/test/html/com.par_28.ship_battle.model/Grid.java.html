@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grid.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model</a> &gt; <span class="el_source">Grid.java</span></div><h1>Grid.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
+
+/**
+ * Grid model representing a player's board.
+ * &lt;p&gt;
+ * The Grid holds a width x height matrix of {@link Cell} and provides operations
+ * to place ships and to receive attacks.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * Public methods throw {@link InvalidCoordinateException} when coordinates given
+ * are out of bounds, and {@link ShipPlacementException} when a ship cannot be placed.
+ * &lt;/p&gt;
+ * @see Cell
+ * @see Ship
+ * @see Coordinate
+ */
+public class Grid {
+    /**
+     * Width of the grid (number of columns).
+     */
+    private final int width;
+    /**
+     * Height of the grid (number of rows).
+     */
+    private final int height;
+    /**
+     * 2D array of cells in the grid.
+     */
+    private final Cell[][] cells;
+
+    /**
+     * Create a square grid (width x height).
+     *
+     * @param width number of columns (must be &gt; 0)
+     * @param height number of rows (must be &gt; 0)
+     * @throws InvalidGridDimension if width or height are not positive
+     */
+<span class="fc" id="L44">    public Grid(int width, int height) throws InvalidGridDimension {</span>
+<span class="fc bfc" id="L45" title="All 4 branches covered.">        if (width &lt;= 0 || height &lt;= 0) {</span>
+<span class="fc" id="L46">            throw new InvalidGridDimension(width, height);</span>
+        }
+<span class="fc" id="L48">        this.width = width;</span>
+<span class="fc" id="L49">        this.height = height;</span>
+<span class="fc" id="L50">        this.cells = new Cell[width][height];</span>
+<span class="fc" id="L51">        initializeCells();</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Initialize the grid cells.
+     * &lt;p&gt;
+     * Each cell is created with its corresponding Coordinate.
+     * &lt;/p&gt;
+     */
+    private void initializeCells() {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for (int x = 0; x &lt; width; x++) {</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            for (int y = 0; y &lt; height; y++) {</span>
+<span class="fc" id="L63">                cells[x][y] = new Cell(new Coordinate(x, y));</span>
+            }
+        }
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Check whether the coordinate is inside the grid bounds.
+     *
+     * @param coord coordinate to check
+     * @return true if valid, false otherwise
+     */
+    public boolean isValidCoordinate(Coordinate coord) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (coord == null) return false;</span>
+<span class="fc" id="L76">        int x = coord.getX();</span>
+<span class="fc" id="L77">        int y = coord.getY();</span>
+<span class="fc bfc" id="L78" title="All 8 branches covered.">        return x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height;</span>
+    }
+
+    /**
+     * Return the Cell at the given coordinate.
+     *
+     * @param coord coordinate of requested cell
+     * @return Cell at coordinate
+     * @throws InvalidCoordinateException if coord is outside the grid
+     */
+    public Cell getCell(Coordinate coord) throws InvalidCoordinateException {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (!isValidCoordinate(coord)) {</span>
+<span class="fc" id="L90">            throw new InvalidCoordinateException(coord);</span>
+        }
+<span class="fc" id="L92">        return cells[coord.getX()][coord.getY()];</span>
+    }
+
+    /**
+     * Calculate the list of Coordinates occupied by a ship starting at {@code start}
+     * with given {@code length} and {@link Direction}.
+     * &lt;p&gt;
+     * Returns an empty list if the computed positions fall outside the grid.
+     * &lt;/p&gt;
+     * @param start starting coordinate
+     * @param length ship length
+     * @param direction placement direction
+     * @return list of Coordinates or empty list if invalid
+     */
+    private List&lt;Coordinate&gt; calculateShipPositions(Coordinate start, int length, Direction direction) {
+<span class="fc" id="L107">        List&lt;Coordinate&gt; res = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L108" title="3 of 6 branches missed.">        if (start == null || length &lt;= 0 || direction == null){</span>
+<span class="nc" id="L109">            return res;</span>
+        }
+
+<span class="fc" id="L112">        int dx = 0, dy = 0;</span>
+
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (direction == Direction.HORIZONTAL)</span>
+<span class="fc" id="L115">            dx = 1;</span>
+        else
+<span class="fc" id="L117">            dy = 1;</span>
+
+<span class="fc" id="L119">        int x = start.getX(), y = start.getY();</span>
+
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L122">            Coordinate c = new Coordinate(</span>
+            x + i*dx,
+            y + i*dy
+            );
+
+<span class="fc bfc" id="L127" title="All 2 branches covered.">            if (!isValidCoordinate(c)) {</span>
+<span class="fc" id="L128">                return new ArrayList&lt;&gt;(); // invalid placement</span>
+            }
+<span class="fc" id="L130">            res.add(c);</span>
+        }
+<span class="fc" id="L132">        return res;</span>
+    }
+
+    /**
+     * Get the list of adjacent cells around a given coordinate.
+     * &lt;p&gt;
+     * Considers the 8 surrounding cells.
+     * &lt;/p&gt;
+     * @param coord central coordinate
+     * @return list of adjacent Cells
+     */
+    private List&lt;Cell&gt; getAdjacentCells(Coordinate coord) {
+<span class="fc" id="L144">        List&lt;Cell&gt; adjacentCells = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L145">        int x = coord.getX();</span>
+<span class="fc" id="L146">        int y = coord.getY();</span>
+
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (int dx = -1; dx &lt;= 1; dx++) {</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            for (int dy = -1; dy &lt;= 1; dy++) {</span>
+<span class="fc bfc" id="L150" title="All 4 branches covered.">                if (dx == 0 &amp;&amp; dy == 0) continue; // skip the cell itself</span>
+<span class="fc" id="L151">                Coordinate adjacentCoord = new Coordinate(x + dx, y + dy);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (isValidCoordinate(adjacentCoord)) {</span>
+<span class="fc" id="L153">                    adjacentCells.add(getCell(adjacentCoord));</span>
+                }
+            }
+        }
+<span class="fc" id="L157">        return adjacentCells;</span>
+    }
+
+    /**
+     * Check if a ship can be placed at the given start and direction.
+     * &lt;p&gt;
+     * Returns the list of Coordinates the ship would occupy if placeable,
+     * or an empty list if not placeable.
+     * The ship cannot overlap or be adjacent to existing ships.
+     * And the start coordinate must be valid.
+     * &lt;/p&gt;
+     * @param ship ship to place
+     * @param start starting coordinate
+     * @param direction direction to place
+     * @return list of Coordinates if placeable, empty list otherwise
+     * @throws InvalidCoordinateException when start is invalid
+     */
+    private List&lt;Coordinate&gt; canPlaceShip(Ship ship, Coordinate start, Direction direction) {
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (ship == null) {</span>
+<span class="fc" id="L176">            return new ArrayList&lt;&gt;();</span>
+        }
+
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (!isValidCoordinate(start))</span>
+<span class="fc" id="L180">            throw new InvalidCoordinateException(start);</span>
+
+<span class="fc" id="L182">        List&lt;Coordinate&gt; positions = calculateShipPositions(start, ship.getLength(), direction);</span>
+
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (positions.isEmpty()) {</span>
+<span class="fc" id="L185">            return new ArrayList&lt;&gt;();</span>
+        }
+
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        for (Coordinate c : positions) {</span>
+<span class="fc" id="L189">            Cell cell = getCell(c);</span>
+
+<span class="fc bfc" id="L191" title="All 2 branches covered.">            if (cell.hasShip()){</span>
+<span class="fc" id="L192">                return new ArrayList&lt;&gt;();</span>
+            }
+
+<span class="fc" id="L195">            List&lt;Cell&gt; adjacentCells = getAdjacentCells(c);</span>
+
+<span class="fc bfc" id="L197" title="All 2 branches covered.">            for (Cell adjacentCell : adjacentCells) {</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">                if (adjacentCell.hasShip()) {</span>
+<span class="fc" id="L199">                    return new ArrayList&lt;&gt;();</span>
+                }
+<span class="fc" id="L201">            }</span>
+
+<span class="fc" id="L203">        }</span>
+
+<span class="fc" id="L205">        return positions;</span>
+    }
+
+    /**
+     * Place a ship on the grid at the given start and direction.
+     *
+     * &lt;p&gt;
+     * If placement is successful, the ship's positions and direction are set,
+     * and the corresponding cells are updated to reference the ship.
+     * &lt;/p&gt;
+     *
+     * @param ship ship to place
+     * @param start starting coordinate
+     * @param direction direction to place
+     * @throws InvalidCoordinateException when start coordinate is invalid
+     * @throws ShipPlacementException when placement is not possible (overlap or out of bounds)
+     * @see #canPlaceShip(Ship, Coordinate, Direction)
+     */
+    public void placeShip(Ship ship, Coordinate start, Direction direction) throws ShipPlacementException, InvalidCoordinateException {
+<span class="fc" id="L224">        List&lt;Coordinate&gt; positions = canPlaceShip(ship, start, direction);</span>
+
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if(!positions.isEmpty()) {</span>
+            // assign positions to ship and to cells
+<span class="fc" id="L228">            ship.setDirection(direction);</span>
+<span class="fc" id="L229">            ship.setPositions(positions);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">            for (Coordinate c : positions) {</span>
+<span class="fc" id="L231">                cells[c.getX()][c.getY()].setShip(ship);</span>
+<span class="fc" id="L232">            }</span>
+        }
+        else {
+<span class="fc" id="L235">            throw new ShipPlacementException(start);</span>
+        }
+<span class="fc" id="L237">    }</span>
+
+    /**
+     * Receive an attack at the given coordinate.
+     *
+     * @param coord attack coordinate
+     * @return AttackResponse representing result (MISS, HIT, SUNK, etc.)
+     * @throws InvalidCoordinateException when coord is outside grid
+     */
+    public AttackResponse receiveAttack(Coordinate coord) throws InvalidCoordinateException {
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (!isValidCoordinate(coord)) {</span>
+<span class="fc" id="L248">            throw new InvalidCoordinateException(coord);</span>
+        }
+
+<span class="fc" id="L251">        Cell target = getCell(coord);</span>
+
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        if (target.isShot()) {</span>
+<span class="fc" id="L254">            return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip());</span>
+        }
+
+<span class="fc" id="L257">        target.shoot();</span>
+
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (!target.hasShip()) {</span>
+<span class="fc" id="L260">            return new AttackResponse(AttackResult.MISS, null);</span>
+        }
+        else {
+<span class="fc" id="L263">            Ship s = target.getShip();</span>
+
+<span class="fc bfc" id="L265" title="All 2 branches covered.">            if (s.isDestroyed()) {</span>
+<span class="fc" id="L266">                return new AttackResponse(AttackResult.SUNK, s);</span>
+            } else {
+<span class="fc" id="L268">                return new AttackResponse(AttackResult.HIT, s);</span>
+            }
+        }
+    }
+
+    /**
+     * Get the grid's width.
+     *
+     * @return width of the grid
+     */
+    public int getWidth() {
+<span class="fc" id="L279">        return width;</span>
+    }
+
+    /**
+     * Get the grid's height.
+     *
+     * @return height of the grid
+     */
+    public int getHeight() {
+<span class="fc" id="L288">        return height;</span>
+    }
+
+    /**
+     * Get the grid's cells.
+     *
+     * @return 2D array of Cells
+     */
+    public Cell[][] getCells() {
+<span class="fc" id="L297">        return cells;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Game Initialization Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-10T10:07:29.274Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="Should not have a current player before start" classname="com.par_28.ship_battle.model.GameTest$InitializationTests" time="0.0"/>
+  <testcase name="Should initialize game in SETUP state" classname="com.par_28.ship_battle.model.GameTest$InitializationTests" time="0.0"/>
+  <testcase name="Should initialize with zero turns" classname="com.par_28.ship_battle.model.GameTest$InitializationTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

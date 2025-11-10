@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model;
+
+import java.util.*;
+
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
+import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+
+/**
+ * Player model representing a game player
+ * &lt;p&gt;
+ * a player has a name, a grid to place ships on, a tracking grid to track attacks on opponent,
+ * &lt;/p&gt;
+ * @see Grid
+ * @see Ship
+ * @see Coordinate
+ * @see Direction
+ * @see AttackResponse
+ */
+public class Player {
+    /**
+     * Player's name
+     */
+    private final String name;
+
+    /**
+     * Player's grid to place ships on
+     */
+    private final Grid grid;
+
+    /**
+     * Player's tracking grid to track attacks on opponent
+     */
+    private final Grid trackingGrid;
+
+    /**
+     * List of player's ships
+     */
+    private final List&lt;Ship&gt; ships;
+
+    /**
+     * Constructor to initialize player with name and grid size
+     *
+     * @param name Player's name
+     * @param gridSize Size of the player's grid
+     */
+<span class="fc" id="L48">    public Player(String name, int gridSize) {</span>
+<span class="fc" id="L49">        this.name = name;</span>
+<span class="fc" id="L50">        this.grid = new Grid(gridSize, gridSize);</span>
+<span class="fc" id="L51">        this.trackingGrid = new Grid(gridSize, gridSize);</span>
+<span class="fc" id="L52">        this.ships = new ArrayList&lt;Ship&gt;();</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Check if player is dead (all ships destroyed)
+     *
+     * @return boolean True if player is dead, false otherwise
+     */
+    public boolean isDead() {
+<span class="fc" id="L61">        boolean result = true;</span>
+
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Ship ship: ships) {</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if(!ship.isDestroyed()) {</span>
+<span class="fc" id="L65">                result = false;</span>
+<span class="fc" id="L66">                break;</span>
+            }
+<span class="fc" id="L68">        }</span>
+
+<span class="fc" id="L70">        return result;</span>
+    }
+
+    /**
+     * Add ship to player's fleet
+     *
+     * @param ship Ship to add
+     */
+    public void addShip(Ship ship) {
+<span class="fc" id="L79">        ships.add(ship);</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * Place ship on player's grid
+     *
+     * @param ship Ship to place
+     * @param coord Starting coordinate to place the ship
+     * @param direction Direction to place the ship
+     * @throws InvalidCoordinateException if the coordinate is invalid
+     * @throws ShipPlacementException if the ship cannot be placed at the given coordinate and direction
+     */
+    public void placeShipOnGrid(Ship ship, Coordinate coord, Direction direction) throws InvalidCoordinateException, ShipPlacementException {
+<span class="fc" id="L92">        grid.placeShip(ship, coord, direction);</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Receive attack on player's grid
+     *
+     * @param coord Coordinate of the attack
+     * @return AttackResponse response of the attack with hit/miss and ship info
+     * @throws InvalidCoordinateException if the coordinate is invalid
+     */
+    public AttackResponse receiveAttack(Coordinate coord) throws InvalidCoordinateException {
+<span class="fc" id="L103">        return grid.receiveAttack(coord);</span>
+    }
+
+
+    /**
+     * Record attack result on tracking grid
+     *
+     * @param coord Coordinate of the attack
+     * @param response Response of the attack with hit/miss and ship info
+     */
+    public void recordAttack(Coordinate coord, AttackResponse response) {
+<span class="fc" id="L114">        Cell trackingCell = trackingGrid.getCell(coord);</span>
+<span class="fc" id="L115">        trackingCell.shoot();</span>
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (response.isHit()) {</span>
+<span class="fc" id="L118">            trackingCell.setShip(response.getShip());</span>
+        }
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Get player's name
+     *
+     * @return String Player's name
+     */
+    public String getName(){
+<span class="fc" id="L128">        return name;</span>
+    }
+
+    /**
+     * Get player's grid
+     *
+     * @return Grid Player's grid
+     */
+    public Grid getGrid() {
+<span class="fc" id="L137">        return grid;</span>
+    }
+
+    /**
+     * Get player's tracking grid
+     *
+     * @return Grid Player's tracking grid
+     */
+    public Grid getTrackingGrid() {
+<span class="fc" id="L146">        return trackingGrid;</span>
+    }
+
+    /**
+     * Get player's ships
+     *
+     * @return Player's ships
+     */
+    public List&lt;Ship&gt; getShips() {
+<span class="fc" id="L155">        return ships;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

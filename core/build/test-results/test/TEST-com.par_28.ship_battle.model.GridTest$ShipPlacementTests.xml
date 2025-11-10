@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Ship Placement Tests" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-11-10T10:07:29.282Z" hostname="MacBook-Pro.local" time="0.005">
+  <properties/>
+  <testcase name="Should place ship vertically on empty grid" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.001"/>
+  <testcase name="Should throw exception when ship placement goes out of bounds vertically" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.0"/>
+  <testcase name="Should throw exception when ship overlaps with existing ship" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.0"/>
+  <testcase name="Should throw exception when ships are adjacent (diagonal)" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.001"/>
+  <testcase name="Should place multiple non-overlapping and non-adjacent ships" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.0"/>
+  <testcase name="Should throw exception for null ship" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.001"/>
+  <testcase name="Should throw exception when ship placement goes out of bounds horizontally" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.0"/>
+  <testcase name="Should throw exception for invalid starting coordinate" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.001"/>
+  <testcase name="Should place ship horizontally on empty grid" classname="com.par_28.ship_battle.model.GridTest$ShipPlacementTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

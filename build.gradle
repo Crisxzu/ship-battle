@@ -1,0 +1,58 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+  }
+  dependencies {
+    // JaCoCo pour la couverture de code
+    classpath 'org.jacoco:org.jacoco.core:0.8.11'
+  }
+}
+
+allprojects {
+  apply plugin: "eclipse"
+  apply plugin: "idea"
+
+  version = '1.0-SNAPSHOT'
+
+  ext {
+    appName = "ShipBattle"
+    gdxVersion = '1.12.1'
+    junitVersion = '5.10.0'
+    mockitoVersion = '5.5.0'
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+  }
+}
+
+// Configuration pour tous les sous-projets
+subprojects {
+  apply plugin: "java-library"
+
+  sourceCompatibility = 17
+  targetCompatibility = 17
+
+  compileJava {
+    options.encoding = 'UTF-8'
+    options.incremental = true
+  }
+}
+
+project(":lwjgl3") {
+  apply plugin: "java-library"
+}
+
+project(":core") {
+  apply plugin: "java-library"
+  apply plugin: "jacoco"  // Couverture de code
+}

@@ -1,0 +1,8 @@
+com.par_28.ship_battle
+com.par_28.ship_battle.controller.console
+com.par_28.ship_battle.controller.gui
+com.par_28.ship_battle.model
+com.par_28.ship_battle.model.enums
+com.par_28.ship_battle.model.exceptions
+com.par_28.ship_battle.view.console
+com.par_28.ship_battle.view.gui

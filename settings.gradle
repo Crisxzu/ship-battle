@@ -1,0 +1,3 @@
+rootProject.name = 'ShipBattle'
+
+include 'core', 'lwjgl3'

@@ -12,7 +12,7 @@ public class SoundHandler {
 
     //Enum for sound identifiers.
     public enum SoundID {
-        JUMP(0);
+        ERROR(0);
         private int value;
         SoundID(int value) {
             this.value = value;
@@ -28,7 +28,7 @@ public class SoundHandler {
         }
     }
 
-    public SoundHandler(){
+    public SoundHandler() {
         loadContent();
     }
 
@@ -36,8 +36,12 @@ public class SoundHandler {
      * Loads all sounds and music.
      */
     public void loadContent() {
-        sounds = new Sound[] {Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"))};
-        tracks = new Music[] {Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))};
+        sounds = new Sound[] {
+            Gdx.audio.newSound(Gdx.files.internal("sounds/wrong.mp3"))
+        };
+        /*tracks = new Music[] {
+            Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
+        };*/
     }
 
     /**
@@ -75,6 +79,4 @@ public class SoundHandler {
 
         System.out.println("SoundHandler content disposed");
     }
-
-
 }

@@ -6,29 +6,32 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.*;
+import com.kotcrab.vis.ui.VisUI;
 import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.model.Game;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.view.gui.SoundHandler;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class ShipBattleApplication extends ApplicationAdapter {
     public SpriteBatch batch;
-    public BitmapFont font;
-    public Viewport viewport;
     private ScreenController screenController;
+    public int nbPlayers = 2;
+    public final int gridSize = 10;
+    public Player player1;
+    public Player player2;
+    public Game game;
+    private SoundHandler soundHandler;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
 
-        // Créer viewport (8x5 comme SimpleGame)
-        viewport = new FitViewport(8, 5);
-
-        // Font avec échelle adaptée au viewport
-        font = new BitmapFont();
-        font.setUseIntegerPositions(false);
-        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
-        font.setColor(Color.WHITE);
-
         screenController = new ScreenController(this);
+
+        soundHandler = new SoundHandler();
+
+        VisUI.load();
     }
 
     @Override
@@ -48,7 +51,8 @@ public class ShipBattleApplication extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        font.dispose();
         screenController.dispose();
+        soundHandler.dispose();
+        VisUI.dispose();
     }
 }

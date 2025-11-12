@@ -1,13 +1,6 @@
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
 
-dependencies {
-  api "com.badlogicgames.gdx:gdx:$gdxVersion"
-
-  if(enableGraalNative == 'true') {
-    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
-  }
-}
 apply plugin: "java-library"
 apply plugin: "jacoco"
 
@@ -30,6 +23,9 @@ dependencies {
   // Mockito pour les mocks
   testImplementation "org.mockito:mockito-core:$mockitoVersion"
   testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+
+  // VisUi
+  api "com.kotcrab.vis:vis-ui:$visuiVersion"
 }
 
 // Configuration des tests (comme Surefire)

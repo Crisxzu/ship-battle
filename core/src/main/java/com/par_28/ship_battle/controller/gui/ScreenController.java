@@ -11,11 +11,14 @@ public class ScreenController extends GuiController {
 
 
     public ScreenController(ShipBattleApplication app) {
+        super(null);
         this.app = app;
 
         controllers = new HashMap<>();
 
         controllers.put(GuiControllerEnum.MAIN_MENU, new MainMenuController(this));
+        controllers.put(GuiControllerEnum.SETUP_MENU, new SetupMenuController(this));
+        controllers.put(GuiControllerEnum.GAME, new GameController(this));
 
         changeController(GuiControllerEnum.MAIN_MENU);
     }
@@ -33,6 +36,7 @@ public class ScreenController extends GuiController {
     public void changeController(GuiControllerEnum controller){
         currentController = controllers.get(controller);
         System.out.println(currentController);
+        currentController.reset();
         currentController.view.show();
     }
 

@@ -1,10 +1,6 @@
 package com.par_28.ship_battle.view.gui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.controller.gui.SetupMenuController;

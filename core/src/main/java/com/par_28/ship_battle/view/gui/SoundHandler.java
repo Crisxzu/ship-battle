@@ -74,8 +74,11 @@ public class SoundHandler {
     public void dispose() {
         for (Sound sound : sounds)
             sound.dispose();
-        for (Music track : tracks)
-            track.dispose();
+        if(tracks != null) {
+            for (Music track : tracks)
+                track.dispose();
+        }
+
 
         System.out.println("SoundHandler content disposed");
     }

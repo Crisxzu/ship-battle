@@ -26,7 +26,7 @@ public abstract class GuiView implements Screen {
         this.stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         menuButtons = new Array<>();
-        backgroundTexture = new Texture("background.png");
+        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
     }
 
     protected void buildUI() {

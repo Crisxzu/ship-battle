@@ -10,7 +10,9 @@ import com.kotcrab.vis.ui.VisUI;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.Game;
 import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.view.gui.InputHandler;
 import com.par_28.ship_battle.view.gui.SoundHandler;
+import com.par_28.ship_battle.view.gui.SpriteHandler;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class ShipBattleApplication extends ApplicationAdapter {
@@ -22,14 +24,20 @@ public class ShipBattleApplication extends ApplicationAdapter {
     public Player player2;
     public Game game;
     private SoundHandler soundHandler;
+    private InputHandler inputHandler;
+    private SpriteHandler spriteHandler;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
 
+        soundHandler = new SoundHandler();
+        inputHandler = new InputHandler();
+        spriteHandler = new SpriteHandler();
+
         screenController = new ScreenController(this);
 
-        soundHandler = new SoundHandler();
+
 
         VisUI.load();
     }
@@ -53,6 +61,8 @@ public class ShipBattleApplication extends ApplicationAdapter {
         batch.dispose();
         screenController.dispose();
         soundHandler.dispose();
+        inputHandler.dispose();
+        spriteHandler.dispose();
         VisUI.dispose();
     }
 }

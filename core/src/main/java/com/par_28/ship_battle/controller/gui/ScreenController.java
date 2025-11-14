@@ -56,7 +56,9 @@ public class ScreenController extends GuiController {
 
     @Override
     public void resize(int width, int height) {
-        currentController.view.resize(width, height);
+        if(currentController.view != null) {
+            currentController.view.resize(width, height);
+        }
     }
 
     @Override

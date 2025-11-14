@@ -1,15 +1,20 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
+import com.par_28.ship_battle.controller.gui.GameController;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.Cell;
 import com.par_28.ship_battle.model.enums.*;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class GameView extends GuiView {
     public Table trackingTable;
@@ -20,10 +25,21 @@ public class GameView extends GuiView {
     TextureRegionDrawable cruiserDrawable;
     TextureRegionDrawable destroyerDrawable;
     TextureRegionDrawable torpedoDrawable;
+    TextureRegionDrawable missDrawable;
+    TextureRegionDrawable hitDrawable;
+    TextureRegionDrawable sunkDrawable;
+    private Player currentPlayer;
+    private AttackResponse response;
+    private boolean turnPlayed = false;
+    private boolean shooted = false;
+    private float waitTimer = 0f;
+    private GameController controller;
+    private List<Label> headerLabels = new ArrayList<>();
+    private List<Label> rowLabels = new ArrayList<>();
 
-    public GameView(ScreenController parent) {
+    public GameView(ScreenController parent, GameController controller) {
         super(parent);
-        backgroundTexture = null;
+        this.controller = controller;
         buildUI();
     }
 
@@ -47,6 +63,17 @@ public class GameView extends GuiView {
         Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO);
         torpedoDrawable = new TextureRegionDrawable(new TextureRegion(torpedoTexture));
 
+        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.MISS);
+        missDrawable = new TextureRegionDrawable(new TextureRegion(missTexture));
+
+        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.HIT);
+        hitDrawable = new TextureRegionDrawable(new TextureRegion(hitTexture));
+
+        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);
+        sunkDrawable = new TextureRegionDrawable(new TextureRegion(sunkTexture));
+
+        currentPlayer = this.parent.app.game.getCurrentPlayer();
+
         Table root = new Table();
         root.setFillParent(true);
 
@@ -56,21 +83,7 @@ public class GameView extends GuiView {
         trackingTable = new Table();
         trackingTable.defaults().expand().fill();
 
-        if(this.parent.app.game != null) {
-            updateTableWithModel(
-                shipTable,
-                this.parent.app.game.getCurrentPlayer().getGrid(),
-                false,
-                true
-            );
-
-            updateTableWithModel(
-                trackingTable,
-                this.parent.app.game.getCurrentPlayer().getTrackingGrid(),
-                true,
-                false
-            );
-        }
+        updatePlayerTables();
 
         root.add(shipTable).size(Value.percentWidth(0.3f, root)).expand();
         root.add(trackingTable).size(Value.percentWidth(0.5f, root)).expand();
@@ -126,6 +139,7 @@ public class GameView extends GuiView {
             Label headerLabel = new Label(String.valueOf(columnLetter), skin);
             headerLabel.setAlignment(Align.center);
             headerLabel.setFontScale(1f);
+            headerLabels.add(headerLabel);
             table.add(headerLabel).center().expandX().fillX().height(30f);
         }
         table.row();
@@ -137,6 +151,7 @@ public class GameView extends GuiView {
             Label rowLabel = new Label(String.valueOf(j + 1), skin);
             rowLabel.setAlignment(Align.center);
             rowLabel.setFontScale(1f);
+            rowLabels.add(rowLabel);
             table.add(rowLabel).center().expandY().fillY().width(30f);
 
             // Activate defaults
@@ -154,6 +169,26 @@ public class GameView extends GuiView {
                 int finalI = i;
                 int finalJ = j;
 
+                if(cell.isShot()) {
+                    if(cell.hasShip()) {
+                        if(cell.getShip().isDestroyed()) {
+                            Image sunkImage = new Image(sunkDrawable);
+                            sunkImage.setFillParent(true);
+                            stack.add(sunkImage);
+                        }
+                        else {
+                            Image hitImage = new Image(hitDrawable);
+                            hitImage.setFillParent(true);
+                            stack.add(hitImage);
+                        }
+                    }
+                    else {
+                        Image missImage = new Image(missDrawable);
+                        missImage.setFillParent(true);
+                        stack.add(missImage);
+                    }
+                }
+
                 if(caseSelectable) {
                     Image snipeImage = new Image(snipeDrawable);
                     snipeImage.setFillParent(true);
@@ -166,7 +201,7 @@ public class GameView extends GuiView {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             System.out.printf("Enter Case %d, %d\n", finalI, finalJ);
-                            if (finalSnipeImage != null) {
+                            if(!shooted) {
                                 finalSnipeImage.setVisible(true);
                             }
                         }
@@ -174,15 +209,21 @@ public class GameView extends GuiView {
                         @Override
                         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                             System.out.printf("Exit Case %d, %d\n", finalI, finalJ);
-                            if (finalSnipeImage != null) {
+                            if(!shooted) {
                                 finalSnipeImage.setVisible(false);
                             }
                         }
-                    });
-                }
 
-                if(cell.isShot()) {
-                    // TODO: Afficher l'état "touché" ou "raté"
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            if(!shooted) {
+                                shooted = true;
+                                Coordinate coord = new Coordinate(finalI, finalJ);
+
+                                response = controller.playTurn(coord);
+                            }
+                        }
+                    });
                 }
 
                 table.add(stack);
@@ -194,7 +235,7 @@ public class GameView extends GuiView {
             for (int j = 0; j < height; j++) {
                 for (int i = 0; i < width; i++) {
                     Cell cell = cells[i][j];
-                    if (cell.hasShip() && shipPartIndex[i][j] >= 0) {
+                    if (!cell.isShot() &&cell.hasShip() && shipPartIndex[i][j] >= 0) {
                         Ship ship = cell.getShip();
                         TextureRegionDrawable shipDrawable = getShipDrawable(ship.getName());
 
@@ -237,6 +278,52 @@ public class GameView extends GuiView {
                 }
             }
         }
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+
+
+    @Override
+    public void render(float delta) {
+        if(shooted && !turnPlayed) {
+            waitTimer += delta;
+            if(waitTimer > 1.5f) {
+                if(response.isHit()) {
+                    if(response.getShip().isDestroyed()) {
+                        SoundHandler.playSound(SoundHandler.SoundID.SUNK, 0.2f);
+                    }
+                    else {
+                        SoundHandler.playSound(SoundHandler.SoundID.HIT, 0.2f);
+                    }
+                }
+                else {
+                    SoundHandler.playSound(SoundHandler.SoundID.MISS, 1f);
+                }
+                updatePlayerTables();
+                turnPlayed = true;
+                waitTimer = 0;
+            }
+        }
+
+        if(turnPlayed) {
+            waitTimer += delta;
+
+            if(waitTimer > 2.5f) {
+                Gdx.app.postRunnable(() -> controller.changeTurn());
+            }
+        }
+        super.render(delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        for(Label headerLabel : headerLabels) {
+            headerLabel.setFontScale(base / 550f);
+        }
+        for(Label rowLabel : rowLabels) {
+            rowLabel.setFontScale(base / 550f);
+        }
     }
 
     /**
@@ -259,6 +346,22 @@ public class GameView extends GuiView {
             default:
                 return null;
         }
+    }
+
+    private void updatePlayerTables() {
+        updateTableWithModel(
+            shipTable,
+            currentPlayer.getGrid(),
+            false,
+            true
+        );
+
+        updateTableWithModel(
+            trackingTable,
+            currentPlayer.getTrackingGrid(),
+            true,
+            false
+        );
     }
 
     @Override

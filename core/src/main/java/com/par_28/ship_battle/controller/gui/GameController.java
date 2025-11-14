@@ -1,7 +1,8 @@
 package com.par_28.ship_battle.controller.gui;
 
-import com.par_28.ship_battle.view.gui.GameView;
-import com.par_28.ship_battle.view.gui.MainMenuView;
+import com.par_28.ship_battle.model.AttackResponse;
+import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.view.gui.*;
 
 public class GameController extends GuiController {
     public GameController(ScreenController parent) {
@@ -15,14 +16,33 @@ public class GameController extends GuiController {
     @Override
     public void render(float dt){
         super.render(dt);
-        view.render(dt);
+        if(view != null) {
+            view.render(dt);
+        }
+    }
+
+    public void startTurn() {
+        changeView(new GameView(parent, this));
+    }
+
+    public void changeTurn() {
+        changeView(new GameTurnDisplayView(parent, this));
+    }
+
+    public AttackResponse playTurn(Coordinate attackCord) {
+        AttackResponse response = this.parent.app.game.playTurn(attackCord);
+
+        SoundHandler.playSound(SoundHandler.SoundID.CANNON_SHOT, 0.3f);
+
+        return response;
     }
 
     @Override
     public void reset() {
         super.reset();
-        view = new GameView(parent);
+        changeView(new GameTurnDisplayView(parent, this));
         System.out.println(this.parent.app.player1);
         System.out.println(this.parent.app.player2);
+        SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
     }
 }

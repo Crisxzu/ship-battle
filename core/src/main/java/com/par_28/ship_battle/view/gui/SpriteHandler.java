@@ -14,7 +14,10 @@ public class SpriteHandler {
         CRUISER(3, "Cruiser"),
         DESTROYER(4, "Destroyer"),
         TORPEDO(5, "Torpedo"),
-        SNIPE(6, "Snipe"),;
+        SNIPE(6, "Snipe"),
+        MISS(7, "Miss"),
+        HIT(8, "Hit"),
+        SUNK(9, "Sunk"),;
 
         private final String name;
         private final int value;
@@ -38,6 +41,9 @@ public class SpriteHandler {
             new Texture("ships/destroyer.png"),
             new Texture("ships/torpedo.png"),
             new Texture("snipe.png"),
+            new Texture("miss.png"),
+            new Texture("hit.png"),
+            new Texture("sunk.png"),
         };
     }
 

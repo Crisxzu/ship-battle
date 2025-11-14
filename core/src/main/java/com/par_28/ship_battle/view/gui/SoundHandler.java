@@ -12,7 +12,11 @@ public class SoundHandler {
 
     //Enum for sound identifiers.
     public enum SoundID {
-        ERROR(0);
+        ERROR(0),
+        CANNON_SHOT(1),
+        HIT(2),
+        MISS(3),
+        SUNK(4);
         private int value;
         SoundID(int value) {
             this.value = value;
@@ -21,7 +25,8 @@ public class SoundHandler {
 
     //Enum for music identifiers.
     public enum TrackID {
-        MAIN_THEME(0);
+        MENU_THEME(0),
+        GAME_THEME(1),;
         private int value;
         TrackID(int value) {
             this.value = value;
@@ -37,11 +42,16 @@ public class SoundHandler {
      */
     public void loadContent() {
         sounds = new Sound[] {
-            Gdx.audio.newSound(Gdx.files.internal("sounds/wrong.mp3"))
+            Gdx.audio.newSound(Gdx.files.internal("sounds/wrong.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/cannon_shot.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/hit.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/miss.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/sunk.mp3")),
         };
-        /*tracks = new Music[] {
-            Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
-        };*/
+        tracks = new Music[] {
+            Gdx.audio.newMusic(Gdx.files.internal("musics/theme_menu.mp3")),
+            Gdx.audio.newMusic(Gdx.files.internal("musics/theme_game.mp3")),
+        };
     }
 
     /**

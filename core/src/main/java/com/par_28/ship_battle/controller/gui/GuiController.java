@@ -1,6 +1,5 @@
 package com.par_28.ship_battle.controller.gui;
 
-import com.badlogic.gdx.Screen;
 import com.par_28.ship_battle.view.gui.GuiView;
 
 public abstract class GuiController {
@@ -9,7 +8,6 @@ public abstract class GuiController {
 
     public GuiController(ScreenController parent) {
         this.parent = parent;
-        reset();
     }
 
     public abstract void update(float dt);
@@ -28,5 +26,14 @@ public abstract class GuiController {
 
     public void reset() {
 
+    }
+
+    protected void changeView(GuiView view) {
+        if (this.view != null) {
+            this.view.hide();
+            this.view.dispose();
+        }
+        this.view = view;
+        this.view.show();
     }
 }

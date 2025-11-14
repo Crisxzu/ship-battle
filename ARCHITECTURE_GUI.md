@@ -45,26 +45,33 @@ Utilisateur → View → Controller → Model → Controller → View → Rendu
 ### Implémentation Actuelle
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                   ShipBattleApplication                      │
-│                  (ApplicationAdapter)                        │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │            ScreenController                         │    │
-│  │         (Orchestrateur principal)                   │    │
-│  │                                                      │    │
-│  │  HashMap<GuiControllerEnum, GuiController>          │    │
-│  │                                                      │    │
-│  │  ┌──────────────────┐  ┌──────────────────┐        │    │
-│  │  │ MainMenuController│  │ FutureController │        │    │
-│  │  │                   │  │                  │        │    │
-│  │  │  MainMenuView     │  │  FutureView      │        │    │
-│  │  │  (Scene2D Screen) │  │  (Scene2D Screen)│        │    │
-│  │  └──────────────────┘  └──────────────────┘        │    │
-│  │                                                      │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                   ShipBattleApplication                              │
+│                  (ApplicationAdapter)                                │
+│                                                                       │
+│  ┌────────────────────────────────────────────────────────────┐    │
+│  │            ScreenController                                 │    │
+│  │         (Orchestrateur principal)                           │    │
+│  │                                                              │    │
+│  │  HashMap<GuiControllerEnum, GuiController>                  │    │
+│  │                                                              │    │
+│  │  ┌──────────────────┐  ┌──────────────────┐               │    │
+│  │  │ MainMenuController│  │ SetupMenuController              │    │
+│  │  │                   │  │                  │                │    │
+│  │  │  MainMenuView     │  │  SetupPlayerNameView             │    │
+│  │  │                   │  │  SetupPlayerShipView             │    │
+│  │  └──────────────────┘  └──────────────────┘                │    │
+│  │                                                              │    │
+│  │  ┌──────────────────────────────────┐                      │    │
+│  │  │     GameController                │                      │    │
+│  │  │                                    │                      │    │
+│  │  │  GameTurnDisplayView               │                      │    │
+│  │  │  GameView                          │                      │    │
+│  │  └──────────────────────────────────┘                      │    │
+│  │                                                              │    │
+│  └────────────────────────────────────────────────────────────┘    │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
                           ↕
                      Model Layer
         ┌────────────────────────────────────┐
@@ -385,28 +392,44 @@ La couche Controller fait le **lien entre View et Model**. Elle contient la logi
 
 ### Architecture GUI
 
-#### 1. **ScreenController.java** (51 lignes)
-L'orchestrateur principal qui gère les transitions d'écrans.
+#### 1. **ScreenController.java** (107 lignes)
+L'orchestrateur principal qui gère les transitions d'écrans et stocke l'état du jeu.
 
 **Responsabilités :**
 - Maintenir une map de tous les contrôleurs GUI
-- Changer d'écran actif
+- Changer d'écran actif via `changeController()`
 - Déléguer les appels render/resize/dispose au contrôleur actif
+- Stocker les références au jeu et aux joueurs (via `app` - `ShipBattleApplication`)
+- Instancier les contrôleurs avec une référence vers lui-même (pattern parent)
 
 **Code clé :**
 ```java
 public class ScreenController extends GuiController {
-    private HashMap<GuiControllerEnum, GuiController> controllers;
-    private GuiController currentController;
+    public ShipBattleApplication app;
+    Map<GuiControllerEnum, GuiController> controllers;
+    GuiController currentController;
 
-    public void changeController(GuiControllerEnum controllerEnum) {
-        currentController = controllers.get(controllerEnum);
-        currentController.update();
-        // Met à jour l'écran de l'application
+    public ScreenController(ShipBattleApplication app) {
+        super(null);  // Pas de parent pour ScreenController
+        this.app = app;
+
+        controllers = new HashMap<>();
+        controllers.put(GuiControllerEnum.MAIN_MENU, new MainMenuController(this));
+        controllers.put(GuiControllerEnum.SETUP_MENU, new SetupMenuController(this));
+        controllers.put(GuiControllerEnum.GAME, new GameController(this));
+
+        changeController(GuiControllerEnum.MAIN_MENU);
+    }
+
+    public void changeController(GuiControllerEnum controller) {
+        currentController = controllers.get(controller);
+        currentController.reset();  // Réinitialise le controller
+        currentController.view.show();
     }
 
     @Override
     public void render(float delta) {
+        super.render(delta);
         currentController.render(delta);
     }
 }
@@ -414,87 +437,281 @@ public class ScreenController extends GuiController {
 
 **Utilisation :**
 ```java
-screenController.changeController(GuiControllerEnum.MAIN_MENU);
-// ou
-screenController.changeController(GuiControllerEnum.GAME_SETUP);
+// Dans une View, pour changer d'écran
+parent.changeController(GuiControllerEnum.SETUP_MENU);
 ```
 
-#### 2. **GuiController.java** (22 lignes)
+#### 2. **GuiController.java** (40 lignes)
 Classe abstraite pour tous les contrôleurs GUI.
 
 **Structure :**
 ```java
 public abstract class GuiController {
-    protected Screen view;  // La vue associée
+    public GuiView view;
+    public ScreenController parent;  // Référence au parent
 
-    public abstract void update();  // Appelé lors de l'activation
+    public GuiController(ScreenController parent) {
+        this.parent = parent;
+    }
 
-    public void render(float delta) {
-        view.render(delta);
+    public abstract void update(float dt);  // Mise à jour logique
+
+    public void render(float dt) {
+        update(dt);  // Appelle update puis laisse la vue se dessiner
     }
 
     public void dispose() {
-        view.dispose();
+        // Libération des ressources
     }
 
     public void resize(int width, int height) {
-        view.resize(width, height);
+        // Gestion du redimensionnement
+    }
+
+    public void reset() {
+        // Réinitialisation du contrôleur (appelé à chaque activation)
+    }
+
+    protected void changeView(GuiView view) {
+        // Permet de changer dynamiquement de vue
+        if (this.view != null) {
+            this.view.hide();
+            this.view.dispose();
+        }
+        this.view = view;
+        this.view.show();
     }
 }
 ```
 
-**Pattern à suivre :**
-```java
-public class MyController extends GuiController {
-    private Game game;  // Référence au modèle
+**Pattern implémenté :**
+- Chaque contrôleur a une référence au `ScreenController` parent via `this.parent`
+- Le contrôleur peut accéder aux données du jeu via `parent.app.game`
+- Méthode `reset()` : recréer la vue à chaque activation de l'écran
+- Méthode `changeView()` : permet de changer dynamiquement de vue au sein d'un même contrôleur
 
-    public MyController() {
-        this.view = new MyView();
-        this.game = new Game(...);
+#### 3. **GuiView.java** (111 lignes)
+Classe abstraite pour toutes les vues GUI.
+
+**Structure :**
+```java
+public abstract class GuiView implements Screen {
+    protected Texture backgroundTexture;
+    protected ScreenController parent;
+    public Stage stage;
+    protected Skin skin;
+    protected Array<TextButton> menuButtons;
+    float base;  // Taille de base pour le scaling responsive
+
+    public GuiView(ScreenController parent) {
+        this.parent = parent;
+        this.stage = new Stage(new ScreenViewport());
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        menuButtons = new Array<>();
+        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
+    }
+
+    protected void buildUI() {
+        // À implémenter par les vues concrètes
+    }
+
+    protected Cell<TextButton> addMenuButton(Table table, String text, Runnable action) {
+        // Méthode utilitaire pour créer des boutons de menu
+        TextButton button = new TextButton(text, skin);
+        menuButtons.add(button);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                action.run();
+            }
+        });
+        Cell<TextButton> cell = table.add(button);
+        cell.row();
+        return cell;
     }
 
     @Override
-    public void update() {
-        // Logique d'initialisation/mise à jour
-        // Ex: passer des données du modèle à la vue
+    public void render(float delta) {
+        update(delta);
+        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
+
+        // Dessiner le background
+        stage.getBatch().begin();
+        if(backgroundTexture != null) {
+            stage.getBatch().draw(backgroundTexture, 0, 0,
+                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
+        stage.getBatch().end();
+
+        // Dessiner les widgets
+        stage.act(delta);
+        stage.draw();
+    }
+
+    public void update(float delta) {
+        // Logique de mise à jour de la vue
     }
 }
 ```
 
-#### 3. **MainMenuController.java** (23 lignes)
+**Fonctionnalités fournies :**
+- Gestion automatique du background
+- Méthode `addMenuButton()` pour créer facilement des boutons
+- Gestion automatique du stage et du skin
+- Scaling responsive avec la variable `base`
+
+#### 4. **MainMenuController.java** (26 lignes)
 Contrôleur du menu principal.
 
 **Implémentation actuelle :**
 ```java
 public class MainMenuController extends GuiController {
-    public MainMenuController() {
-        this.view = new MainMenuView();
+    public MainMenuController(ScreenController parent) {
+        super(parent);
+    }
+
+    public void update(float dt) {
+        // Pas de logique de mise à jour pour le menu
     }
 
     @Override
-    public void update() {
-        // Pas de logique particulière pour le moment
-        // Les boutons gèrent eux-mêmes leurs clics
+    public void render(float dt) {
+        super.render(dt);
+        view.render(dt);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        view = new MainMenuView(parent);  // Recrée la vue
     }
 }
 ```
 
-#### 4. **GuiControllerEnum.java**
+**Pattern utilisé :**
+- La vue est recréée à chaque appel de `reset()`
+- Le contrôleur passe la référence au `parent` à la vue
+- La vue peut ainsi appeler `parent.changeController()` pour naviguer
+
+#### 5. **SetupMenuController.java** (69 lignes)
+Contrôleur pour la configuration de la partie (saisie des noms des joueurs).
+
+**Responsabilités :**
+- Collecter les noms des 2 joueurs
+- Valider les noms (non vides, pas de doublons)
+- Créer les objets `Player` une fois les noms collectés
+- Gérer dynamiquement les vues (SetupPlayerNameView → SetupPlayerShipView)
+
+**Implémentation :**
+```java
+public class SetupMenuController extends GuiController {
+    List<String> names = new ArrayList<>();
+
+    public boolean addName(String name) {
+        if(name.isEmpty()) {
+            SoundHandler.playSound(SoundHandler.SoundID.ERROR, 0.2f);
+            Dialogs.showErrorDialog(view.stage, "Please enter a name");
+            return false;
+        }
+
+        if(names.contains(name)) {
+            SoundHandler.playSound(SoundHandler.SoundID.ERROR, 0.2f);
+            Dialogs.showErrorDialog(view.stage,
+                String.format("%s already registered", name));
+            return false;
+        }
+
+        this.names.add(name);
+
+        if(this.names.size() >= this.parent.app.nbPlayers) {
+            // Créer les joueurs
+            Player player1 = new Player(this.names.get(0), this.parent.app.gridSize);
+            Player player2 = new Player(this.names.get(1), this.parent.app.gridSize);
+
+            this.parent.app.player1 = player1;
+            this.parent.app.player2 = player2;
+
+            // Changer dynamiquement de vue vers SetupPlayerShipView
+            changeView(new SetupPlayerShipView(parent));
+        }
+
+        return true;
+    }
+
+    @Override
+    public void reset() {
+        if(names != null) {
+            names.clear();
+        }
+        view = new SetupPlayerNameView(this.parent, this);
+    }
+}
+```
+
+**Pattern avancé :**
+- Le contrôleur garde une liste des noms collectés
+- Il change dynamiquement de vue avec `changeView()` quand tous les noms sont collectés
+- Les Players sont stockés dans `parent.app` pour être accessibles partout
+
+#### 6. **GameController.java** (48 lignes)
+Contrôleur de la bataille principale.
+
+**Responsabilités :**
+- Gérer les tours de jeu
+- Alterner entre GameView (jeu) et GameTurnDisplayView (transition entre tours)
+- Traiter les attaques des joueurs
+- Jouer les sons appropriés
+
+**Implémentation :**
+```java
+public class GameController extends GuiController {
+    public void startTurn() {
+        changeView(new GameView(parent, this));
+    }
+
+    public void changeTurn() {
+        changeView(new GameTurnDisplayView(parent, this));
+    }
+
+    public AttackResponse playTurn(Coordinate attackCord) {
+        AttackResponse response = this.parent.app.game.playTurn(attackCord);
+        SoundHandler.playSound(SoundHandler.SoundID.CANNON_SHOT, 0.3f);
+        return response;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        changeView(new GameTurnDisplayView(parent, this));
+    }
+}
+```
+
+**Pattern avancé :**
+- Le contrôleur alterne dynamiquement entre 2 vues :
+  - `GameTurnDisplayView` : écran de transition "Tour de [Joueur]"
+  - `GameView` : l'écran de jeu avec les 2 grilles
+- Les vues appellent `controller.startTurn()` et `controller.changeTurn()`
+- Le contrôleur garde la référence au `Game` via `parent.app.game`
+
+#### 7. **GuiControllerEnum.java**
 Énumération de tous les écrans disponibles.
 
 **Actuel :**
 ```java
 public enum GuiControllerEnum {
-    MAIN_MENU
+    MAIN_MENU,
+    SETUP_MENU,  // Configuration + saisie des noms
+    GAME         // Jeu principal (alterne entre GameView et GameTurnDisplayView)
 }
 ```
 
-**À ajouter :**
+**À ajouter (futur) :**
 ```java
 public enum GuiControllerEnum {
     MAIN_MENU,
-    GAME_SETUP,      // Configuration + placement bateaux
-    BATTLE,          // Jeu principal
+    SETUP_MENU,
+    GAME,
     GAME_OVER,       // Fin de partie
     OPTIONS,         // Paramètres
     LOAD_GAME        // Chargement

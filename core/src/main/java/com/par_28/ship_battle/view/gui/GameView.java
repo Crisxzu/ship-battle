@@ -134,6 +134,10 @@ public class GameView extends GuiView {
             .height(Value.percentHeight(0.7f, root))
             .expand();
 
+        com.badlogic.gdx.scenes.scene2d.ui.Cell<TextButton> pauseBtn = addMenuButton(root, "Pause", this::togglePause);
+        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));
+        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));
+
         root.row();
 
         HorizontalGroup dialogGroup = new HorizontalGroup();
@@ -170,6 +174,8 @@ public class GameView extends GuiView {
         root.row();
 
         stack.add(root);
+
+        root.debug();
 
         pauseImage = new Image(pauseTexture);
         pauseImage.setFillParent(true);

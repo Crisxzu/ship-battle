@@ -9,17 +9,39 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mananger of setup menu where players enter their names and set up ships.
+ */
 public class SetupMenuController extends GuiController {
+    /**
+     * List of player names entered.
+     */
     List<String> names = new ArrayList<>();
 
+    /**
+     * Initialize the menu controller.
+     * 
+     * @param parent Reference to the parent screen controller
+     */
     public SetupMenuController(ScreenController parent) {
         super(parent);
     }
 
+    /**
+     * Update menu controller.
+     * 
+     * @param dt Delta time since last update
+     */
     public void update(float dt){
 
     }
 
+    /**
+     * Add a player name to the setup.
+     * 
+     * @param name Player name to add
+     * @return true if name added successfully, false otherwise
+     */
     public boolean addName(String name) {
         if(name.isEmpty()) {
             SoundHandler.playSound(SoundHandler.SoundID.ERROR, 0.2f);
@@ -52,12 +74,20 @@ public class SetupMenuController extends GuiController {
         return true;
     }
 
+    /**
+     * Render menu view.
+     * 
+     * @param dt Delta time since last render
+     */
     @Override
     public void render(float dt){
         super.render(dt);
         view.render(dt);
     }
 
+    /**
+     * Reset menu to initial state.
+     */
     @Override
     public void reset() {
         if(names != null) {

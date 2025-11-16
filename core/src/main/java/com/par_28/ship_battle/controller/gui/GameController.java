@@ -26,7 +26,13 @@ public class GameController extends GuiController {
     }
 
     public void changeTurn() {
-        changeView(new GameTurnDisplayView(parent, this));
+        if(this.parent.app.game.isGameOver()) {
+            SoundHandler.playTrack(SoundHandler.TrackID.MENU_THEME, 0.2f, true);
+            changeView(new GameOverView(parent, this));
+        }
+        else {
+            changeView(new GameTurnDisplayView(parent, this));
+        }
     }
 
     public AttackResponse playTurn(Coordinate attackCord) {
@@ -43,7 +49,6 @@ public class GameController extends GuiController {
         changeView(new GameTurnDisplayView(parent, this));
         System.out.println(this.parent.app.player1);
         System.out.println(this.parent.app.player2);
-        // TODO Renable music
-        //SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
+        SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
     }
 }

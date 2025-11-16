@@ -52,6 +52,7 @@ public class GameView extends GuiView {
     private Table root;
     private Table pauseTable;
     private Image pauseImage;
+    private Label pauseTitleLabel;
 
     public GameView(ScreenController parent, GameController controller) {
         super(parent);
@@ -167,8 +168,6 @@ public class GameView extends GuiView {
             .width(Value.percentWidth(0.1f, root));
 
         root.row();
-        // TODO: Remove that
-        root.debug();
 
         stack.add(root);
 
@@ -184,6 +183,8 @@ public class GameView extends GuiView {
         stack.add(pauseTable);
 
         stage.addActor(stack);
+
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     void updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
@@ -375,7 +376,6 @@ public class GameView extends GuiView {
                 }
             }
         }
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 
@@ -448,6 +448,7 @@ public class GameView extends GuiView {
                     );
                 }
                 updatePlayerTables();
+                resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 turnPlayed = true;
                 waitTimer = 0;
             }
@@ -470,17 +471,25 @@ public class GameView extends GuiView {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+
         for(Label headerLabel : headerLabels) {
             headerLabel.setFontScale(base / 550f);
         }
+
         for(Label rowLabel : rowLabels) {
             rowLabel.setFontScale(base / 550f);
         }
+
         if(loliMsg != null) {
             loliMsg.setFontScale(base / 425f);
         }
+
         if(coordLabel != null) {
             coordLabel.setFontScale(base / 425f);
+        }
+
+        if(pauseTitleLabel != null) {
+            pauseTitleLabel.setFontScale(base / 200f);
         }
     }
 
@@ -536,11 +545,11 @@ public class GameView extends GuiView {
                 .height(Value.percentHeight(0.1f, root))
                 .pad(Value.percentHeight(0.02f, root));
 
-            Label titleLabel = new Label("Pause", skin);
-            titleLabel.setFontScale(2.5f);
-            titleLabel.setAlignment(Align.center);
+            pauseTitleLabel = new Label("Pause", skin);
+            pauseTitleLabel.setFontScale(2.5f);
+            pauseTitleLabel.setAlignment(Align.center);
 
-            pauseTable.add(titleLabel).row();;
+            pauseTable.add(pauseTitleLabel).row();;
 
             addMenuButton(pauseTable, "Continue", this::togglePause);
             addMenuButton(pauseTable,  "Return to Title", () -> this.parent.changeController(GuiControllerEnum.MAIN_MENU));
@@ -548,6 +557,7 @@ public class GameView extends GuiView {
         }
         else {
             pauseTable.clear();
+            pauseTitleLabel = null;
         }
     }
 

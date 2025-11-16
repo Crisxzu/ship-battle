@@ -33,6 +33,8 @@ public class SoundHandler implements Handler {
         }
     }
 
+    static Music currentTrack;
+
     public SoundHandler() {
         loadContent();
     }
@@ -72,9 +74,14 @@ public class SoundHandler implements Handler {
      */
     public static void playTrack(TrackID track, float volume, boolean loop){
         if (tracks != null && track.value <= tracks.length) {
+            if(currentTrack != null){
+                currentTrack.stop();
+            }
+
             tracks[track.value].setVolume(volume);
             tracks[track.value].setLooping(loop);
             tracks[track.value].play();
+            currentTrack = tracks[track.value];
         }
     }
 

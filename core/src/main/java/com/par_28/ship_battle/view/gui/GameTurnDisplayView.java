@@ -8,7 +8,7 @@ import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.*;
 
 public class GameTurnDisplayView extends GuiView {
-    private Label turnLabel;
+    private Label msg;
     private Player currentPlayer;
     private GameController controller;
 
@@ -26,7 +26,7 @@ public class GameTurnDisplayView extends GuiView {
         Table root = new Table();
         root.setFillParent(true);
 
-        turnLabel = new Label(
+        msg = new Label(
             String.format(
                 "Turn %d\n Player %s",
                 this.parent.app.game.getNbTurns()+1,
@@ -34,14 +34,23 @@ public class GameTurnDisplayView extends GuiView {
             ),
             skin
         );
-        turnLabel.setAlignment(Align.center);
-        turnLabel.setFontScale(2.5f);
-        root.add(turnLabel).row();
+        msg.setAlignment(Align.center);
+        msg.setFontScale(2.5f);
+        root.add(msg).row();
 
         addMenuButton(root, "Continue", () -> {
             Gdx.app.postRunnable(() -> controller.startTurn());
         }).width(Value.percentWidth(0.35f, root))
             .height(Value.percentHeight(0.1f, root));
         stage.addActor(root);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        if(msg != null) {
+            msg.setFontScale(base / 200f);
+        }
     }
 }

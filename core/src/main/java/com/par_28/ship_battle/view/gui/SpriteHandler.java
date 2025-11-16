@@ -17,7 +17,8 @@ public class SpriteHandler implements Handler {
         SNIPE(6, "Snipe"),
         MISS(7, "Miss"),
         HIT(8, "Hit"),
-        SUNK(9, "Sunk"),;
+        SUNK(9, "Sunk"),
+        PAUSE_BACKGROUND(10, "PauseBackground"),;
 
         private final String name;
         private final int value;
@@ -44,6 +45,7 @@ public class SpriteHandler implements Handler {
             new Texture("miss.png"),
             new Texture("hit.png"),
             new Texture("sunk.png"),
+            new Texture("pause_background.png"),
         };
     }
 

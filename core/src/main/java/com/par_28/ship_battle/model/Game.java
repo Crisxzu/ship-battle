@@ -5,10 +5,8 @@ import com.par_28.ship_battle.model.enums.GameState;
 import com.par_28.ship_battle.model.exceptions.*;
 
 /**
- * Class representing the game state and logic
- * <p>
- * A game consists of two players who take turns attacking each other's ships on a grid.
- * </p>
+ * Game state and logic
+ *
  * @see Player
  * @see Coordinate
  * @see AttackResponse
@@ -40,7 +38,7 @@ public class Game {
     private int nbTurns = 0;
 
     /**
-     * Constructor to initialize game with two players
+     * Initialize game
      *
      * @param player1 First player
      * @param player2 Second player

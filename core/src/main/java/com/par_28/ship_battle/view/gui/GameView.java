@@ -1,6 +1,8 @@
 package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.par_28.ship_battle.controller.gui.GameController;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.Cell;
@@ -30,6 +33,7 @@ public class GameView extends GuiView {
     TextureRegionDrawable hitTexture;
     TextureRegionDrawable sunkTexture;
     TextureRegionDrawable loliTexture;
+    TextureRegionDrawable pauseTexture;
     private Player currentPlayer;
     private AttackResponse response;
     private boolean turnPlayed = false;
@@ -43,6 +47,11 @@ public class GameView extends GuiView {
     private Label loliMsg;
     private Image loliImage;
     private Label coordLabel;
+    private Stack stack;
+    private boolean paused = false;
+    private Table root;
+    private Table pauseTable;
+    private Image pauseImage;
 
     public GameView(ScreenController parent, GameController controller) {
         super(parent);
@@ -84,6 +93,9 @@ public class GameView extends GuiView {
         Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);
         this.sunkTexture = new TextureRegionDrawable(new TextureRegion(sunkTexture));
 
+        Texture pauseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.PAUSE_BACKGROUND);
+        this.pauseTexture = new TextureRegionDrawable(new TextureRegion(pauseTexture));
+
         loliAnimation = GifDecoder.loadGIFAnimation(
             Animation.PlayMode.LOOP,
             Gdx.files.internal("loli_talking.gif").read()
@@ -98,7 +110,10 @@ public class GameView extends GuiView {
 
         currentPlayer = this.parent.app.game.getCurrentPlayer();
 
-        Table root = new Table();
+        stack = new Stack();
+        stack.setFillParent(true);
+
+        root = new Table();
         root.setFillParent(true);
 
         shipTable = new Table();
@@ -152,9 +167,23 @@ public class GameView extends GuiView {
             .width(Value.percentWidth(0.1f, root));
 
         root.row();
+        // TODO: Remove that
         root.debug();
 
-        stage.addActor(root);
+        stack.add(root);
+
+        pauseImage = new Image(pauseTexture);
+        pauseImage.setFillParent(true);
+        pauseImage.setVisible(paused);
+
+        stack.add(pauseImage);
+
+        pauseTable = new Table();
+        pauseTable.setFillParent(true);
+
+        stack.add(pauseTable);
+
+        stage.addActor(stack);
     }
 
     void updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
@@ -268,7 +297,7 @@ public class GameView extends GuiView {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             System.out.printf("Enter Case %d, %d\n", finalI, finalJ);
-                            if(!shoot) {
+                            if(!shoot && !paused) {
                                 finalSnipeImage.setVisible(true);
                                 coordLabel.setText(new Coordinate(finalI, finalJ).toLetterFormat());
                             }
@@ -284,7 +313,7 @@ public class GameView extends GuiView {
 
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            if(!shoot) {
+                            if(!shoot && !paused) {
                                 shoot = true;
                                 Coordinate coord = new Coordinate(finalI, finalJ);
 
@@ -364,7 +393,16 @@ public class GameView extends GuiView {
 
     @Override
     public void update(float delta) {
+        if(InputHandler.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            togglePause();
+        }
+
+        if(paused) {
+            return;
+        }
+
         super.update(delta);
+
         elapsed += delta;
 
         if(elapsed < DialogHandler.getDialogDuration()) {
@@ -482,6 +520,35 @@ public class GameView extends GuiView {
             true,
             false
         );
+    }
+
+    private void togglePause() {
+        paused = !paused;
+
+        pauseImage.setVisible(paused);
+        Color pauseColor = pauseImage.getColor();
+        pauseColor.set(pauseColor.r, pauseColor.g, pauseColor.b, 0.2f);
+        pauseImage.setColor(pauseColor);
+
+        if(paused) {
+            pauseTable.defaults()
+                .width(Value.percentWidth(0.35f, root))
+                .height(Value.percentHeight(0.1f, root))
+                .pad(Value.percentHeight(0.02f, root));
+
+            Label titleLabel = new Label("Pause", skin);
+            titleLabel.setFontScale(2.5f);
+            titleLabel.setAlignment(Align.center);
+
+            pauseTable.add(titleLabel).row();;
+
+            addMenuButton(pauseTable, "Continue", this::togglePause);
+            addMenuButton(pauseTable,  "Return to Title", () -> this.parent.changeController(GuiControllerEnum.MAIN_MENU));
+
+        }
+        else {
+            pauseTable.clear();
+        }
     }
 
     @Override

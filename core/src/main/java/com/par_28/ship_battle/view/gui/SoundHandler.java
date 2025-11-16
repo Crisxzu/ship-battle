@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.audio.Sound;
 
-public class SoundHandler {
+public class SoundHandler implements Handler {
 
     private static Sound[] sounds;
     private static Music[] tracks;

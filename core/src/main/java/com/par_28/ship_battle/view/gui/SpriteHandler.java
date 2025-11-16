@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Objects;
 
-public class SpriteHandler {
+public class SpriteHandler implements Handler {
     private static Texture[] textures;
 
     public enum SpriteID {

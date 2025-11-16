@@ -10,6 +10,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.Game;
 import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.view.gui.DialogHandler;
 import com.par_28.ship_battle.view.gui.InputHandler;
 import com.par_28.ship_battle.view.gui.SoundHandler;
 import com.par_28.ship_battle.view.gui.SpriteHandler;
@@ -26,6 +27,7 @@ public class ShipBattleApplication extends ApplicationAdapter {
     private SoundHandler soundHandler;
     private InputHandler inputHandler;
     private SpriteHandler spriteHandler;
+    private DialogHandler dialogHandler;
 
     @Override
     public void create() {
@@ -34,6 +36,7 @@ public class ShipBattleApplication extends ApplicationAdapter {
         soundHandler = new SoundHandler();
         inputHandler = new InputHandler();
         spriteHandler = new SpriteHandler();
+        dialogHandler = new DialogHandler();
 
         screenController = new ScreenController(this);
 

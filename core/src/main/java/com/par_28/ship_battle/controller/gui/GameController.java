@@ -43,6 +43,7 @@ public class GameController extends GuiController {
         changeView(new GameTurnDisplayView(parent, this));
         System.out.println(this.parent.app.player1);
         System.out.println(this.parent.app.player2);
-        SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
+        // TODO Renable music
+        //SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
     }
 }

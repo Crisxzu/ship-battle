@@ -20,6 +20,7 @@ public class GameTurnDisplayView extends GuiView {
 
     @Override
     protected void buildUI() {
+        super.buildUI();
         currentPlayer = this.parent.app.game.getCurrentPlayer();
 
         Table root = new Table();

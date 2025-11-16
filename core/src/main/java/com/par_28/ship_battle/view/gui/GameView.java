@@ -2,6 +2,7 @@ package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -19,58 +20,81 @@ import java.util.ArrayList;
 public class GameView extends GuiView {
     public Table trackingTable;
     public Table shipTable;
-    TextureRegionDrawable gridCaseDrawable;
-    TextureRegionDrawable snipeDrawable;
-    TextureRegionDrawable carrierDrawable;
-    TextureRegionDrawable cruiserDrawable;
-    TextureRegionDrawable destroyerDrawable;
-    TextureRegionDrawable torpedoDrawable;
-    TextureRegionDrawable missDrawable;
-    TextureRegionDrawable hitDrawable;
-    TextureRegionDrawable sunkDrawable;
+    TextureRegionDrawable gridCaseTexture;
+    TextureRegionDrawable snipeTexture;
+    TextureRegionDrawable carrierTexture;
+    TextureRegionDrawable cruiserTexture;
+    TextureRegionDrawable destroyerTexture;
+    TextureRegionDrawable torpedoTexture;
+    TextureRegionDrawable missTexture;
+    TextureRegionDrawable hitTexture;
+    TextureRegionDrawable sunkTexture;
+    TextureRegionDrawable loliTexture;
     private Player currentPlayer;
     private AttackResponse response;
     private boolean turnPlayed = false;
-    private boolean shooted = false;
+    private boolean shoot = false;
     private float waitTimer = 0f;
     private GameController controller;
     private List<Label> headerLabels = new ArrayList<>();
     private List<Label> rowLabels = new ArrayList<>();
+    private float elapsed = 0f;
+    Animation<TextureRegion> loliAnimation;
+    private Label loliMsg;
+    private Image loliImage;
+    private Label coordLabel;
 
     public GameView(ScreenController parent, GameController controller) {
         super(parent);
         this.controller = controller;
+        loadTextures();
         buildUI();
+        playDialog(
+            DialogHandler.DialogID.TURN_START,
+            (float) (loliAnimation.getAnimationDuration() * 1.25)
+        );
+    }
+
+    @Override
+    protected void loadTextures() {
+        Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
+        this.gridCaseTexture = new TextureRegionDrawable(new TextureRegion(gridCaseTexture));
+
+        Texture snipeTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SNIPE);
+        this.snipeTexture = new TextureRegionDrawable(new TextureRegion(snipeTexture));
+
+        Texture carrierTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER);
+        this.carrierTexture = new TextureRegionDrawable(new TextureRegion(carrierTexture));
+
+        Texture cruiserTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CRUISER);
+        this.cruiserTexture = new TextureRegionDrawable(new TextureRegion(cruiserTexture));
+
+        Texture destroyerTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.DESTROYER);
+        this.destroyerTexture = new TextureRegionDrawable(new TextureRegion(destroyerTexture));
+
+        Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO);
+        this.torpedoTexture = new TextureRegionDrawable(new TextureRegion(torpedoTexture));
+
+        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.MISS);
+        this.missTexture = new TextureRegionDrawable(new TextureRegion(missTexture));
+
+        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.HIT);
+        this.hitTexture = new TextureRegionDrawable(new TextureRegion(hitTexture));
+
+        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);
+        this.sunkTexture = new TextureRegionDrawable(new TextureRegion(sunkTexture));
+
+        loliAnimation = GifDecoder.loadGIFAnimation(
+            Animation.PlayMode.LOOP,
+            Gdx.files.internal("loli_talking.gif").read()
+        );
+
+        loliTexture = new TextureRegionDrawable(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));
     }
 
     @Override
     protected void buildUI() {
-        Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
-        gridCaseDrawable = new TextureRegionDrawable(new TextureRegion(gridCaseTexture));
-
-        Texture snipeTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SNIPE);
-        snipeDrawable = new TextureRegionDrawable(new TextureRegion(snipeTexture));
-
-        Texture carrierTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER);
-        carrierDrawable = new TextureRegionDrawable(new TextureRegion(carrierTexture));
-
-        Texture cruiserTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CRUISER);
-        cruiserDrawable = new TextureRegionDrawable(new TextureRegion(cruiserTexture));
-
-        Texture destroyerTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.DESTROYER);
-        destroyerDrawable = new TextureRegionDrawable(new TextureRegion(destroyerTexture));
-
-        Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO);
-        torpedoDrawable = new TextureRegionDrawable(new TextureRegion(torpedoTexture));
-
-        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.MISS);
-        missDrawable = new TextureRegionDrawable(new TextureRegion(missTexture));
-
-        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.HIT);
-        hitDrawable = new TextureRegionDrawable(new TextureRegion(hitTexture));
-
-        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);
-        sunkDrawable = new TextureRegionDrawable(new TextureRegion(sunkTexture));
+        super.buildUI();
 
         currentPlayer = this.parent.app.game.getCurrentPlayer();
 
@@ -85,8 +109,51 @@ public class GameView extends GuiView {
 
         updatePlayerTables();
 
-        root.add(shipTable).size(Value.percentWidth(0.3f, root)).expand();
-        root.add(trackingTable).size(Value.percentWidth(0.5f, root)).expand();
+        root.add(shipTable)
+            .width(Value.percentWidth(0.3f, root))
+            .height(Value.percentHeight(0.5f, root))
+            .expand();
+        root.add(trackingTable)
+            .width(Value.percentWidth(0.5f, root))
+            .height(Value.percentHeight(0.7f, root))
+            .expand();
+
+        root.row();
+
+        HorizontalGroup dialogGroup = new HorizontalGroup();
+        dialogGroup.space(10f);
+        dialogGroup.expand().fill();
+
+        loliImage = new Image(loliAnimation.getKeyFrame(elapsed));
+        Container<Image> loliImageContainer = new Container<>(loliImage);
+
+        loliImageContainer.pad(10f);
+
+        dialogGroup.addActor(loliImageContainer);
+
+        loliMsg = new Label("Test", skin);
+        loliMsg.setAlignment(Align.left);
+        loliMsg.setFontScale(1.2f);
+
+        dialogGroup.addActor(loliMsg);
+
+        coordLabel = new Label("XX", skin);
+        coordLabel.setAlignment(Align.center);
+        coordLabel.setFontScale(1.2f);
+
+        root.add(dialogGroup)
+            .expandX()
+            .fill()
+            .height(Value.percentHeight(0.2f, root))
+            .colspan(2);
+
+        root
+            .add(coordLabel)
+            .width(Value.percentWidth(0.1f, root));
+
+        root.row();
+        root.debug();
+
         stage.addActor(root);
     }
 
@@ -162,7 +229,7 @@ public class GameView extends GuiView {
                 Stack stack = new Stack();
                 stacks[i][j] = stack;
 
-                Image gridCase = new Image(gridCaseDrawable);
+                Image gridCase = new Image(gridCaseTexture);
                 gridCase.setFillParent(true);
                 stack.add(gridCase);
 
@@ -172,25 +239,25 @@ public class GameView extends GuiView {
                 if(cell.isShot()) {
                     if(cell.hasShip()) {
                         if(cell.getShip().isDestroyed()) {
-                            Image sunkImage = new Image(sunkDrawable);
+                            Image sunkImage = new Image(sunkTexture);
                             sunkImage.setFillParent(true);
                             stack.add(sunkImage);
                         }
                         else {
-                            Image hitImage = new Image(hitDrawable);
+                            Image hitImage = new Image(hitTexture);
                             hitImage.setFillParent(true);
                             stack.add(hitImage);
                         }
                     }
                     else {
-                        Image missImage = new Image(missDrawable);
+                        Image missImage = new Image(missTexture);
                         missImage.setFillParent(true);
                         stack.add(missImage);
                     }
                 }
 
                 if(caseSelectable) {
-                    Image snipeImage = new Image(snipeDrawable);
+                    Image snipeImage = new Image(snipeTexture);
                     snipeImage.setFillParent(true);
                     snipeImage.setVisible(false);
                     stack.add(snipeImage);
@@ -201,23 +268,24 @@ public class GameView extends GuiView {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             System.out.printf("Enter Case %d, %d\n", finalI, finalJ);
-                            if(!shooted) {
+                            if(!shoot) {
                                 finalSnipeImage.setVisible(true);
+                                coordLabel.setText(new Coordinate(finalI, finalJ).toLetterFormat());
                             }
                         }
 
                         @Override
                         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                             System.out.printf("Exit Case %d, %d\n", finalI, finalJ);
-                            if(!shooted) {
+                            if(!shoot) {
                                 finalSnipeImage.setVisible(false);
                             }
                         }
 
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            if(!shooted) {
-                                shooted = true;
+                            if(!shoot) {
+                                shoot = true;
                                 Coordinate coord = new Coordinate(finalI, finalJ);
 
                                 response = controller.playTurn(coord);
@@ -282,22 +350,64 @@ public class GameView extends GuiView {
     }
 
 
+    void playDialog(DialogHandler.DialogID dialogID, float duration) {
+        loliMsg.setText("");
+        elapsed = 0;
+
+        loliAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+        DialogHandler.playDialog(
+            dialogID,
+            duration
+        );
+    }
 
     @Override
-    public void render(float delta) {
-        if(shooted && !turnPlayed) {
+    public void update(float delta) {
+        super.update(delta);
+        elapsed += delta;
+
+        if(elapsed < DialogHandler.getDialogDuration()) {
+            int charCount = DialogHandler.getCharCountThisFrame(elapsed);
+
+            if(charCount > 0) {
+                String text = DialogHandler.getDialogText().substring(0, charCount-1);
+
+                loliMsg.setText(text);
+            }
+        }
+        else {
+            loliAnimation.setPlayMode(Animation.PlayMode.NORMAL);
+        }
+
+        loliTexture.setRegion(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));
+        loliImage.setDrawable(new TextureRegionDrawable(loliTexture));
+
+        if(shoot && !turnPlayed) {
             waitTimer += delta;
             if(waitTimer > 1.5f) {
                 if(response.isHit()) {
                     if(response.getShip().isDestroyed()) {
                         SoundHandler.playSound(SoundHandler.SoundID.SUNK, 0.2f);
+                        playDialog(
+                            DialogHandler.DialogID.SUNK,
+                            (float) (loliAnimation.getAnimationDuration() * 0.60)
+                        );
                     }
                     else {
                         SoundHandler.playSound(SoundHandler.SoundID.HIT, 0.2f);
+                        playDialog(
+                            DialogHandler.DialogID.HIT,
+                            (float) (loliAnimation.getAnimationDuration() * 0.60)
+                        );
                     }
                 }
                 else {
                     SoundHandler.playSound(SoundHandler.SoundID.MISS, 1f);
+                    playDialog(
+                        DialogHandler.DialogID.MISS,
+                        (float) (loliAnimation.getAnimationDuration() * 0.60)
+                    );
                 }
                 updatePlayerTables();
                 turnPlayed = true;
@@ -308,10 +418,14 @@ public class GameView extends GuiView {
         if(turnPlayed) {
             waitTimer += delta;
 
-            if(waitTimer > 2.5f) {
+            if(waitTimer > 3f) {
                 Gdx.app.postRunnable(() -> controller.changeTurn());
             }
         }
+    }
+
+    @Override
+    public void render(float delta) {
         super.render(delta);
     }
 
@@ -323,6 +437,12 @@ public class GameView extends GuiView {
         }
         for(Label rowLabel : rowLabels) {
             rowLabel.setFontScale(base / 550f);
+        }
+        if(loliMsg != null) {
+            loliMsg.setFontScale(base / 425f);
+        }
+        if(coordLabel != null) {
+            coordLabel.setFontScale(base / 425f);
         }
     }
 
@@ -336,13 +456,13 @@ public class GameView extends GuiView {
 
         switch (shipName) {
             case "Carrier":
-                return carrierDrawable;
+                return carrierTexture;
             case "Cruiser":
-                return cruiserDrawable;
+                return cruiserTexture;
             case "Destroyer":
-                return destroyerDrawable;
+                return destroyerTexture;
             case "Torpedo":
-                return torpedoDrawable;
+                return torpedoTexture;
             default:
                 return null;
         }
@@ -368,11 +488,11 @@ public class GameView extends GuiView {
     public void dispose() {
         super.dispose();
 
-        gridCaseDrawable = null;
-        snipeDrawable = null;
-        carrierDrawable = null;
-        cruiserDrawable = null;
-        destroyerDrawable = null;
-        torpedoDrawable = null;
+        gridCaseTexture = null;
+        snipeTexture = null;
+        carrierTexture = null;
+        cruiserTexture = null;
+        destroyerTexture = null;
+        torpedoTexture = null;
     }
 }

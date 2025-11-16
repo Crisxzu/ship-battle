@@ -132,6 +132,27 @@ public class Coordinate {
     }
 
     /**
+     * Convert coordinate to letter-number format (e.g., "A1", "Z10", "AA15").
+     *
+     * @return coordinate in letter-number format
+     */
+    public String toLetterFormat() {
+        StringBuilder letters = new StringBuilder();
+        int col = x + 1;
+        
+        // With the same logic as earlier but in reverse to get the letters from the number
+        // We decrement col by 1 to handle 0-based indexing
+        // And we use modulo 26 to get the current letter in the alphabet
+        while (col > 0) {
+            col--;
+            letters.insert(0, (char) ('A' + (col % 26)));
+            col /= 26;
+        }
+        
+        return letters.toString() + (y + 1);
+    }
+
+    /**
      * Equality check based on x and y values.
      *
      * @param o other object

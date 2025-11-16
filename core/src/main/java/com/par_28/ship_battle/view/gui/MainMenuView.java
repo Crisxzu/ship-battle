@@ -24,6 +24,7 @@ public class MainMenuView extends GuiView {
 
     @Override
     protected void buildUI() {
+        super.buildUI();
         Table root = new Table();
         root.setFillParent(true);
 

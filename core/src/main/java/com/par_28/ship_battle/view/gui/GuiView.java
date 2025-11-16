@@ -29,8 +29,12 @@ public abstract class GuiView implements Screen {
         backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
     }
 
-    protected void buildUI() {
+    protected void loadTextures() {
 
+    }
+
+    protected void buildUI() {
+        loadTextures();
     }
 
     protected Cell<TextButton> addMenuButton(Table table, String text, Runnable action) {
@@ -63,8 +67,13 @@ public abstract class GuiView implements Screen {
         }
     }
 
+    public void update(float delta) {
+
+    }
+
     @Override
     public void render(float delta) {
+        update(delta);
         ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);
 
         stage.getBatch().begin();

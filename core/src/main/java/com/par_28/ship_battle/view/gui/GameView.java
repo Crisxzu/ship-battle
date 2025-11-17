@@ -74,6 +74,16 @@ public class GameView extends GuiView {
     private Label pauseTitleLabel;
 
     /**
+     * Turn label
+     */
+    private Label turnLabel;
+
+    /**
+     * Player name label
+     */
+    private Label nameLabel;
+
+    /**
      * Pause image overlay
      */
     private Image pauseImage;
@@ -187,7 +197,7 @@ public class GameView extends GuiView {
 
     /**
      * Initialize game menu
-     * 
+     *
      * @param parent screen manager
      * @param controller game menu controller
      */
@@ -260,6 +270,32 @@ public class GameView extends GuiView {
         root = new Table();
         root.setFillParent(true);
 
+        HorizontalGroup statusGroup = new HorizontalGroup();
+        statusGroup.space(10f);
+
+        turnLabel = new Label(
+            String.format("Turn %d", this.parent.app.game.getNbTurns()+1),
+            skin
+        );
+
+        statusGroup.addActor(turnLabel);
+
+        nameLabel = new Label(
+            String.format("%s", currentPlayer.getName()),
+            skin
+        );
+
+        statusGroup.addActor(nameLabel);
+
+        root.add(statusGroup)
+            .colspan(2);
+
+        com.badlogic.gdx.scenes.scene2d.ui.Cell<TextButton> pauseBtn = addMenuButton(root, "Pause", this::togglePause);
+        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));
+        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));
+
+        root.row();
+
         shipTable = new Table();
         shipTable.defaults().expand().fill();
 
@@ -276,10 +312,6 @@ public class GameView extends GuiView {
             .width(Value.percentWidth(0.5f, root))
             .height(Value.percentHeight(0.7f, root))
             .expand();
-
-        com.badlogic.gdx.scenes.scene2d.ui.Cell<TextButton> pauseBtn = addMenuButton(root, "Pause", this::togglePause);
-        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));
-        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));
 
         root.row();
 
@@ -338,7 +370,7 @@ public class GameView extends GuiView {
 
     /**
      * Update table with model data
-     * 
+     *
      * @param table table to update
      * @param playerGrid player's grid data
      * @param caseSelectable if cases are selectable
@@ -537,7 +569,7 @@ public class GameView extends GuiView {
 
     /**
      * Play dialog
-     * 
+     *
      * @param dialogID dialog identifier
      * @param duration duration of dialog
      */
@@ -555,7 +587,7 @@ public class GameView extends GuiView {
 
     /**
      * Update game menu
-     * 
+     *
      * @param delta time since last frame
      */
     @Override
@@ -640,7 +672,7 @@ public class GameView extends GuiView {
 
     /**
      * Resize elements on window resize
-     * 
+     *
      * @param width new width
      * @param height new height
      */
@@ -667,11 +699,19 @@ public class GameView extends GuiView {
         if(pauseTitleLabel != null) {
             pauseTitleLabel.setFontScale(base / 200f);
         }
+
+        if(turnLabel != null) {
+            turnLabel.setFontScale(base / 300f);
+        }
+
+        if(nameLabel != null) {
+            nameLabel.setFontScale(base / 300f);
+        }
     }
 
     /**
      * Get ship drawable by name
-     * 
+     *
      * @param shipName name of ship
      * @return drawable of ship
      */

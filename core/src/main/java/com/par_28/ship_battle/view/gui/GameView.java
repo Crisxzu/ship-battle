@@ -350,8 +350,6 @@ public class GameView extends GuiView {
 
         stack.add(root);
 
-        root.debug();
-
         pauseImage = new Image(pauseTexture);
         pauseImage.setFillParent(true);
         pauseImage.setVisible(paused);

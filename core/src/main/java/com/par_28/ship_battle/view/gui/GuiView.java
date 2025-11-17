@@ -49,7 +49,7 @@ public abstract class GuiView implements Screen {
 
     /**
      * Initialize GUI view
-     * 
+     *
      * @param parent screen manager
      */
     public GuiView(ScreenController parent) {
@@ -76,7 +76,7 @@ public abstract class GuiView implements Screen {
 
     /**
      * Add a button to the menu
-     * 
+     *
      * @param table table to add the button to
      * @param text button text
      * @param action button action
@@ -106,7 +106,7 @@ public abstract class GuiView implements Screen {
 
     /**
      * Resize the screen
-     * 
+     *
      * @param width new width
      * @param height new height
      */
@@ -123,7 +123,7 @@ public abstract class GuiView implements Screen {
 
     /**
      * Update the screen
-     * 
+     *
      * @param delta time since last update
      */
     public void update(float delta) {
@@ -132,7 +132,7 @@ public abstract class GuiView implements Screen {
 
     /**
      * Render the screen
-     * 
+     *
      * @param delta time since last render
      */
     @Override

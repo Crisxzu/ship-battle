@@ -5,36 +5,98 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Handler for sound and music in the GUI.
+ */
 public class SoundHandler implements Handler {
-
+    /**
+     * Sounds.
+     */
     private static Sound[] sounds;
+    /**
+     * Music tracks.
+     */
     private static Music[] tracks;
 
-    //Enum for sound identifiers.
+    /**
+     * Sound identifiers.
+     */
     public enum SoundID {
+        /**
+         * Error sound
+         */
         ERROR(0),
+        
+        /**
+         * Cannon shot sound
+         */
         CANNON_SHOT(1),
+        /**
+         * Hit sound
+         */
         HIT(2),
+
+        /**
+         * Miss sound
+         */
         MISS(3),
+
+        /**
+         * Sunk sound
+         */
         SUNK(4);
+
+        /**
+         * Index of sound
+         */
         private int value;
+
+        /**
+         * Initialize sound
+         * 
+         * @param value sound index
+         */
         SoundID(int value) {
             this.value = value;
         }
     }
 
-    //Enum for music identifiers.
+    /**
+     * Music track identifiers.
+     */
     public enum TrackID {
+        /**
+         * Menu theme track
+         */
         MENU_THEME(0),
+        /**
+         * Game theme track
+         */
         GAME_THEME(1),;
+
+        /**
+         * Index of track
+         */
         private int value;
+
+        /**
+         * Initialize track
+         * 
+         * @param value track index
+         */
         TrackID(int value) {
             this.value = value;
         }
     }
 
+    /**
+     * Current playing track
+     */
     static Music currentTrack;
 
+    /**
+     * Initialize handler and load sounds/music.
+     */
     public SoundHandler() {
         loadContent();
     }
@@ -57,7 +119,8 @@ public class SoundHandler implements Handler {
     }
 
     /**
-     * Method for playing sounds.
+     * Play a sound.
+     * 
      * @param sound sound identifier (SoundID).
      * @param volume sound volume.
      */
@@ -67,9 +130,10 @@ public class SoundHandler implements Handler {
     }
 
     /**
-     * Method for playing music.
-     * @param track sound identifier (SoundID).
-     * @param volume sound volume.
+     * Play a music track.
+     * 
+     * @param track track identifier (TrackID).
+     * @param volume track volume.
      * @param loop states if the track should be looping.
      */
     public static void playTrack(TrackID track, float volume, boolean loop){

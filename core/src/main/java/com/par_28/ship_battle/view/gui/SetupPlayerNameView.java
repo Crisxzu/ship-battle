@@ -5,18 +5,45 @@ import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.controller.gui.SetupMenuController;
 
+/**
+ * Setup player name menu
+ */
 public class SetupPlayerNameView extends GuiView {
+    /**
+     * Title label
+     */
     private Label titleLabel;
+
+    /**
+     * Name input field
+     */
     private TextField nameField;
+    
+    /**
+     * Current player index
+     */
     private int iPlayer = 0;
+
+    /**
+     * Controller for setup menu
+     */
     private SetupMenuController controller;
 
+    /**
+     * Initialize menu
+     * 
+     * @param parent parent controller
+     * @param controller setup menu controller
+     */
     public SetupPlayerNameView(ScreenController parent, SetupMenuController controller) {
         super(parent);
         this.controller = controller;
         buildUI();
     }
 
+    /**
+     * Build UI
+     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -59,11 +86,20 @@ public class SetupPlayerNameView extends GuiView {
         stage.addActor(root);
     }
 
+    /**
+     * Update UI elements
+     */
     void updateUI() {
         titleLabel.setText(String.format("Player %d", iPlayer+1));
         nameField.setText("");
     }
 
+    /**
+     * Resize elements on window resize
+     * 
+     * @param width new width
+     * @param height new height
+     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -73,6 +109,9 @@ public class SetupPlayerNameView extends GuiView {
         nameField.setStyle(style);
     }
 
+    /**
+     * Dispose resources
+     */
     @Override
     public void dispose() {
         super.dispose();

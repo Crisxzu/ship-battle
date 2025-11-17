@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ShipBattleApplication</span>
 <span class="extends-implements">extends com.badlogic.gdx.ApplicationAdapter</span></div>
-<div class="block"><code>ApplicationListener</code> implementation shared by all platforms.</div>
+<div class="block">Ship Battle game.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -95,18 +95,56 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>com.badlogic.gdx.graphics.g2d.SpriteBatch</code></div>
-<div class="col-second even-row-color"><code><a href="#batch" class="member-name-link">batch</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.badlogic.gdx.graphics.g2d.BitmapFont</code></div>
-<div class="col-second odd-row-color"><code><a href="#font" class="member-name-link">font</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private <a href="controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></div>
-<div class="col-second even-row-color"><code><a href="#screenController" class="member-name-link">screenController</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.badlogic.gdx.utils.viewport.Viewport</code></div>
-<div class="col-second odd-row-color"><code><a href="#viewport" class="member-name-link">viewport</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private <a href="view/gui/DialogHandler.html" title="class in com.par_28.ship_battle.view.gui">DialogHandler</a></code></div>
+<div class="col-second even-row-color"><code><a href="#dialogHandler" class="member-name-link">dialogHandler</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Dialog handler for managing in-game dialogs.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="model/Game.html" title="class in com.par_28.ship_battle.model">Game</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#game" class="member-name-link">game</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Game logic instance.</div>
+</div>
+<div class="col-first even-row-color"><code>final int</code></div>
+<div class="col-second even-row-color"><code><a href="#gridSize" class="member-name-link">gridSize</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Size of the game grid (gridSize x gridSize).</div>
+</div>
+<div class="col-first odd-row-color"><code>private <a href="view/gui/InputHandler.html" title="class in com.par_28.ship_battle.view.gui">InputHandler</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#inputHandler" class="member-name-link">inputHandler</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Input handler for managing user inputs.</div>
+</div>
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><code><a href="#nbPlayers" class="member-name-link">nbPlayers</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Number of players in the game.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#player1" class="member-name-link">player1</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Player 1 instance.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second even-row-color"><code><a href="#player2" class="member-name-link">player2</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Player 2 instance.</div>
+</div>
+<div class="col-first odd-row-color"><code>private <a href="controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#screenController" class="member-name-link">screenController</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Screen controller managing different views.</div>
+</div>
+<div class="col-first even-row-color"><code>private <a href="view/gui/SoundHandler.html" title="class in com.par_28.ship_battle.view.gui">SoundHandler</a></code></div>
+<div class="col-second even-row-color"><code><a href="#soundHandler" class="member-name-link">soundHandler</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Sound handler for managing game sounds.</div>
+</div>
+<div class="col-first odd-row-color"><code>private <a href="view/gui/SpriteHandler.html" title="class in com.par_28.ship_battle.view.gui">SpriteHandler</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#spriteHandler" class="member-name-link">spriteHandler</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Sprite handler for managing game sprites and textures.</div>
+</div>
 </div>
 </section>
 </li>
@@ -136,17 +174,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Initialize the application.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispose resources on application exit.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render()" class="member-name-link">render</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Main render loop.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handle resizing of the application window.</div>
+</div>
 </div>
 </div>
 </div>
@@ -168,27 +214,81 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="batch">
-<h3>batch</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.SpriteBatch</span>&nbsp;<span class="element-name">batch</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="font">
-<h3>font</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.BitmapFont</span>&nbsp;<span class="element-name">font</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="viewport">
-<h3>viewport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.utils.viewport.Viewport</span>&nbsp;<span class="element-name">viewport</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="screenController">
 <h3>screenController</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></span>&nbsp;<span class="element-name">screenController</span></div>
+<div class="block">Screen controller managing different views.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="nbPlayers">
+<h3>nbPlayers</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">nbPlayers</span></div>
+<div class="block">Number of players in the game.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="gridSize">
+<h3>gridSize</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">gridSize</span></div>
+<div class="block">Size of the game grid (gridSize x gridSize).</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../constant-values.html#com.par_28.ship_battle.ShipBattleApplication.gridSize">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="player1">
+<h3>player1</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></span>&nbsp;<span class="element-name">player1</span></div>
+<div class="block">Player 1 instance.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="player2">
+<h3>player2</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></span>&nbsp;<span class="element-name">player2</span></div>
+<div class="block">Player 2 instance.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="game">
+<h3>game</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="model/Game.html" title="class in com.par_28.ship_battle.model">Game</a></span>&nbsp;<span class="element-name">game</span></div>
+<div class="block">Game logic instance.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="soundHandler">
+<h3>soundHandler</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="view/gui/SoundHandler.html" title="class in com.par_28.ship_battle.view.gui">SoundHandler</a></span>&nbsp;<span class="element-name">soundHandler</span></div>
+<div class="block">Sound handler for managing game sounds.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="inputHandler">
+<h3>inputHandler</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="view/gui/InputHandler.html" title="class in com.par_28.ship_battle.view.gui">InputHandler</a></span>&nbsp;<span class="element-name">inputHandler</span></div>
+<div class="block">Input handler for managing user inputs.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="spriteHandler">
+<h3>spriteHandler</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="view/gui/SpriteHandler.html" title="class in com.par_28.ship_battle.view.gui">SpriteHandler</a></span>&nbsp;<span class="element-name">spriteHandler</span></div>
+<div class="block">Sprite handler for managing game sprites and textures.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="dialogHandler">
+<h3>dialogHandler</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="view/gui/DialogHandler.html" title="class in com.par_28.ship_battle.view.gui">DialogHandler</a></span>&nbsp;<span class="element-name">dialogHandler</span></div>
+<div class="block">Dialog handler for managing in-game dialogs.</div>
 </section>
 </li>
 </ul>
@@ -217,6 +317,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="create()">
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span>()</div>
+<div class="block">Initialize the application.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>create</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.ApplicationListener</code></dd>
@@ -229,6 +330,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="render()">
 <h3>render</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">render</span>()</div>
+<div class="block">Main render loop.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>render</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.ApplicationListener</code></dd>
@@ -242,11 +344,19 @@ loadScripts(document, 'script');</script>
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
+<div class="block">Handle resizing of the application window.
+ <p>
+ Prevents resizing to non-positive dimensions.
+ Applies new size to the screen controller.
+ </p></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>resize</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.ApplicationListener</code></dd>
 <dt>Overrides:</dt>
 <dd><code>resize</code>&nbsp;in class&nbsp;<code>com.badlogic.gdx.ApplicationAdapter</code></dd>
+<dt>Parameters:</dt>
+<dd><code>width</code> - new width</dd>
+<dd><code>height</code> - new height</dd>
 </dl>
 </section>
 </li>
@@ -254,6 +364,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block">Dispose resources on application exit.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.ApplicationListener</code></dd>

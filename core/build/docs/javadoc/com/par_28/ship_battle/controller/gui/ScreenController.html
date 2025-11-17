@@ -78,6 +78,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ScreenController</span>
 <span class="extends-implements">extends <a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></span></div>
+<div class="block">Manager of screens and controllers.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -92,17 +93,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../../ShipBattleApplication.html" title="class in com.par_28.ship_battle">ShipBattleApplication</a></code></div>
 <div class="col-second even-row-color"><code><a href="#app" class="member-name-link">app</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Reference to the main application.</div>
+</div>
 <div class="col-first odd-row-color"><code>(package private) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="GuiControllerEnum.html" title="enum class in com.par_28.ship_battle.controller.gui">GuiControllerEnum</a>,<wbr><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#controllers" class="member-name-link">controllers</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Map of available GUI controllers.</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) <a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></div>
 <div class="col-second even-row-color"><code><a href="#currentController" class="member-name-link">currentController</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Currently active GUI controller.</div>
+</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.controller.gui.GuiController">Fields inherited from class&nbsp;com.par_28.ship_battle.controller.gui.<a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></h3>
-<code><a href="GuiController.html#view">view</a></code></div>
+<code><a href="GuiController.html#parent">parent</a>, <a href="GuiController.html#view">view</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -114,7 +121,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.ShipBattleApplication)" class="member-name-link">ScreenController</a><wbr>(<a href="../../ShipBattleApplication.html" title="class in com.par_28.ship_battle">ShipBattleApplication</a>&nbsp;app)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Initialize the screen controller with all GUI controllers.</div>
+</div>
 </div>
 </section>
 </li>
@@ -131,23 +140,39 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#changeController(com.par_28.ship_battle.controller.gui.GuiControllerEnum)" class="member-name-link">changeController</a><wbr>(<a href="GuiControllerEnum.html" title="enum class in com.par_28.ship_battle.controller.gui">GuiControllerEnum</a>&nbsp;controller)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Change the active GUI controller.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispose all controllers and their resources.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initializeDefaultShips(com.par_28.ship_battle.model.Player)" class="member-name-link">initializeDefaultShips</a><wbr>(<a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a>&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
- int&nbsp;height)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Render the current controller.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
+ int&nbsp;height)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handle resizing of the application window.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Update the current controller.</div>
 </div>
 </div>
 </div>
+</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.par_28.ship_battle.controller.gui.GuiController">Methods inherited from class&nbsp;com.par_28.ship_battle.controller.gui.<a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></h3>
+<code><a href="GuiController.html#changeView(com.par_28.ship_battle.view.gui.GuiView)">changeView</a>, <a href="GuiController.html#reset()">reset</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -166,18 +191,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="app">
 <h3>app</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../ShipBattleApplication.html" title="class in com.par_28.ship_battle">ShipBattleApplication</a></span>&nbsp;<span class="element-name">app</span></div>
+<div class="block">Reference to the main application.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="controllers">
 <h3>controllers</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="GuiControllerEnum.html" title="enum class in com.par_28.ship_battle.controller.gui">GuiControllerEnum</a>,<wbr><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a>&gt;</span>&nbsp;<span class="element-name">controllers</span></div>
+<div class="block">Map of available GUI controllers.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="currentController">
 <h3>currentController</h3>
 <div class="member-signature"><span class="return-type"><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></span>&nbsp;<span class="element-name">currentController</span></div>
+<div class="block">Currently active GUI controller.</div>
 </section>
 </li>
 </ul>
@@ -192,6 +220,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.ShipBattleApplication)">
 <h3>ScreenController</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ScreenController</span><wbr><span class="parameters">(<a href="../../ShipBattleApplication.html" title="class in com.par_28.ship_battle">ShipBattleApplication</a>&nbsp;app)</span></div>
+<div class="block">Initialize the screen controller with all GUI controllers.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>app</code> - Reference to the main application</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -206,9 +239,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update(float)">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(float&nbsp;dt)</span></div>
+<div class="block">Update the current controller.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuiController.html#update(float)">update</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dt</code> - Delta time since last update</dd>
 </dl>
 </section>
 </li>
@@ -216,9 +252,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="render(float)">
 <h3>render</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">render</span><wbr><span class="parameters">(float&nbsp;dt)</span></div>
+<div class="block">Render the current controller.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="GuiController.html#render(float)">render</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dt</code> - Delta time since last render</dd>
 </dl>
 </section>
 </li>
@@ -226,6 +265,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="changeController(com.par_28.ship_battle.controller.gui.GuiControllerEnum)">
 <h3>changeController</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">changeController</span><wbr><span class="parameters">(<a href="GuiControllerEnum.html" title="enum class in com.par_28.ship_battle.controller.gui">GuiControllerEnum</a>&nbsp;controller)</span></div>
+<div class="block">Change the active GUI controller.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>controller</code> - The new controller to activate</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -233,9 +277,16 @@ loadScripts(document, 'script');</script>
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
+<div class="block">Handle resizing of the application window.
+ <p>
+ Delegates resize event to the current controller's view.
+ </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="GuiController.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>width</code> - new width</dd>
+<dd><code>height</code> - new height</dd>
 </dl>
 </section>
 </li>
@@ -243,10 +294,17 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block">Dispose all controllers and their resources.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="GuiController.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="initializeDefaultShips(com.par_28.ship_battle.model.Player)">
+<h3>initializeDefaultShips</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initializeDefaultShips</span><wbr><span class="parameters">(<a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a>&nbsp;player)</span></div>
 </section>
 </li>
 </ul>

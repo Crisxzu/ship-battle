@@ -11,17 +11,33 @@ import com.par_28.ship_battle.controller.gui.ScreenController;
 
 
 /**
- * MainMenuView avec Scene2D - Menu principal avec boutons interactifs
+ * Main menu
  */
 public class MainMenuView extends GuiView {
+
+    /**
+     * Title label
+     */
     private Label titleLabel;
+
+    /**
+     * Version label
+     */
     private Label versionLabel;
 
+    /**
+     * Initialize main menu
+     * 
+     * @param parent screen manager
+     */
     public MainMenuView(ScreenController parent) {
         super(parent);
         buildUI();
     }
 
+    /**
+     * Build main menu
+     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -55,6 +71,12 @@ public class MainMenuView extends GuiView {
         stage.addActor(root);
     }
 
+    /**
+     * Resize elements on window resize
+     * 
+     * @param width new width
+     * @param height new height
+     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -62,6 +84,9 @@ public class MainMenuView extends GuiView {
         versionLabel.setFontScale(base / 500f);
     }
 
+    /**
+     * Dispose resources
+     */
     @Override
     public void dispose() {
         super.dispose();

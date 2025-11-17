@@ -20,40 +20,177 @@ import com.par_28.ship_battle.model.enums.*;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Game menu
+ */
 public class GameView extends GuiView {
-    public Table trackingTable;
-    public Table shipTable;
-    TextureRegionDrawable gridCaseTexture;
-    TextureRegionDrawable snipeTexture;
-    TextureRegionDrawable carrierTexture;
-    TextureRegionDrawable cruiserTexture;
-    TextureRegionDrawable destroyerTexture;
-    TextureRegionDrawable torpedoTexture;
-    TextureRegionDrawable missTexture;
-    TextureRegionDrawable hitTexture;
-    TextureRegionDrawable sunkTexture;
-    TextureRegionDrawable loliTexture;
-    TextureRegionDrawable pauseTexture;
-    private Player currentPlayer;
-    private AttackResponse response;
-    private boolean turnPlayed = false;
-    private boolean shoot = false;
-    private float waitTimer = 0f;
-    private GameController controller;
-    private List<Label> headerLabels = new ArrayList<>();
-    private List<Label> rowLabels = new ArrayList<>();
-    private float elapsed = 0f;
-    Animation<TextureRegion> loliAnimation;
-    private Label loliMsg;
-    private Image loliImage;
-    private Label coordLabel;
+    /**
+     * Stack for layering UI elements
+     */
     private Stack stack;
-    private boolean paused = false;
+
+    /**
+     * Table for player's tracking grid
+     */
+    public Table trackingTable;
+
+    /**
+     * Table for player's ship grid
+     */
+    public Table shipTable;
+
+    /**
+     * Root table of the UI
+     */
     private Table root;
+
+    /**
+     * Pause table UI element
+     */
     private Table pauseTable;
-    private Image pauseImage;
+    /**
+     * Header labels for each grid column
+     */
+    private List<Label> headerLabels = new ArrayList<>();
+
+    /**
+     * Row labels for each grid row
+     */
+    private List<Label> rowLabels = new ArrayList<>();
+
+    /**
+     * Loli message label
+     */
+    private Label loliMsg;
+
+    /**
+     * Coordinate label displaying selected grid position
+     */
+    private Label coordLabel;
+
+    /**
+     * Pause title label
+     */
     private Label pauseTitleLabel;
 
+    /**
+     * Pause image overlay
+     */
+    private Image pauseImage;
+
+    /**
+     * Loli image UI element
+     */
+    private Image loliImage;
+
+    /**
+     * Grid case texture
+     */
+    TextureRegionDrawable gridCaseTexture;
+
+    /**
+     * Snipe texture
+     */
+    TextureRegionDrawable snipeTexture;
+
+    /**
+     * Carrier ship texture
+     */
+    TextureRegionDrawable carrierTexture;
+
+    /**
+     * Cruiser ship texture
+     */
+    TextureRegionDrawable cruiserTexture;
+
+    /**
+     * Destroyer ship texture
+     */
+    TextureRegionDrawable destroyerTexture;
+
+    /**
+     * Torpedo texture
+     */
+    TextureRegionDrawable torpedoTexture;
+
+    /**
+     * Miss texture
+     */
+    TextureRegionDrawable missTexture;
+
+    /**
+     * Hit texture
+     */
+    TextureRegionDrawable hitTexture;
+
+    /**
+     * Sunk texture
+     */
+    TextureRegionDrawable sunkTexture;
+
+    /**
+     * Loli talking texture
+     */
+    TextureRegionDrawable loliTexture;
+
+    /**
+     * Pause background texture
+     */
+    TextureRegionDrawable pauseTexture;
+
+    /**
+     * Loli talking animation
+     */
+    Animation<TextureRegion> loliAnimation;
+
+
+    /**
+     * Current player
+     */
+    private Player currentPlayer;
+
+    /**
+     * Attack response after shooting
+     */
+    private AttackResponse response;
+
+    /**
+     * Game menu controller
+     */
+    private GameController controller;
+
+    /**
+     * Turn played flag
+     */
+    private boolean turnPlayed = false;
+
+    /**
+     * Shoot flag
+     */
+    private boolean shoot = false;
+
+    /**
+     * Wait timer for delays
+     */
+    private float waitTimer = 0f;
+
+    /**
+     * Elapsed time for animation
+     */
+    private float elapsed = 0f;
+
+    /**
+     * Paused flag
+     */
+    private boolean paused = false;
+
+
+    /**
+     * Initialize game menu
+     * 
+     * @param parent screen manager
+     * @param controller game menu controller
+     */
     public GameView(ScreenController parent, GameController controller) {
         super(parent);
         this.controller = controller;
@@ -65,6 +202,9 @@ public class GameView extends GuiView {
         );
     }
 
+    /**
+     * Load textures
+     */
     @Override
     protected void loadTextures() {
         Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
@@ -105,6 +245,9 @@ public class GameView extends GuiView {
         loliTexture = new TextureRegionDrawable(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));
     }
 
+    /**
+     * Build game menu UI
+     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -193,6 +336,14 @@ public class GameView extends GuiView {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    /**
+     * Update table with model data
+     * 
+     * @param table table to update
+     * @param playerGrid player's grid data
+     * @param caseSelectable if cases are selectable
+     * @param showShips if ships should be shown
+     */
     void updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
         Cell[][] cells = playerGrid.getCells();
         int width = cells.length;
@@ -384,7 +535,12 @@ public class GameView extends GuiView {
         }
     }
 
-
+    /**
+     * Play dialog
+     * 
+     * @param dialogID dialog identifier
+     * @param duration duration of dialog
+     */
     void playDialog(DialogHandler.DialogID dialogID, float duration) {
         loliMsg.setText("");
         elapsed = 0;
@@ -397,6 +553,11 @@ public class GameView extends GuiView {
         );
     }
 
+    /**
+     * Update game menu
+     * 
+     * @param delta time since last frame
+     */
     @Override
     public void update(float delta) {
         if(InputHandler.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -469,11 +630,20 @@ public class GameView extends GuiView {
         }
     }
 
+    /**
+     * Render game menu
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
     }
 
+    /**
+     * Resize elements on window resize
+     * 
+     * @param width new width
+     * @param height new height
+     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -500,9 +670,10 @@ public class GameView extends GuiView {
     }
 
     /**
-     * Obtient le TextureRegionDrawable correspondant au nom du bateau.
-     * @param shipName le nom du bateau (Carrier, Cruiser, Destroyer, Torpedo)
-     * @return le TextureRegionDrawable correspondant, ou null si non trouvé
+     * Get ship drawable by name
+     * 
+     * @param shipName name of ship
+     * @return drawable of ship
      */
     private TextureRegionDrawable getShipDrawable(String shipName) {
         if (shipName == null) return null;
@@ -521,6 +692,9 @@ public class GameView extends GuiView {
         }
     }
 
+    /**
+     * Update player ui tables
+     */
     private void updatePlayerTables() {
         updateTableWithModel(
             shipTable,
@@ -537,6 +711,9 @@ public class GameView extends GuiView {
         );
     }
 
+    /**
+     * Toggle pause menu
+     */
     private void togglePause() {
         paused = !paused;
 
@@ -567,6 +744,9 @@ public class GameView extends GuiView {
         }
     }
 
+    /**
+     * Dispose resources
+     */
     @Override
     public void dispose() {
         super.dispose();

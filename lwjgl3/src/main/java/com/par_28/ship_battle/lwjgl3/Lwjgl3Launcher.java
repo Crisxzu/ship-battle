@@ -6,15 +6,30 @@ import com.par_28.ship_battle.ShipBattleApplication;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
+    /**
+     * Entry point for application
+     * 
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
     }
 
+    /**
+     * Create the application
+     * 
+     * @return the created application
+     */
     private static Lwjgl3Application createApplication() {
         return new Lwjgl3Application(new ShipBattleApplication(), getDefaultConfiguration());
     }
 
+    /**
+     * Get default configuration for the application
+     * 
+     * @return default configuration
+     */
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("ShipBattle");

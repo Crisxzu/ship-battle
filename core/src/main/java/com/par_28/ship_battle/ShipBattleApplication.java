@@ -26,12 +26,12 @@ public class ShipBattleApplication extends ApplicationAdapter {
      * Number of players in the game.
      */
     public int nbPlayers = 2;
-    
+
     /**
      * Size of the game grid (gridSize x gridSize).
      */
     public final int gridSize = 10;
-    
+
     /**
      * Player 1 instance.
      */
@@ -50,7 +50,7 @@ public class ShipBattleApplication extends ApplicationAdapter {
      * Sound handler for managing game sounds.
      */
     private SoundHandler soundHandler;
-    
+
     /**
      * Input handler for managing user inputs.
      */
@@ -60,7 +60,7 @@ public class ShipBattleApplication extends ApplicationAdapter {
      * Sprite handler for managing game sprites and textures.
      */
     private SpriteHandler spriteHandler;
-    
+
     /**
      * Dialog handler for managing in-game dialogs.
      */

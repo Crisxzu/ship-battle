@@ -15,6 +15,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * GIF decoder adapted for LibGDX
+ */
 public class GifDecoder {
     /**
      * File read status: No errors.
@@ -28,49 +31,211 @@ public class GifDecoder {
      * File read status: Unable to open source.
      */
     public static final int STATUS_OPEN_ERROR = 2;
-    /** max decoder pixel stack size */
+    /** 
+     * max decoder pixel stack size 
+     */
     protected static final int MAX_STACK_SIZE = 4096;
+
+    /**
+     * Input stream
+     */
     protected InputStream in;
+
+    /**
+     * Current status
+     */
     protected int status;
-    protected int width; // full image width
-    protected int height; // full image height
-    protected boolean gctFlag; // global color table used
-    protected int gctSize; // size of global color table
-    protected int loopCount = 1; // iterations; 0 = repeat forever
-    protected int[] gct; // global color table
-    protected int[] lct; // local color table
-    protected int[] act; // active color table
-    protected int bgIndex; // background color index
-    protected int bgColor; // background color
-    protected int lastBgColor; // previous bg color
-    protected int pixelAspect; // pixel aspect ratio
-    protected boolean lctFlag; // local color table flag
-    protected boolean interlace; // interlace flag
-    protected int lctSize; // local color table size
-    protected int ix, iy, iw, ih; // current image rectangle
+    /**
+     * Full image width
+     */
+    protected int width;
+    
+    /**
+     * Full image height
+     */
+    protected int height;
+
+    /**
+     * Global color table flag
+     */
+    protected boolean gctFlag; 
+
+    /**
+     * Size of global color table
+     */
+    protected int gctSize;
+
+    /**
+     * Number of times to repeat animated GIF.
+     * <p>
+     * 0 = repeat indefinitely
+     * </p>
+     */
+    protected int loopCount = 1;
+
+    /**
+     * Global color table
+     */
+    protected int[] gct;
+
+    /**
+     * Local color table
+     */
+    protected int[] lct;
+    
+    /**
+     * Active color table
+     */
+    protected int[] act;
+    
+    /**
+     * Background color index
+     */
+    protected int bgIndex;
+
+    /**
+     * Background color
+     */
+    protected int bgColor;
+
+    /**
+     * Previous background color
+     */
+    protected int lastBgColor;
+
+    /**
+     * Pixel aspect ratio
+     */
+    protected int pixelAspect;
+
+    /**
+     * Local color table flag
+     */
+    protected boolean lctFlag;
+
+    /**
+     * Interlace flag
+     */
+    protected boolean interlace;
+
+    /**
+     * Local color table size
+     */
+    protected int lctSize;
+
+    /**
+     * Current image rectangle
+     */
+    protected int ix, iy, iw, ih;
+
+    /**
+     * Last image rectangle
+     */
     protected int lrx, lry, lrw, lrh;
-    protected DixieMap image; // current frame
-    protected DixieMap lastPixmap; // previous frame
-    protected byte[] block = new byte[256]; // current data block
-    protected int blockSize = 0; // block size last graphic control extension info
-    protected int dispose = 0; // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
+
+    /**
+     * Current frame
+     */
+    protected DixieMap image;
+
+    /**
+     * Previous frame
+     */
+    protected DixieMap lastPixmap;
+
+    /**
+     * Current data block
+     */
+    protected byte[] block = new byte[256];
+
+    /**
+     * Block size last graphic control extension info
+     */
+    protected int blockSize = 0;
+
+    /**
+     * Disposal method
+     * <p>
+     * 0 = no action<br>
+     * 1 = leave in place<br>
+     * 2 = restore to background color<br>
+     * 3 = restore to previous
+     * </p>
+     */
+    protected int dispose = 0;
+
+    /**
+     * Last disposal method
+     */
     protected int lastDispose = 0;
-    protected boolean transparency = false; // use transparent color
-    protected int delay = 0; // delay in milliseconds
-    protected int transIndex; // transparent color index
-    // LZW decoder working arrays
+
+    /**
+     * Use of transparent color
+     */
+    protected boolean transparency = false;
+
+    /**
+     * Delay in milliseconds
+     */
+    protected int delay = 0;
+
+    /**
+     * Transparent color index
+     */
+    protected int transIndex;
+    /**
+     * LZW decoder prefix
+     */
     protected short[] prefix;
+
+    /**
+     * LZW decoder suffix
+     */
     protected byte[] suffix;
+
+    /**
+     * Pixel stack
+     */
     protected byte[] pixelStack;
+
+    /**
+     * Pixels 
+     */
     protected byte[] pixels;
-    protected Vector<GifFrame> frames; // frames read from current file
+
+    /**
+     * Frames read from current file
+     */
+    protected Vector<GifFrame> frames;
+
+    /**
+     * Number of frames
+     */
     protected int frameCount;
 
+    /**
+     * Pixmap to handle RGBA8888 format conversion
+     */
     private static class DixieMap extends Pixmap {
+
+        /**
+         * Initialize DixieMap
+         * @param w width
+         * @param h height
+         * @param f format
+         */
         DixieMap(int w, int h, Pixmap.Format f) {
             super(w, h, f);
         }
 
+        /**
+         * Initialize DixieMap
+         * 
+         * @param data pixel data in ARGB8888 format
+         * @param w width
+         * @param h height
+         * @param f format
+         */
         DixieMap(int[] data, int w, int h, Pixmap.Format f) {
             super(w, h, f);
 
@@ -87,6 +252,17 @@ public class GifDecoder {
             }
         }
 
+        /**
+         * Get pixels in ARGB8888 format
+         * 
+         * @param pixels pixel array
+         * @param offset offset in pixel array
+         * @param stride stride in pixel array
+         * @param x x position
+         * @param y y position
+         * @param width width
+         * @param height height
+         */
         void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
             java.nio.ByteBuffer bb = getPixels();
 
@@ -105,21 +281,36 @@ public class GifDecoder {
         }
     }
 
+    /**
+     * Gif frame
+     */
     private static class GifFrame {
+        /**
+         * Initialize gif frame
+         * 
+         * @param im image
+         * @param del delay
+         */
         public GifFrame(DixieMap im, int del) {
             image = im;
             delay = del;
         }
 
+        /**
+         * Image of frame
+         */
         public DixieMap image;
+
+        /**
+         * Display duration of frame in milliseconds
+         */
         public int delay;
     }
 
     /**
      * Gets display duration for specified frame.
      *
-     * @param n
-     *          int index of frame
+     * @param n int index of frame
      * @return delay in milliseconds
      */
     public int getDelay(int n) {
@@ -247,7 +438,8 @@ public class GifDecoder {
 
     /**
      * Gets the image contents of frame n.
-     *
+     * 
+     * @param n int index of frame
      * @return BufferedPixmap representation of frame, or null if n is invalid.
      */
     public DixieMap getFrame(int n) {
@@ -260,8 +452,7 @@ public class GifDecoder {
     /**
      * Reads GIF image from stream
      *
-     * @param is
-     *          containing GIF file.
+     * @param is containing GIF file.
      * @return read status code (0 = no errors)
      */
     public int read(InputStream is) {
@@ -394,6 +585,8 @@ public class GifDecoder {
 
     /**
      * Returns true if an error was encountered during reading/decoding
+     * 
+     * @return true if error occurred
      */
     protected boolean err() {
         return status != STATUS_OK;
@@ -412,6 +605,8 @@ public class GifDecoder {
 
     /**
      * Reads a single byte from the input stream.
+     * 
+     * @return byte from stream
      */
     protected int read() {
         int curByte = 0;
@@ -454,8 +649,7 @@ public class GifDecoder {
     /**
      * Reads color table as 256 RGB integer values
      *
-     * @param ncolors
-     *          int number of colors to read
+     * @param ncolors int number of colors to read
      * @return int array containing 256 colors (packed ARGB with full alpha)
      */
     protected int[] readColorTable(int ncolors) {
@@ -655,6 +849,8 @@ public class GifDecoder {
 
     /**
      * Reads next 16-bit value, LSB first
+     * 
+     * @return next 16-bit value
      */
     protected int readShort() {
         // read 16-bit value, LSB first
@@ -687,6 +883,12 @@ public class GifDecoder {
         } while ((blockSize > 0) && !err());
     }
 
+    /**
+     * Get Animation from GIF frames
+     * 
+     * @param playMode PlayMode of animation
+     * @return animation
+     */
     public Animation<TextureRegion> getAnimation(PlayMode playMode) {
         int nrFrames = getFrameCount();
         Pixmap frame = getFrame(0);
@@ -730,6 +932,13 @@ public class GifDecoder {
         return result;
     }
 
+    /**
+     * Load GIF animation from input stream
+     * 
+     * @param playMode PlayMode of animation
+     * @param is input stream
+     * @return animation
+     */
     public static Animation<TextureRegion> loadGIFAnimation(Animation.PlayMode playMode, InputStream is) {
         GifDecoder gdec = new GifDecoder();
         gdec.read(is);

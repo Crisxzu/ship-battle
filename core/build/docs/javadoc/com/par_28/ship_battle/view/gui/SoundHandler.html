@@ -73,9 +73,15 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.par_28.ship_battle.view.gui.SoundHandler</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="Handler.html" title="interface in com.par_28.ship_battle.view.gui">Handler</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SoundHandler</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="Handler.html" title="interface in com.par_28.ship_battle.view.gui">Handler</a></span></div>
+<div class="block">Handler for sound and music in the GUI.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -90,10 +96,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="SoundHandler.SoundID.html" class="type-name-link" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.SoundID</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Sound identifiers.</div>
+</div>
 <div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="SoundHandler.TrackID.html" class="type-name-link" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Music track identifiers.</div>
+</div>
 </div>
 </section>
 </li>
@@ -106,12 +116,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private static com.badlogic.gdx.audio.Sound[]</code></div>
-<div class="col-second even-row-color"><code><a href="#sounds" class="member-name-link">sounds</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private static com.badlogic.gdx.audio.Music[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#tracks" class="member-name-link">tracks</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>(package private) static com.badlogic.gdx.audio.Music</code></div>
+<div class="col-second even-row-color"><code><a href="#currentTrack" class="member-name-link">currentTrack</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Current playing track</div>
+</div>
+<div class="col-first odd-row-color"><code>private static com.badlogic.gdx.audio.Sound[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#sounds" class="member-name-link">sounds</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Sounds.</div>
+</div>
+<div class="col-first even-row-color"><code>private static com.badlogic.gdx.audio.Music[]</code></div>
+<div class="col-second even-row-color"><code><a href="#tracks" class="member-name-link">tracks</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Music tracks.</div>
+</div>
 </div>
 </section>
 </li>
@@ -124,7 +143,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">SoundHandler</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Initialize handler and load sounds/music.</div>
+</div>
 </div>
 </section>
 </li>
@@ -153,14 +174,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playSound(com.par_28.ship_battle.view.gui.SoundHandler.SoundID,float)" class="member-name-link">playSound</a><wbr>(<a href="SoundHandler.SoundID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.SoundID</a>&nbsp;sound,
  float&nbsp;volume)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Method for playing sounds.</div>
+<div class="block">Play a sound.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playTrack(com.par_28.ship_battle.view.gui.SoundHandler.TrackID,float,boolean)" class="member-name-link">playTrack</a><wbr>(<a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a>&nbsp;track,
  float&nbsp;volume,
  boolean&nbsp;loop)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Method for playing music.</div>
+<div class="block">Play a music track.</div>
 </div>
 </div>
 </div>
@@ -183,12 +204,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sounds">
 <h3>sounds</h3>
 <div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type">com.badlogic.gdx.audio.Sound[]</span>&nbsp;<span class="element-name">sounds</span></div>
+<div class="block">Sounds.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="tracks">
 <h3>tracks</h3>
 <div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type">com.badlogic.gdx.audio.Music[]</span>&nbsp;<span class="element-name">tracks</span></div>
+<div class="block">Music tracks.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="currentTrack">
+<h3>currentTrack</h3>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type">com.badlogic.gdx.audio.Music</span>&nbsp;<span class="element-name">currentTrack</span></div>
+<div class="block">Current playing track</div>
 </section>
 </li>
 </ul>
@@ -203,6 +233,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>SoundHandler</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SoundHandler</span>()</div>
+<div class="block">Initialize handler and load sounds/music.</div>
 </section>
 </li>
 </ul>
@@ -225,7 +256,7 @@ loadScripts(document, 'script');</script>
 <h3>playSound</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playSound</span><wbr><span class="parameters">(<a href="SoundHandler.SoundID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.SoundID</a>&nbsp;sound,
  float&nbsp;volume)</span></div>
-<div class="block">Method for playing sounds.</div>
+<div class="block">Play a sound.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>sound</code> - sound identifier (SoundID).</dd>
@@ -239,11 +270,11 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playTrack</span><wbr><span class="parameters">(<a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a>&nbsp;track,
  float&nbsp;volume,
  boolean&nbsp;loop)</span></div>
-<div class="block">Method for playing music.</div>
+<div class="block">Play a music track.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>track</code> - sound identifier (SoundID).</dd>
-<dd><code>volume</code> - sound volume.</dd>
+<dd><code>track</code> - track identifier (TrackID).</dd>
+<dd><code>volume</code> - track volume.</dd>
 <dd><code>loop</code> - states if the track should be looping.</dd>
 </dl>
 </section>
@@ -253,6 +284,10 @@ loadScripts(document, 'script');</script>
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
 <div class="block">Disposes all sounds and music.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Handler.html#dispose()">dispose</a></code>&nbsp;in interface&nbsp;<code><a href="Handler.html" title="interface in com.par_28.ship_battle.view.gui">Handler</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>

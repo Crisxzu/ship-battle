@@ -11,14 +11,14 @@ public abstract class GuiController {
      */
     public GuiView view;
     /**
-     * Reference to the parent screen controller.
+     * Reference to the screen manager.
      */
     public ScreenController parent;
 
     /**
      * Initialize controller.
      * 
-     * @param parent Reference to the parent screen controller
+     * @param parent Reference to the screen manager
      */
     public GuiController(ScreenController parent) {
         this.parent = parent;
@@ -33,7 +33,7 @@ public abstract class GuiController {
 
     /**
      * Render controller view.
-     * @param dt
+     * @param dt Delta time since last render
      */
     public void render(float dt) {
         update(dt);

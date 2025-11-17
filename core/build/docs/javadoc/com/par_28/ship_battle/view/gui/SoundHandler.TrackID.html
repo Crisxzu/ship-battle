@@ -86,6 +86,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public static enum </span><span class="element-name type-name-label">SoundHandler.TrackID</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a>&gt;</span></div>
+<div class="block">Music track identifiers.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -106,8 +107,14 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="#MAIN_THEME" class="member-name-link">MAIN_THEME</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#GAME_THEME" class="member-name-link">GAME_THEME</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Game theme track</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#MENU_THEME" class="member-name-link">MENU_THEME</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Menu theme track</div>
+</div>
 </div>
 </section>
 </li>
@@ -122,7 +129,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>private int</code></div>
 <div class="col-second even-row-color"><code><a href="#value" class="member-name-link">value</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Index of track</div>
+</div>
 </div>
 </section>
 </li>
@@ -137,7 +146,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>private </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">TrackID</a><wbr>(int&nbsp;value)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Initialize track</div>
+</div>
 </div>
 </section>
 </li>
@@ -184,9 +195,17 @@ the order they are declared.</div>
 <h2>Enum Constant Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="MAIN_THEME">
-<h3>MAIN_THEME</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a></span>&nbsp;<span class="element-name">MAIN_THEME</span></div>
+<section class="detail" id="MENU_THEME">
+<h3>MENU_THEME</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a></span>&nbsp;<span class="element-name">MENU_THEME</span></div>
+<div class="block">Menu theme track</div>
+</section>
+</li>
+<li>
+<section class="detail" id="GAME_THEME">
+<h3>GAME_THEME</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="SoundHandler.TrackID.html" title="enum class in com.par_28.ship_battle.view.gui">SoundHandler.TrackID</a></span>&nbsp;<span class="element-name">GAME_THEME</span></div>
+<div class="block">Game theme track</div>
 </section>
 </li>
 </ul>
@@ -201,6 +220,7 @@ the order they are declared.</div>
 <section class="detail" id="value">
 <h3>value</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">value</span></div>
+<div class="block">Index of track</div>
 </section>
 </li>
 </ul>
@@ -215,6 +235,11 @@ the order they are declared.</div>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>TrackID</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="element-name">TrackID</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
+<div class="block">Initialize track</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - track index</dd>
+</dl>
 </section>
 </li>
 </ul>

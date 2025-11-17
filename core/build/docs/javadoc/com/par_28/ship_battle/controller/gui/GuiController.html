@@ -75,11 +75,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="MainMenuController.html" title="class in com.par_28.ship_battle.controller.gui">MainMenuController</a></code>, <code><a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></dd>
+<dd><code><a href="GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a></code>, <code><a href="MainMenuController.html" title="class in com.par_28.ship_battle.controller.gui">MainMenuController</a></code>, <code><a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code>, <code><a href="SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GuiController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Base for all GUI controllers.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -92,9 +93,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>com.badlogic.gdx.Screen</code></div>
-<div class="col-second even-row-color"><code><a href="#view" class="member-name-link">view</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></div>
+<div class="col-second even-row-color"><code><a href="#parent" class="member-name-link">parent</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Reference to the screen manager.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../../view/gui/GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#view" class="member-name-link">view</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The view associated with this controller.</div>
+</div>
 </div>
 </section>
 </li>
@@ -106,8 +114,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">GuiController</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.controller.gui.ScreenController)" class="member-name-link">GuiController</a><wbr>(<a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Initialize controller.</div>
+</div>
 </div>
 </section>
 </li>
@@ -122,19 +132,37 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#changeView(com.par_28.ship_battle.view.gui.GuiView)" class="member-name-link">changeView</a><wbr>(<a href="../../view/gui/GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&nbsp;view)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Change the current view.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispose controller resources.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Render controller view.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reset()" class="member-name-link">reset</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reset controller to initial state.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handle resizing of the application window.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Update controller.</div>
+</div>
 </div>
 </div>
 </div>
@@ -155,7 +183,15 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="view">
 <h3>view</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.Screen</span>&nbsp;<span class="element-name">view</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../view/gui/GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></span>&nbsp;<span class="element-name">view</span></div>
+<div class="block">The view associated with this controller.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="parent">
+<h3>parent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></span>&nbsp;<span class="element-name">parent</span></div>
+<div class="block">Reference to the screen manager.</div>
 </section>
 </li>
 </ul>
@@ -167,9 +203,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController)">
 <h3>GuiController</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GuiController</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GuiController</span><wbr><span class="parameters">(<a href="ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</span></div>
+<div class="block">Initialize controller.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>parent</code> - Reference to the screen manager</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -184,18 +225,29 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update(float)">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(float&nbsp;dt)</span></div>
+<div class="block">Update controller.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dt</code> - Delta time since last update</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="render(float)">
 <h3>render</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">render</span><wbr><span class="parameters">(float&nbsp;dt)</span></div>
+<div class="block">Render controller view.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dt</code> - Delta time since last render</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block">Dispose controller resources.</div>
 </section>
 </li>
 <li>
@@ -203,6 +255,33 @@ loadScripts(document, 'script');</script>
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
+<div class="block">Handle resizing of the application window.
+ <p>
+ Delegates resize event to the view.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>width</code> - new width</dd>
+<dd><code>height</code> - new height</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="reset()">
+<h3>reset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reset</span>()</div>
+<div class="block">Reset controller to initial state.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="changeView(com.par_28.ship_battle.view.gui.GuiView)">
+<h3>changeView</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">changeView</span><wbr><span class="parameters">(<a href="../../view/gui/GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&nbsp;view)</span></div>
+<div class="block">Change the current view.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>view</code> - The new view to set</dd>
+</dl>
 </section>
 </li>
 </ul>

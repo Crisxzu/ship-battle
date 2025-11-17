@@ -10,17 +10,40 @@ import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.Player;
 
+/**
+ * Game over menu
+ */
 public class GameOverView extends GuiView {
+    /**
+     * Message label
+     */
     private Label msg;
+
+    /**
+     * Winner player
+     */
     private Player winner;
+
+    /**
+     * Game controller
+     */
     private GameController controller;
 
+    /**
+     * Initialize game over menu
+     * 
+     * @param parent screen manager
+     * @param controller game controller
+     */
     public GameOverView(ScreenController parent, GameController controller) {
         super(parent);
         this.controller = controller;
         buildUI();
     }
 
+    /**
+     * Build UI
+     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -61,6 +84,12 @@ public class GameOverView extends GuiView {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    /**
+     * Resize elements on window resize
+     * 
+     * @param width new width
+     * @param height new height
+     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);

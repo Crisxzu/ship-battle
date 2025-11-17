@@ -36,7 +36,15 @@ public class DialogHandler implements Handler {
         SUNK(
             3,
             "Ouch, I wouldn't liked that. You are a monster !"
-        ),;
+        ),
+
+        /**
+         * Already hit dialog
+         */
+        ALREADY_HIT(
+            4,
+            "Baka ! You have already hit this case."
+        );
 
         /**
          * Index of dialog

@@ -26,7 +26,7 @@ public class SoundHandler implements Handler {
          * Error sound
          */
         ERROR(0),
-        
+
         /**
          * Cannon shot sound
          */
@@ -44,7 +44,12 @@ public class SoundHandler implements Handler {
         /**
          * Sunk sound
          */
-        SUNK(4);
+        SUNK(4),
+
+        /**
+         * Already hit sound
+         */
+        ALREADY_HIT(5);
 
         /**
          * Index of sound
@@ -53,7 +58,7 @@ public class SoundHandler implements Handler {
 
         /**
          * Initialize sound
-         * 
+         *
          * @param value sound index
          */
         SoundID(int value) {
@@ -81,7 +86,7 @@ public class SoundHandler implements Handler {
 
         /**
          * Initialize track
-         * 
+         *
          * @param value track index
          */
         TrackID(int value) {
@@ -111,6 +116,7 @@ public class SoundHandler implements Handler {
             Gdx.audio.newSound(Gdx.files.internal("sounds/hit.mp3")),
             Gdx.audio.newSound(Gdx.files.internal("sounds/miss.mp3")),
             Gdx.audio.newSound(Gdx.files.internal("sounds/sunk.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/already_hit.mp3")),
         };
         tracks = new Music[] {
             Gdx.audio.newMusic(Gdx.files.internal("musics/theme_menu.mp3")),
@@ -120,7 +126,7 @@ public class SoundHandler implements Handler {
 
     /**
      * Play a sound.
-     * 
+     *
      * @param sound sound identifier (SoundID).
      * @param volume sound volume.
      */
@@ -131,7 +137,7 @@ public class SoundHandler implements Handler {
 
     /**
      * Play a music track.
-     * 
+     *
      * @param track track identifier (TrackID).
      * @param volume track volume.
      * @param loop states if the track should be looping.

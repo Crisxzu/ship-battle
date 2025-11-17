@@ -604,7 +604,7 @@ public class GameView extends GuiView {
 
         elapsed += delta;
 
-        if(elapsed < DialogHandler.getDialogDuration()) {
+        if(elapsed <= DialogHandler.getDialogDuration()) {
             int charCount = DialogHandler.getCharCountThisFrame(elapsed);
 
             if(charCount > 0) {
@@ -623,8 +623,9 @@ public class GameView extends GuiView {
         if(shoot && !turnPlayed) {
             waitTimer += delta;
             if(waitTimer > 1.5f) {
+                AttackResult result = response.getResult();
                 if(response.isHit()) {
-                    if(response.getShip().isDestroyed()) {
+                    if(result == AttackResult.SUNK) {
                         SoundHandler.playSound(SoundHandler.SoundID.SUNK, 0.2f);
                         playDialog(
                             DialogHandler.DialogID.SUNK,
@@ -640,11 +641,20 @@ public class GameView extends GuiView {
                     }
                 }
                 else {
-                    SoundHandler.playSound(SoundHandler.SoundID.MISS, 1f);
-                    playDialog(
-                        DialogHandler.DialogID.MISS,
-                        (float) (loliAnimation.getAnimationDuration() * 0.60)
-                    );
+                    if(response.getResult() == AttackResult.ALREADY_HIT) {
+                        SoundHandler.playSound(SoundHandler.SoundID.ALREADY_HIT, 0.2f);
+                        playDialog(
+                            DialogHandler.DialogID.ALREADY_HIT,
+                            (float) (loliAnimation.getAnimationDuration() * 0.60)
+                        );
+                    }
+                    else {
+                        SoundHandler.playSound(SoundHandler.SoundID.MISS, 1f);
+                        playDialog(
+                            DialogHandler.DialogID.MISS,
+                            (float) (loliAnimation.getAnimationDuration() * 0.60)
+                        );
+                    }
                 }
                 updatePlayerTables();
                 resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

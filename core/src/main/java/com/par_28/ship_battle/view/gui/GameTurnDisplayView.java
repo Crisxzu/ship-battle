@@ -10,7 +10,7 @@ import com.par_28.ship_battle.model.*;
 /**
  * Menu to display current turn and player
  */
-public class GameTurnDisplayView extends GuiView {
+public class GameTurnDisplayView extends GuiView<GameController> {
     /**
      * Message label
      */
@@ -21,10 +21,6 @@ public class GameTurnDisplayView extends GuiView {
      */
     private Player currentPlayer;
 
-    /**
-     * Game controller
-     */
-    private GameController controller;
 
     /**
      * Initialize turn display menu
@@ -32,14 +28,10 @@ public class GameTurnDisplayView extends GuiView {
      * @param controller game controller
      */
     public GameTurnDisplayView(ScreenController parent, GameController controller) {
-        super(parent);
-        this.controller = controller;
+        super(parent, controller);
         buildUI();
     }
 
-    /**
-     * Build UI
-     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -68,12 +60,6 @@ public class GameTurnDisplayView extends GuiView {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    /**
-     * Resize elements on window resize
-     * 
-     * @param width new width
-     * @param height new height
-     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);

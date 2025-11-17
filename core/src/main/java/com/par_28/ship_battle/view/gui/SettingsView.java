@@ -12,7 +12,7 @@ import com.par_28.ship_battle.controller.gui.SettingsController;
 /**
  * Settings menu
  */
-public class SettingsView extends GuiView {
+public class SettingsView extends GuiView<SettingsController> {
 
     /**
      * Title label
@@ -43,25 +43,16 @@ public class SettingsView extends GuiView {
     private SettingsHandler data;
 
     /**
-     * Settings menu controller
-     */
-    private SettingsController controller;
-
-    /**
      * Initialize settings menu
      *
      * @param parent screen manager
      * @param controller settings menu controller
      */
     public SettingsView(ScreenController parent, SettingsController controller) {
-        super(parent);
-        this.controller = controller;
+        super(parent, controller);
         buildUI();
     }
 
-    /**
-     * Build UI
-     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -146,12 +137,6 @@ public class SettingsView extends GuiView {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    /**
-     * Resize elements on window resize
-     *
-     * @param width new width
-     * @param height new height
-     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);

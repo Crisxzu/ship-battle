@@ -25,7 +25,7 @@ public class SettingsHandler implements Handler {
 
     /**
      * Get sound volume
-     * 
+     *
      * @return sound volume
      */
     public float getSoundVolume() {
@@ -34,7 +34,7 @@ public class SettingsHandler implements Handler {
 
     /**
      * Set sound volume
-     * 
+     *
      * @param soundVolume sound volume
      */
     public void setSoundVolume(float soundVolume) {
@@ -43,7 +43,7 @@ public class SettingsHandler implements Handler {
 
     /**
      * Get music volume
-     * 
+     *
      * @return music volume
      */
     public float getMusicVolume() {
@@ -52,7 +52,7 @@ public class SettingsHandler implements Handler {
 
     /**
      * Set music volume
-     * 
+     *
      * @param musicVolume music volume
      */
     public void setMusicVolume(float musicVolume) {

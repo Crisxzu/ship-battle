@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Game menu
  */
-public class GameView extends GuiView {
+public class GameView extends GuiView<GameController> {
     /**
      * Stack for layering UI elements
      */
@@ -165,11 +165,6 @@ public class GameView extends GuiView {
     private AttackResponse response;
 
     /**
-     * Game menu controller
-     */
-    private GameController controller;
-
-    /**
      * Turn played flag
      */
     private boolean turnPlayed = false;
@@ -194,7 +189,6 @@ public class GameView extends GuiView {
      */
     private boolean paused = false;
 
-
     /**
      * Initialize game menu
      *
@@ -202,9 +196,7 @@ public class GameView extends GuiView {
      * @param controller game menu controller
      */
     public GameView(ScreenController parent, GameController controller) {
-        super(parent);
-        this.controller = controller;
-        loadTextures();
+        super(parent, controller);
         buildUI();
         playDialog(
             DialogHandler.DialogID.TURN_START,
@@ -212,11 +204,9 @@ public class GameView extends GuiView {
         );
     }
 
-    /**
-     * Load textures
-     */
     @Override
     protected void loadTextures() {
+        super.loadTextures();
         Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
         this.gridCaseTexture = new TextureRegionDrawable(new TextureRegion(gridCaseTexture));
 
@@ -255,9 +245,6 @@ public class GameView extends GuiView {
         loliTexture = new TextureRegionDrawable(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));
     }
 
-    /**
-     * Build game menu UI
-     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -583,11 +570,6 @@ public class GameView extends GuiView {
         );
     }
 
-    /**
-     * Update game menu
-     *
-     * @param delta time since last frame
-     */
     @Override
     public void update(float delta) {
         if(InputHandler.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -626,7 +608,7 @@ public class GameView extends GuiView {
                     if(result == AttackResult.SUNK) {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.SUNK,
-                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.SUNK,
@@ -636,7 +618,7 @@ public class GameView extends GuiView {
                     else {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.HIT,
-                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.HIT,
@@ -648,7 +630,7 @@ public class GameView extends GuiView {
                     if(response.getResult() == AttackResult.ALREADY_HIT) {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.ALREADY_HIT,
-                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.ALREADY_HIT,
@@ -658,7 +640,7 @@ public class GameView extends GuiView {
                     else {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.MISS,
-                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.MISS,
@@ -690,12 +672,7 @@ public class GameView extends GuiView {
         super.render(delta);
     }
 
-    /**
-     * Resize elements on window resize
-     *
-     * @param width new width
-     * @param height new height
-     */
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -804,9 +781,7 @@ public class GameView extends GuiView {
         }
     }
 
-    /**
-     * Dispose resources
-     */
+
     @Override
     public void dispose() {
         super.dispose();

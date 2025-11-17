@@ -78,7 +78,7 @@ public class GameController extends GuiController {
 
         SoundHandler.playSound(
             SoundHandler.SoundID.CANNON_SHOT,
-            0.3f * this.parent.app.settingsHandler.getSoundVolume()
+            0.05f * this.parent.app.settingsHandler.getSoundVolume()
         );
 
         return response;

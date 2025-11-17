@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.MainMenuController;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 
 
 /**
  * Main menu
  */
-public class MainMenuView extends GuiView {
-
+public class MainMenuView extends GuiView<MainMenuController> {
     /**
      * Title label
      */
@@ -32,9 +32,6 @@ public class MainMenuView extends GuiView {
         buildUI();
     }
 
-    /**
-     * Build main menu
-     */
     @Override
     protected void buildUI() {
         super.buildUI();
@@ -69,12 +66,6 @@ public class MainMenuView extends GuiView {
         stage.addActor(root);
     }
 
-    /**
-     * Resize elements on window resize
-     *
-     * @param width new width
-     * @param height new height
-     */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -82,9 +73,6 @@ public class MainMenuView extends GuiView {
         versionLabel.setFontScale(base / 500f);
     }
 
-    /**
-     * Dispose resources
-     */
     @Override
     public void dispose() {
         super.dispose();

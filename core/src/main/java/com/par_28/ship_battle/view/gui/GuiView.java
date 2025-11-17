@@ -10,13 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.par_28.ship_battle.controller.gui.GuiController;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 
 /**
  * Base for all GUI views
+ *
+ * @param <T> type of controller associated with the view
  */
-public abstract class GuiView implements Screen {
+public abstract class GuiView<T extends GuiController> implements Screen {
     /**
      * Background texture
      */
@@ -48,23 +51,46 @@ public abstract class GuiView implements Screen {
     float base;
 
     /**
-     * Initialize GUI view
+     * Controller associated with the view
+     */
+    protected T controller;
+
+    /**
+     * Initialize menu
      *
      * @param parent screen manager
      */
     public GuiView(ScreenController parent) {
         this.parent = parent;
+        initUI();
+    }
+
+    /**
+     * Initialize menu with controller
+     *
+     * @param parent screen manager
+     * @param controller menu controller
+     */
+    public GuiView(ScreenController parent, T controller) {
+        this.parent = parent;
+        this.controller = controller;
+        initUI();
+    }
+
+    /**
+     * Initialize base things for UI
+     */
+    protected void initUI() {
         this.stage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         menuButtons = new Array<>();
-        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
     }
 
     /**
      * Load necessary textures
      */
     protected void loadTextures() {
-
+        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
     }
 
     /**

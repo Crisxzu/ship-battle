@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
@@ -18,7 +19,7 @@ public class SetupPlayerNameView extends GuiView {
      * Name input field
      */
     private TextField nameField;
-    
+
     /**
      * Current player index
      */
@@ -31,7 +32,7 @@ public class SetupPlayerNameView extends GuiView {
 
     /**
      * Initialize menu
-     * 
+     *
      * @param parent parent controller
      * @param controller setup menu controller
      */
@@ -74,12 +75,7 @@ public class SetupPlayerNameView extends GuiView {
 
         root.add(nameField).row();
 
-        addMenuButton(root, "OK", () -> {
-            if(controller.addName(nameField.getText())) {
-                iPlayer++;
-                updateUI();
-            }
-        });
+        addMenuButton(root, "OK", this::addName);
 
         root.add().expand().row();
 
@@ -95,8 +91,29 @@ public class SetupPlayerNameView extends GuiView {
     }
 
     /**
+     * Update the screen
+     */
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        if(InputHandler.isKeyJustPressed(Input.Keys.ENTER)) {
+            addName();
+        }
+    }
+
+    /**
+     * Add player name
+     */
+    private void addName() {
+        if(controller.addName(nameField.getText())) {
+            iPlayer++;
+            updateUI();
+        }
+    }
+
+    /**
      * Resize elements on window resize
-     * 
+     *
      * @param width new width
      * @param height new height
      */

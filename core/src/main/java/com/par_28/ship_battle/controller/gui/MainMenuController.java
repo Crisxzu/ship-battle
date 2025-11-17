@@ -1,6 +1,7 @@
 package com.par_28.ship_battle.controller.gui;
 
 import com.par_28.ship_battle.view.gui.MainMenuView;
+import com.par_28.ship_battle.view.gui.SoundHandler;
 
 /**
  * Manager of main menu.
@@ -8,7 +9,7 @@ import com.par_28.ship_battle.view.gui.MainMenuView;
 public class MainMenuController extends GuiController {
     /**
      * Initialize the menu controller.
-     * 
+     *
      * @param parent Reference to the parent screen controller
      */
     public MainMenuController(ScreenController parent) {
@@ -17,7 +18,7 @@ public class MainMenuController extends GuiController {
 
     /**
      * Update menu controller.
-     * 
+     *
      * @param dt Delta time since last update
      */
     @Override
@@ -27,7 +28,7 @@ public class MainMenuController extends GuiController {
 
     /**
      * Render menu view.
-     * 
+     *
      * @param dt Delta time since last render
      */
     @Override
@@ -35,13 +36,18 @@ public class MainMenuController extends GuiController {
         super.render(dt);
         view.render(dt);
     }
-    
+
     /**
      * Reset controller to initial state.
      */
     @Override
     public void reset() {
         super.reset();
-        view = new MainMenuView(parent);
+        changeView(new MainMenuView(parent));
+        SoundHandler.playTrack(
+            SoundHandler.TrackID.MENU_THEME,
+            0.2f * this.parent.app.settingsHandler.getMusicVolume(),
+            true
+        );
     }
 }

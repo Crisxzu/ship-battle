@@ -15,5 +15,9 @@ public enum GuiControllerEnum {
     /**
      * Game controller.
      */
-    GAME
+    GAME,
+    /**
+     * Settings menu controller.
+     */
+    SETTINGS,
 }

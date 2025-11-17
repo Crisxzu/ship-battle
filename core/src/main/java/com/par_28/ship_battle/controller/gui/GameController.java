@@ -10,7 +10,7 @@ import com.par_28.ship_battle.view.gui.*;
 public class GameController extends GuiController {
     /**
      * Initialize the menu controller.
-     * 
+     *
      * @param parent Reference to the parent screen controller
      */
     public GameController(ScreenController parent) {
@@ -19,7 +19,7 @@ public class GameController extends GuiController {
 
     /**
      * Update menu controller.
-     * 
+     *
      * @param dt Delta time since last update
      */
     public void update(float dt){
@@ -28,7 +28,7 @@ public class GameController extends GuiController {
 
     /**
      * Render menu view.
-     * 
+     *
      * @param dt Delta time since last render
      */
     @Override
@@ -55,7 +55,11 @@ public class GameController extends GuiController {
      */
     public void changeTurn() {
         if(this.parent.app.game.isGameOver()) {
-            SoundHandler.playTrack(SoundHandler.TrackID.MENU_THEME, 0.2f, true);
+            SoundHandler.playTrack(
+                SoundHandler.TrackID.MENU_THEME,
+                0.2f * this.parent.app.settingsHandler.getMusicVolume(),
+                true
+            );
             changeView(new GameOverView(parent, this));
         }
         else {
@@ -65,18 +69,21 @@ public class GameController extends GuiController {
 
     /**
      * Play a turn by attacking a coordinate.
-     * 
+     *
      * @param attackCord Coordinate to attack
      * @return Attack response
      */
     public AttackResponse playTurn(Coordinate attackCord) {
         AttackResponse response = this.parent.app.game.playTurn(attackCord);
 
-        SoundHandler.playSound(SoundHandler.SoundID.CANNON_SHOT, 0.3f);
+        SoundHandler.playSound(
+            SoundHandler.SoundID.CANNON_SHOT,
+            0.3f * this.parent.app.settingsHandler.getSoundVolume()
+        );
 
         return response;
     }
-    
+
     /**
      * Reset controller to initial state.
      */
@@ -86,6 +93,10 @@ public class GameController extends GuiController {
         changeView(new GameTurnDisplayView(parent, this));
         System.out.println(this.parent.app.player1);
         System.out.println(this.parent.app.player2);
-        SoundHandler.playTrack(SoundHandler.TrackID.GAME_THEME, 0.2f, true);
+        SoundHandler.playTrack(
+            SoundHandler.TrackID.GAME_THEME,
+            0.2f * this.parent.app.settingsHandler.getMusicVolume(),
+            true
+        );
     }
 }

@@ -16,12 +16,12 @@ public class ScreenController extends GuiController {
      * Reference to the main application.
      */
     public ShipBattleApplication app;
-    
+
     /**
      * Map of available GUI controllers.
      */
     Map<GuiControllerEnum, GuiController> controllers;
-    
+
     /**
      * Currently active GUI controller.
      */
@@ -29,7 +29,7 @@ public class ScreenController extends GuiController {
 
     /**
      * Initialize the screen controller with all GUI controllers.
-     * 
+     *
      * @param app Reference to the main application
      */
     public ScreenController(ShipBattleApplication app) {
@@ -41,6 +41,8 @@ public class ScreenController extends GuiController {
         controllers.put(GuiControllerEnum.MAIN_MENU, new MainMenuController(this));
         controllers.put(GuiControllerEnum.SETUP_MENU, new SetupMenuController(this));
         controllers.put(GuiControllerEnum.GAME, new GameController(this));
+        controllers.put(GuiControllerEnum.SETTINGS, new SettingsController(this));
+
         // TODO Return to normal after game testing
         //changeController(GuiControllerEnum.MAIN_MENU);
         this.app.player1 = new Player("Dazu", this.app.gridSize);
@@ -54,10 +56,10 @@ public class ScreenController extends GuiController {
         this.app.game.start();
         changeController(GuiControllerEnum.GAME);
     }
-    
+
     /**
      * Update the current controller.
-     * 
+     *
      * @param dt Delta time since last update
      */
     public void update(float dt){
@@ -66,7 +68,7 @@ public class ScreenController extends GuiController {
 
     /**
      * Render the current controller.
-     * 
+     *
      * @param dt Delta time since last render
      */
     @Override
@@ -77,7 +79,7 @@ public class ScreenController extends GuiController {
 
     /**
      * Change the active GUI controller.
-     * 
+     *
      * @param controller The new controller to activate
      */
     public void changeController(GuiControllerEnum controller){

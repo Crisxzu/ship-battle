@@ -626,14 +626,20 @@ public class GameView extends GuiView {
                 AttackResult result = response.getResult();
                 if(response.isHit()) {
                     if(result == AttackResult.SUNK) {
-                        SoundHandler.playSound(SoundHandler.SoundID.SUNK, 0.2f);
+                        SoundHandler.playSound(
+                            SoundHandler.SoundID.SUNK,
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                        );
                         playDialog(
                             DialogHandler.DialogID.SUNK,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)
                         );
                     }
                     else {
-                        SoundHandler.playSound(SoundHandler.SoundID.HIT, 0.2f);
+                        SoundHandler.playSound(
+                            SoundHandler.SoundID.HIT,
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                        );
                         playDialog(
                             DialogHandler.DialogID.HIT,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)
@@ -642,14 +648,20 @@ public class GameView extends GuiView {
                 }
                 else {
                     if(response.getResult() == AttackResult.ALREADY_HIT) {
-                        SoundHandler.playSound(SoundHandler.SoundID.ALREADY_HIT, 0.2f);
+                        SoundHandler.playSound(
+                            SoundHandler.SoundID.ALREADY_HIT,
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                        );
                         playDialog(
                             DialogHandler.DialogID.ALREADY_HIT,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)
                         );
                     }
                     else {
-                        SoundHandler.playSound(SoundHandler.SoundID.MISS, 1f);
+                        SoundHandler.playSound(
+                            SoundHandler.SoundID.MISS,
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
+                        );
                         playDialog(
                             DialogHandler.DialogID.MISS,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)

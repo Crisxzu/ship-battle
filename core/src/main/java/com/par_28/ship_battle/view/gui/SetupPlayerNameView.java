@@ -132,6 +132,5 @@ public class SetupPlayerNameView extends GuiView {
     @Override
     public void dispose() {
         super.dispose();
-        backgroundTexture.dispose();
     }
 }

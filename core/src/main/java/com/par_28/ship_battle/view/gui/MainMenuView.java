@@ -2,10 +2,7 @@ package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 
@@ -27,7 +24,7 @@ public class MainMenuView extends GuiView {
 
     /**
      * Initialize main menu
-     * 
+     *
      * @param parent screen manager
      */
     public MainMenuView(ScreenController parent) {
@@ -47,7 +44,10 @@ public class MainMenuView extends GuiView {
         titleLabel = new Label("ShipBattle", skin);
         titleLabel.setFontScale(2.5f);
 
-        root.add(titleLabel).expand().height(Value.percentHeight(0.2f)).row();
+        root.add(titleLabel)
+            .expand()
+            .height(Value.percentHeight(0.2f, root))
+            .row();
 
 
         Table buttons = new Table();
@@ -56,11 +56,9 @@ public class MainMenuView extends GuiView {
             .height(Value.percentHeight(0.1f, root))
             .pad(Value.percentHeight(0.02f, root));
 
-        addMenuButton(buttons, "Nouvelle Partie", () -> {
-            System.out.println("Nouvelle Partie cliquée!");
-            this.parent.changeController(GuiControllerEnum.SETUP_MENU);
-        });
-        addMenuButton(buttons, "Quitter", Gdx.app::exit);
+        addMenuButton(buttons, "New game", () -> this.parent.changeController(GuiControllerEnum.SETUP_MENU));
+        addMenuButton(buttons, "Settings", () -> this.parent.changeController(GuiControllerEnum.SETTINGS));
+        addMenuButton(buttons, "Quit", Gdx.app::exit);
 
         root.add(buttons).expand().fill().center().row();
 
@@ -73,14 +71,14 @@ public class MainMenuView extends GuiView {
 
     /**
      * Resize elements on window resize
-     * 
+     *
      * @param width new width
      * @param height new height
      */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        titleLabel.setFontScale(base / 300f);
+        titleLabel.setFontScale(base / 200f);
         versionLabel.setFontScale(base / 500f);
     }
 
@@ -90,6 +88,5 @@ public class MainMenuView extends GuiView {
     @Override
     public void dispose() {
         super.dispose();
-        backgroundTexture.dispose();
     }
 }

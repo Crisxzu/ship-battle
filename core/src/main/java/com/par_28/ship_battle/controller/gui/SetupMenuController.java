@@ -20,7 +20,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Initialize the menu controller.
-     * 
+     *
      * @param parent Reference to the parent screen controller
      */
     public SetupMenuController(ScreenController parent) {
@@ -29,7 +29,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Update menu controller.
-     * 
+     *
      * @param dt Delta time since last update
      */
     public void update(float dt){
@@ -38,19 +38,25 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Add a player name to the setup.
-     * 
+     *
      * @param name Player name to add
      * @return true if name added successfully, false otherwise
      */
     public boolean addName(String name) {
         if(name.isEmpty()) {
-            SoundHandler.playSound(SoundHandler.SoundID.ERROR, 0.2f);
+            SoundHandler.playSound(
+                SoundHandler.SoundID.ERROR,
+                0.2f * this.parent.app.settingsHandler.getSoundVolume()
+            );
             Dialogs.showErrorDialog(view.stage, "Please enter a name");
             return false;
         }
 
         if(names.contains(name)) {
-            SoundHandler.playSound(SoundHandler.SoundID.ERROR, 0.2f);
+            SoundHandler.playSound(
+                SoundHandler.SoundID.ERROR,
+                0.2f * this.parent.app.settingsHandler.getSoundVolume()
+            );
             Dialogs.showErrorDialog(view.stage, String.format("%s already registered", name));
             return false;
         }
@@ -76,7 +82,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Render menu view.
-     * 
+     *
      * @param dt Delta time since last render
      */
     @Override

@@ -1,14 +1,17 @@
 package com.par_28.ship_battle.controller.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.par_28.ship_battle.model.Player;
 import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
-import com.par_28.ship_battle.view.gui.*;
-import com.kotcrab.vis.ui.util.dialog.Dialogs;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.par_28.ship_battle.view.gui.DifficultyView;
+import com.par_28.ship_battle.view.gui.GameModeView;
+import com.par_28.ship_battle.view.gui.SetupPlayerNameView;
+import com.par_28.ship_battle.view.gui.SetupPlayerShipView;
+import com.par_28.ship_battle.view.gui.SoundHandler;
 
 /**
  * Manager of setup menu where players enter their names and set up ships.

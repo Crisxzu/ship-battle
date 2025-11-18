@@ -1,14 +1,23 @@
 package com.par_28.ship_battle.controller.gui;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.par_28.ship_battle.ShipBattleApplication;
-import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.Carrier;
+import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Cruiser;
+import com.par_28.ship_battle.model.Destroyer;
+import com.par_28.ship_battle.model.Game;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.Ship;
+import com.par_28.ship_battle.model.Torpedo;
 import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
 import com.par_28.ship_battle.model.enums.Direction;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
-
-import java.util.*;
 
 /**
  * Manager of screens and controllers.
@@ -71,7 +80,7 @@ public class ScreenController extends GuiController {
 
         this.app.game = new Game(this.app.player1, this.app.player2);
         this.app.game.start();
-        changeController(GuiControllerEnum.GAME);
+        changeController(GuiControllerEnum.MAIN_MENU);
     }
 
     /**

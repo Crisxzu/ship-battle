@@ -1,6 +1,7 @@
 package com.par_28.ship_battle.controller.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,12 +10,14 @@ import com.par_28.ship_battle.model.Carrier;
 import com.par_28.ship_battle.model.Coordinate;
 import com.par_28.ship_battle.model.Cruiser;
 import com.par_28.ship_battle.model.Destroyer;
+import com.par_28.ship_battle.model.Game;
 import com.par_28.ship_battle.model.Player;
 import com.par_28.ship_battle.model.Ship;
 import com.par_28.ship_battle.model.Torpedo;
 import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
 import com.par_28.ship_battle.model.enums.Direction;
+import com.par_28.ship_battle.model.exceptions.IllegalGameStateException;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 import com.par_28.ship_battle.view.gui.DifficultyView;
@@ -45,13 +48,23 @@ public class SetupMenuController extends GuiController {
     private Ship selectedShip;
 
     /**
+     * Index of the player currently placing ships.
+     */
+    private int currentSetupPlayerIndex = 0;
+
+    /**
+     * Track which players have completed manual placement.
+     */
+    private final boolean[] placementDone = new boolean[2];
+
+    /**
      * Initialize the menu controller.
      *
      * @param parent Reference to the parent screen controller
      */
     public SetupMenuController(ScreenController parent) {
         super(parent);
-        initializeShipsToPlace();
+        resetPlacementTracking();
     }
 
     /**
@@ -111,7 +124,7 @@ public class SetupMenuController extends GuiController {
             this.parent.app.player1 = player1;
             this.parent.app.player2 = player2;
 
-            changeView(new SetupPlayerShipView(parent, this));
+            startPlacementFlow();
         }
 
         return true;
@@ -138,7 +151,7 @@ public class SetupMenuController extends GuiController {
     }
 
     /**
-     * Render menu view.
+            startPlacementFlow();
      *
      * @param dt Delta time since last render
      */
@@ -156,16 +169,28 @@ public class SetupMenuController extends GuiController {
         if(names != null) {
             names.clear();
         }
-        initializeShipsToPlace();
+        aiDifficulty = null;
+        resetPlacementTracking();
         changeView(new GameModeView(this.parent, this));
     }
 
     private Player getSetupPlayer() {
-        return this.parent != null ? this.parent.app.player1 : null;
+        if(this.parent == null || this.parent.app == null) {
+            return null;
+        }
+        return getPlayerByIndex(currentSetupPlayerIndex);
     }
 
     public Player getCurrentSetupPlayer() {
         return getSetupPlayer();
+    }
+
+    public String getCurrentSetupPlayerName() {
+        Player player = getSetupPlayer();
+        if(player != null) {
+            return player.getName();
+        }
+        return String.format("Player %d", currentSetupPlayerIndex + 1);
     }
 
     /**
@@ -231,6 +256,10 @@ public class SetupMenuController extends GuiController {
         return Collections.unmodifiableList(shipsToPlace);
     }
 
+    public int getShipsToPlaceCount() {
+        return shipsToPlace.size();
+    }
+
     /**
      * Select a ship to place on the grid.
      *
@@ -259,11 +288,115 @@ public class SetupMenuController extends GuiController {
      */
     private void initializeShipsToPlace() {
         shipsToPlace.clear();
-        shipsToPlace.add(new Carrier());
-        shipsToPlace.add(new Cruiser());
-        shipsToPlace.add(new Destroyer());
-        shipsToPlace.add(new Destroyer());
-        shipsToPlace.add(new Torpedo());
+        shipsToPlace.addAll(createDefaultFleet());
         selectedShip = null;
+    }
+
+    private Player getPlayerByIndex(int index) {
+        if(this.parent == null || this.parent.app == null) {
+            return null;
+        }
+        return switch (index) {
+            case 0 -> this.parent.app.player1;
+            case 1 -> this.parent.app.player2;
+            default -> null;
+        };
+    }
+
+    private boolean isHumanPlayer(int index) {
+        Player player = getPlayerByIndex(index);
+        return player != null && !player.isAI();
+    }
+
+    private List<Ship> createDefaultFleet() {
+        List<Ship> fleet = new ArrayList<>();
+        fleet.add(new Carrier());
+        fleet.add(new Cruiser());
+        fleet.add(new Destroyer());
+        fleet.add(new Destroyer());
+        fleet.add(new Torpedo());
+        return fleet;
+    }
+
+    private void resetPlacementTracking() {
+        Arrays.fill(placementDone, false);
+        currentSetupPlayerIndex = 0;
+        initializeShipsToPlace();
+    }
+
+    private void startPlacementFlow() {
+        resetPlacementTracking();
+        int nextIndex = findNextHumanNeedingPlacement();
+        if(nextIndex < 0) {
+            autoPlaceAIShips();
+            startGameAndTransition();
+            return;
+        }
+
+        currentSetupPlayerIndex = nextIndex;
+        initializeShipsToPlace();
+        changeView(new SetupPlayerShipView(parent, this));
+    }
+
+    public void handlePlacementComplete() {
+        if(!shipsToPlace.isEmpty()) {
+            return;
+        }
+
+        markPlacementDone(currentSetupPlayerIndex);
+
+        int nextPlayer = findNextHumanNeedingPlacement();
+        if(nextPlayer >= 0) {
+            currentSetupPlayerIndex = nextPlayer;
+            initializeShipsToPlace();
+            changeView(new SetupPlayerShipView(parent, this));
+            return;
+        }
+
+        autoPlaceAIShips();
+        startGameAndTransition();
+    }
+
+    private void autoPlaceAIShips() {
+        Player player = getPlayerByIndex(1);
+        if(player instanceof AIPlayer aiPlayer && aiPlayer.getShips().isEmpty()) {
+            aiPlayer.placeShipsRandomly(createDefaultFleet());
+        }
+    }
+
+    private void startGameAndTransition() {
+        Player player1 = getPlayerByIndex(0);
+        Player player2 = getPlayerByIndex(1);
+        if(player1 == null || player2 == null) {
+            return;
+        }
+
+        this.parent.app.game = new Game(player1, player2);
+        try {
+            this.parent.app.game.start();
+        }
+        catch (IllegalGameStateException e) {
+            Dialogs.showErrorDialog(view.stage, "Unable to start game: " + e.getMessage());
+            return;
+        }
+
+        names.clear();
+        currentSetupPlayerIndex = 0;
+        this.parent.changeController(GuiControllerEnum.GAME);
+    }
+
+    private void markPlacementDone(int index) {
+        if(index >= 0 && index < placementDone.length) {
+            placementDone[index] = true;
+        }
+    }
+
+    private int findNextHumanNeedingPlacement() {
+        for (int i = 0; i < placementDone.length; i++) {
+            if(!placementDone[i] && isHumanPlayer(i)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

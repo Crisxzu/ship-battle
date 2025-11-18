@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIGameExample.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.examples</a> &gt; <span class="el_source">AIGameExample.java</span></div><h1>AIGameExample.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.examples;
+
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
+import com.par_28.ship_battle.model.enums.Direction;
+
+/**
+ * Example demonstrating how to use the AI system in a game.
+ * &lt;p&gt;
+ * This example shows:
+ * - Creating an AI player with different difficulty levels
+ * - Setting up a game between human and AI
+ * - Handling AI turns
+ * - Getting AI shot decisions
+ * &lt;/p&gt;
+ */
+<span class="nc" id="L18">public class AIGameExample {</span>
+
+    /**
+     * Example 1: Create AI players with different difficulties
+     */
+    public static void exampleCreateAIPlayers() {
+<span class="nc" id="L24">        System.out.println(&quot;=== Example 1: Creating AI Players ===\n&quot;);</span>
+
+        // Easy AI - Random shots
+<span class="nc" id="L27">        AIPlayer easyAI = new AIPlayer(&quot;Easy Bot&quot;, 10, AIDifficulty.EASY);</span>
+<span class="nc" id="L28">        System.out.println(&quot;Created: &quot; + easyAI.getName() + &quot; (Difficulty: &quot; + easyAI.getDifficulty() + &quot;)&quot;);</span>
+
+        // Medium AI - Hunt and target
+<span class="nc" id="L31">        AIPlayer mediumAI = new AIPlayer(&quot;Medium Bot&quot;, 10, AIDifficulty.MEDIUM);</span>
+<span class="nc" id="L32">        System.out.println(&quot;Created: &quot; + mediumAI.getName() + &quot; (Difficulty: &quot; + mediumAI.getDifficulty() + &quot;)&quot;);</span>
+
+        // Hard AI - Probability-based
+<span class="nc" id="L35">        AIPlayer hardAI = new AIPlayer(&quot;Hard Bot&quot;, 10, AIDifficulty.HARD);</span>
+<span class="nc" id="L36">        System.out.println(&quot;Created: &quot; + hardAI.getName() + &quot; (Difficulty: &quot; + hardAI.getDifficulty() + &quot;)&quot;);</span>
+
+<span class="nc" id="L38">        System.out.println();</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Example 2: Setup a game with AI opponent
+     */
+    public static void exampleSetupGame() throws Exception {
+<span class="nc" id="L45">        System.out.println(&quot;=== Example 2: Setup Game with AI ===\n&quot;);</span>
+
+        // Create players
+<span class="nc" id="L48">        Player human = new Player(&quot;Human Player&quot;, 10);</span>
+<span class="nc" id="L49">        AIPlayer ai = new AIPlayer(&quot;Computer&quot;, 10, AIDifficulty.MEDIUM);</span>
+
+        // Add ships to human player
+<span class="nc" id="L52">        Ship carrier = new Carrier();</span>
+<span class="nc" id="L53">        human.addShip(carrier);</span>
+<span class="nc" id="L54">        human.placeShipOnGrid(carrier, new Coordinate(0, 0), Direction.HORIZONTAL);</span>
+
+<span class="nc" id="L56">        Ship cruiser = new Cruiser();</span>
+<span class="nc" id="L57">        human.addShip(cruiser);</span>
+<span class="nc" id="L58">        human.placeShipOnGrid(cruiser, new Coordinate(0, 2), Direction.HORIZONTAL);</span>
+
+<span class="nc" id="L60">        System.out.println(&quot;Human ships: &quot; + human.getShips().size() + &quot; placed&quot;);</span>
+
+        // Add ships to AI player
+<span class="nc" id="L63">        Ship aiCarrier = new Carrier();</span>
+<span class="nc" id="L64">        ai.addShip(aiCarrier);</span>
+<span class="nc" id="L65">        ai.placeShipOnGrid(aiCarrier, new Coordinate(5, 5), Direction.VERTICAL);</span>
+
+<span class="nc" id="L67">        Ship aiCruiser = new Cruiser();</span>
+<span class="nc" id="L68">        ai.addShip(aiCruiser);</span>
+<span class="nc" id="L69">        ai.placeShipOnGrid(aiCruiser, new Coordinate(7, 2), Direction.VERTICAL);</span>
+
+<span class="nc" id="L71">        System.out.println(&quot;AI ships: &quot; + ai.getShips().size() + &quot; placed&quot;);</span>
+
+        // Create game
+<span class="nc" id="L74">        Game game = new Game(human, ai);</span>
+<span class="nc" id="L75">        game.start();</span>
+
+<span class="nc" id="L77">        System.out.println(&quot;Game started! Current player: &quot; + game.getCurrentPlayer().getName());</span>
+<span class="nc" id="L78">        System.out.println();</span>
+<span class="nc" id="L79">    }</span>
+
+    /**
+     * Example 3: Handle AI turn
+     */
+    public static void exampleAITurn() throws Exception {
+<span class="nc" id="L85">        System.out.println(&quot;=== Example 3: AI Turn Handling ===\n&quot;);</span>
+
+        // Setup
+<span class="nc" id="L88">        Player human = new Player(&quot;Human&quot;, 10);</span>
+<span class="nc" id="L89">        AIPlayer ai = new AIPlayer(&quot;AI&quot;, 10, AIDifficulty.HARD);</span>
+
+        // Add one ship to human
+<span class="nc" id="L92">        Ship destroyer = new Destroyer();</span>
+<span class="nc" id="L93">        human.addShip(destroyer);</span>
+<span class="nc" id="L94">        human.placeShipOnGrid(destroyer, new Coordinate(3, 3), Direction.HORIZONTAL);</span>
+
+        // Add one ship to AI
+<span class="nc" id="L97">        Ship aiDestroyer = new Destroyer();</span>
+<span class="nc" id="L98">        ai.addShip(aiDestroyer);</span>
+<span class="nc" id="L99">        ai.placeShipOnGrid(aiDestroyer, new Coordinate(6, 6), Direction.HORIZONTAL);</span>
+
+<span class="nc" id="L101">        Game game = new Game(human, ai);</span>
+<span class="nc" id="L102">        game.start();</span>
+
+        // Simulate a few turns
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (int turn = 1; turn &lt;= 5; turn++) {</span>
+<span class="nc" id="L106">            System.out.println(&quot;Turn &quot; + turn + &quot;:&quot;);</span>
+
+<span class="nc" id="L108">            Player current = game.getCurrentPlayer();</span>
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (current instanceof AIPlayer) {</span>
+<span class="nc" id="L111">                AIPlayer aiPlayer = (AIPlayer) current;</span>
+
+                // AI chooses where to shoot
+<span class="nc" id="L114">                Coordinate shot = aiPlayer.chooseShot(game.getOpponent().getShips());</span>
+<span class="nc" id="L115">                System.out.println(&quot;  AI shoots at: &quot; + shot);</span>
+
+                // Execute the attack
+<span class="nc" id="L118">                AttackResponse response = game.playTurn(shot);</span>
+
+                // Notify AI of the result (important for learning!)
+<span class="nc" id="L121">                aiPlayer.notifyAttackResult(shot, response);</span>
+
+<span class="nc" id="L123">                System.out.println(&quot;  Result: &quot; + response.getResult());</span>
+<span class="nc" id="L124">            } else {</span>
+                // Human turn - simulate random shot
+<span class="nc" id="L126">                Coordinate humanShot = new Coordinate(turn, turn);</span>
+<span class="nc" id="L127">                System.out.println(&quot;  Human shoots at: &quot; + humanShot);</span>
+
+<span class="nc" id="L129">                AttackResponse response = game.playTurn(humanShot);</span>
+<span class="nc" id="L130">                System.out.println(&quot;  Result: &quot; + response.getResult());</span>
+            }
+
+<span class="nc" id="L133">            System.out.println();</span>
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (game.isGameOver()) {</span>
+<span class="nc" id="L136">                System.out.println(&quot;Game Over! Winner: &quot; + game.getWinner().getName());</span>
+<span class="nc" id="L137">                break;</span>
+            }
+        }
+<span class="nc" id="L140">    }</span>
+
+    /**
+     * Example 4: Test AI behavior at different difficulties
+     */
+    public static void exampleDifficultyComparison() {
+<span class="nc" id="L146">        System.out.println(&quot;=== Example 4: Difficulty Comparison ===\n&quot;);</span>
+
+<span class="nc" id="L148">        AIPlayer easy = new AIPlayer(&quot;Easy&quot;, 10, AIDifficulty.EASY);</span>
+<span class="nc" id="L149">        AIPlayer medium = new AIPlayer(&quot;Medium&quot;, 10, AIDifficulty.MEDIUM);</span>
+<span class="nc" id="L150">        AIPlayer hard = new AIPlayer(&quot;Hard&quot;, 10, AIDifficulty.HARD);</span>
+
+        // Make 5 shots with each difficulty
+<span class="nc" id="L153">        System.out.println(&quot;First 5 shots from each AI:\n&quot;);</span>
+
+<span class="nc" id="L155">        System.out.println(&quot;EASY AI:&quot;);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="nc" id="L157">            Coordinate shot = easy.chooseShot(easy.getShips());</span>
+<span class="nc" id="L158">            easy.getTrackingGrid().getCell(shot).shoot();</span>
+<span class="nc" id="L159">            System.out.println(&quot;  Shot &quot; + (i + 1) + &quot;: &quot; + shot);</span>
+        }
+
+<span class="nc" id="L162">        System.out.println(&quot;\nMEDIUM AI:&quot;);</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="nc" id="L164">            Coordinate shot = medium.chooseShot(medium.getShips());</span>
+<span class="nc" id="L165">            medium.getTrackingGrid().getCell(shot).shoot();</span>
+<span class="nc" id="L166">            System.out.println(&quot;  Shot &quot; + (i + 1) + &quot;: &quot; + shot);</span>
+        }
+
+<span class="nc" id="L169">        System.out.println(&quot;\nHARD AI:&quot;);</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        for (int i = 0; i &lt; 5; i++) {</span>
+<span class="nc" id="L171">            Coordinate shot = hard.chooseShot(hard.getShips());</span>
+<span class="nc" id="L172">            hard.getTrackingGrid().getCell(shot).shoot();</span>
+<span class="nc" id="L173">            System.out.println(&quot;  Shot &quot; + (i + 1) + &quot;: &quot; + shot);</span>
+        }
+
+<span class="nc" id="L176">        System.out.println();</span>
+<span class="nc" id="L177">    }</span>
+
+    /**
+     * Example 5: AI learning from hits
+     */
+    public static void exampleAILearning() {
+<span class="nc" id="L183">        System.out.println(&quot;=== Example 5: AI Learning (Medium difficulty) ===\n&quot;);</span>
+
+<span class="nc" id="L185">        AIPlayer ai = new AIPlayer(&quot;Learning AI&quot;, 10, AIDifficulty.MEDIUM);</span>
+
+        // First shot (random)
+<span class="nc" id="L188">        Coordinate shot1 = ai.chooseShot(ai.getShips());</span>
+<span class="nc" id="L189">        ai.getTrackingGrid().getCell(shot1).shoot();</span>
+<span class="nc" id="L190">        System.out.println(&quot;Shot 1 (HUNT mode): &quot; + shot1);</span>
+
+        // Simulate a HIT
+<span class="nc" id="L193">        Ship dummyShip = new Cruiser();</span>
+<span class="nc" id="L194">        AttackResponse hitResponse = new AttackResponse(</span>
+            com.par_28.ship_battle.model.enums.AttackResult.HIT,
+            dummyShip
+        );
+<span class="nc" id="L198">        ai.notifyAttackResult(shot1, hitResponse);</span>
+<span class="nc" id="L199">        System.out.println(&quot;Result: HIT! AI switches to TARGET mode&quot;);</span>
+
+        // Next shots should be adjacent to the hit
+<span class="nc" id="L202">        System.out.println(&quot;\nNext 4 shots (TARGET mode - should be adjacent to &quot; + shot1 + &quot;):&quot;);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        for (int i = 0; i &lt; 4; i++) {</span>
+<span class="nc" id="L204">            Coordinate shot = ai.chooseShot(ai.getShips());</span>
+<span class="nc" id="L205">            ai.getTrackingGrid().getCell(shot).shoot();</span>
+<span class="nc" id="L206">            System.out.println(&quot;  Shot &quot; + (i + 2) + &quot;: &quot; + shot);</span>
+
+            // Check if adjacent
+<span class="nc" id="L209">            boolean isAdjacent = isAdjacentTo(shot, shot1);</span>
+<span class="nc" id="L210">            System.out.println(&quot;    Adjacent to hit? &quot; + isAdjacent);</span>
+        }
+
+<span class="nc" id="L213">        System.out.println();</span>
+<span class="nc" id="L214">    }</span>
+
+    /**
+     * Helper method to check if two coordinates are adjacent
+     */
+    private static boolean isAdjacentTo(Coordinate c1, Coordinate c2) {
+<span class="nc" id="L220">        int dx = Math.abs(c1.getX() - c2.getX());</span>
+<span class="nc" id="L221">        int dy = Math.abs(c1.getY() - c2.getY());</span>
+<span class="nc bnc" id="L222" title="All 8 branches missed.">        return (dx == 1 &amp;&amp; dy == 0) || (dx == 0 &amp;&amp; dy == 1);</span>
+    }
+
+    /**
+     * Main method to run all examples
+     */
+    public static void main(String[] args) {
+        try {
+<span class="nc" id="L230">            exampleCreateAIPlayers();</span>
+<span class="nc" id="L231">            exampleSetupGame();</span>
+<span class="nc" id="L232">            exampleAITurn();</span>
+<span class="nc" id="L233">            exampleDifficultyComparison();</span>
+<span class="nc" id="L234">            exampleAILearning();</span>
+
+<span class="nc" id="L236">            System.out.println(&quot;=== All Examples Completed ===&quot;);</span>
+<span class="nc" id="L237">        } catch (Exception e) {</span>
+<span class="nc" id="L238">            System.err.println(&quot;Error running examples: &quot; + e.getMessage());</span>
+<span class="nc" id="L239">            e.printStackTrace();</span>
+<span class="nc" id="L240">        }</span>
+<span class="nc" id="L241">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

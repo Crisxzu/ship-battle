@@ -42,8 +42,8 @@ public class Grid {
      * @throws InvalidGridDimension if width or height are not positive
      */
 <span class="fc" id="L44">    public Grid(int width, int height) throws InvalidGridDimension {</span>
-<span class="fc bfc" id="L45" title="All 4 branches covered.">        if (width &lt;= 0 || height &lt;= 0) {</span>
-<span class="fc" id="L46">            throw new InvalidGridDimension(width, height);</span>
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">        if (width &lt;= 0 || height &lt;= 0) {</span>
+<span class="nc" id="L46">            throw new InvalidGridDimension(width, height);</span>
         }
 <span class="fc" id="L48">        this.width = width;</span>
 <span class="fc" id="L49">        this.height = height;</span>
@@ -72,7 +72,7 @@ public class Grid {
      * @return true if valid, false otherwise
      */
     public boolean isValidCoordinate(Coordinate coord) {
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (coord == null) return false;</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (coord == null) return false;</span>
 <span class="fc" id="L76">        int x = coord.getX();</span>
 <span class="fc" id="L77">        int y = coord.getY();</span>
 <span class="fc bfc" id="L78" title="All 8 branches covered.">        return x &gt;= 0 &amp;&amp; x &lt; width &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; height;</span>
@@ -86,8 +86,8 @@ public class Grid {
      * @throws InvalidCoordinateException if coord is outside the grid
      */
     public Cell getCell(Coordinate coord) throws InvalidCoordinateException {
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (!isValidCoordinate(coord)) {</span>
-<span class="fc" id="L90">            throw new InvalidCoordinateException(coord);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (!isValidCoordinate(coord)) {</span>
+<span class="nc" id="L90">            throw new InvalidCoordinateException(coord);</span>
         }
 <span class="fc" id="L92">        return cells[coord.getX()][coord.getY()];</span>
     }
@@ -172,12 +172,12 @@ public class Grid {
      * @throws InvalidCoordinateException when start is invalid
      */
     private List&lt;Coordinate&gt; canPlaceShip(Ship ship, Coordinate start, Direction direction) {
-<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (ship == null) {</span>
-<span class="fc" id="L176">            return new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (ship == null) {</span>
+<span class="nc" id="L176">            return new ArrayList&lt;&gt;();</span>
         }
 
-<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (!isValidCoordinate(start))</span>
-<span class="fc" id="L180">            throw new InvalidCoordinateException(start);</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        if (!isValidCoordinate(start))</span>
+<span class="nc" id="L180">            throw new InvalidCoordinateException(start);</span>
 
 <span class="fc" id="L182">        List&lt;Coordinate&gt; positions = calculateShipPositions(start, ship.getLength(), direction);</span>
 
@@ -244,28 +244,28 @@ public class Grid {
      * @throws InvalidCoordinateException when coord is outside grid
      */
     public AttackResponse receiveAttack(Coordinate coord) throws InvalidCoordinateException {
-<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (!isValidCoordinate(coord)) {</span>
-<span class="fc" id="L248">            throw new InvalidCoordinateException(coord);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (!isValidCoordinate(coord)) {</span>
+<span class="nc" id="L248">            throw new InvalidCoordinateException(coord);</span>
         }
 
-<span class="fc" id="L251">        Cell target = getCell(coord);</span>
+<span class="nc" id="L251">        Cell target = getCell(coord);</span>
 
-<span class="fc bfc" id="L253" title="All 2 branches covered.">        if (target.isShot()) {</span>
-<span class="fc" id="L254">            return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip());</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (target.isShot()) {</span>
+<span class="nc" id="L254">            return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip());</span>
         }
 
-<span class="fc" id="L257">        target.shoot();</span>
+<span class="nc" id="L257">        target.shoot();</span>
 
-<span class="fc bfc" id="L259" title="All 2 branches covered.">        if (!target.hasShip()) {</span>
-<span class="fc" id="L260">            return new AttackResponse(AttackResult.MISS, null);</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (!target.hasShip()) {</span>
+<span class="nc" id="L260">            return new AttackResponse(AttackResult.MISS, null);</span>
         }
         else {
-<span class="fc" id="L263">            Ship s = target.getShip();</span>
+<span class="nc" id="L263">            Ship s = target.getShip();</span>
 
-<span class="fc bfc" id="L265" title="All 2 branches covered.">            if (s.isDestroyed()) {</span>
-<span class="fc" id="L266">                return new AttackResponse(AttackResult.SUNK, s);</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            if (s.isDestroyed()) {</span>
+<span class="nc" id="L266">                return new AttackResponse(AttackResult.SUNK, s);</span>
             } else {
-<span class="fc" id="L268">                return new AttackResponse(AttackResult.HIT, s);</span>
+<span class="nc" id="L268">                return new AttackResponse(AttackResult.HIT, s);</span>
             }
         }
     }

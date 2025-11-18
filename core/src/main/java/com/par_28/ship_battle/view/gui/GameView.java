@@ -19,6 +19,7 @@ import com.par_28.ship_battle.model.enums.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Game menu
@@ -27,7 +28,7 @@ public class GameView extends GuiView<GameController> {
     /**
      * Stack for layering UI elements
      */
-    private Stack stack;
+    protected Stack stack;
 
     /**
      * Table for player's tracking grid
@@ -42,152 +43,154 @@ public class GameView extends GuiView<GameController> {
     /**
      * Root table of the UI
      */
-    private Table root;
+    protected Table root;
 
     /**
      * Pause table UI element
      */
-    private Table pauseTable;
+    protected Table pauseTable;
     /**
      * Header labels for each grid column
      */
-    private List<Label> headerLabels = new ArrayList<>();
+    protected List<Label> headerLabels = new ArrayList<>();
 
     /**
      * Row labels for each grid row
      */
-    private List<Label> rowLabels = new ArrayList<>();
+    protected List<Label> rowLabels = new ArrayList<>();
 
     /**
      * Loli message label
      */
-    private Label loliMsg;
+    protected Label loliMsg;
 
     /**
      * Coordinate label displaying selected grid position
      */
-    private Label coordLabel;
+    protected Label coordLabel;
 
     /**
      * Pause title label
      */
-    private Label pauseTitleLabel;
+    protected Label pauseTitleLabel;
 
     /**
      * Turn label
      */
-    private Label turnLabel;
+    protected Label turnLabel;
 
     /**
      * Player name label
      */
-    private Label nameLabel;
+    protected Label nameLabel;
 
     /**
      * Pause image overlay
      */
-    private Image pauseImage;
+    protected Image pauseImage;
 
     /**
      * Loli image UI element
      */
-    private Image loliImage;
+    protected Image loliImage;
 
     /**
      * Grid case texture
      */
-    TextureRegionDrawable gridCaseTexture;
+    protected TextureRegionDrawable gridCaseTexture;
 
     /**
      * Snipe texture
      */
-    TextureRegionDrawable snipeTexture;
+    protected TextureRegionDrawable snipeTexture;
 
     /**
      * Carrier ship texture
      */
-    TextureRegionDrawable carrierTexture;
+    protected TextureRegionDrawable carrierTexture;
 
     /**
      * Cruiser ship texture
      */
-    TextureRegionDrawable cruiserTexture;
+    protected TextureRegionDrawable cruiserTexture;
 
     /**
      * Destroyer ship texture
      */
-    TextureRegionDrawable destroyerTexture;
+    protected TextureRegionDrawable destroyerTexture;
 
     /**
      * Torpedo texture
      */
-    TextureRegionDrawable torpedoTexture;
+    protected TextureRegionDrawable torpedoTexture;
 
     /**
      * Miss texture
      */
-    TextureRegionDrawable missTexture;
+    protected TextureRegionDrawable missTexture;
 
     /**
      * Hit texture
      */
-    TextureRegionDrawable hitTexture;
+    protected TextureRegionDrawable hitTexture;
 
     /**
      * Sunk texture
      */
-    TextureRegionDrawable sunkTexture;
+    protected TextureRegionDrawable sunkTexture;
 
     /**
      * Loli talking texture
      */
-    TextureRegionDrawable loliTexture;
+    protected TextureRegionDrawable loliTexture;
 
     /**
      * Pause background texture
      */
-    TextureRegionDrawable pauseTexture;
+    protected TextureRegionDrawable pauseTexture;
 
     /**
      * Loli talking animation
      */
-    Animation<TextureRegion> loliAnimation;
+    protected Animation<TextureRegion> loliAnimation;
 
 
     /**
      * Current player
      */
-    private Player currentPlayer;
+    protected Player currentPlayer;
 
     /**
      * Attack response after shooting
      */
-    private AttackResponse response;
+    protected AttackResponse response;
 
     /**
      * Turn played flag
      */
-    private boolean turnPlayed = false;
+    protected boolean turnPlayed = false;
 
     /**
      * Shoot flag
      */
-    private boolean shoot = false;
+    protected boolean shoot = false;
 
     /**
      * Wait timer for delays
      */
-    private float waitTimer = 0f;
+    protected float waitTimer = 0f;
 
     /**
      * Elapsed time for animation
      */
-    private float elapsed = 0f;
+    protected float elapsed = 0f;
 
     /**
      * Paused flag
      */
-    private boolean paused = false;
+    protected boolean paused = false;
+
+    protected Stack[][] trackingTableStack;
 
     /**
      * Initialize game menu
@@ -361,7 +364,8 @@ public class GameView extends GuiView<GameController> {
      * @param caseSelectable if cases are selectable
      * @param showShips if ships should be shown
      */
-    void updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
+    Stack[][] updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
+        Stack[][] stacks;
         Cell[][] cells = playerGrid.getCells();
         int width = cells.length;
         int height = (width > 0) ? cells[0].length : 0;
@@ -396,7 +400,7 @@ public class GameView extends GuiView<GameController> {
             }
         }
 
-        Stack[][] stacks = new Stack[width][height];
+        stacks = new Stack[width][height];
 
         // Deactivate default for header
         table.defaults().reset();
@@ -472,7 +476,7 @@ public class GameView extends GuiView<GameController> {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                             System.out.printf("Enter Case %d, %d\n", finalI, finalJ);
-                            if(!shoot && !paused) {
+                            if(!shoot && !paused && !currentPlayer.isAI()) {
                                 finalSnipeImage.setVisible(true);
                                 coordLabel.setText(new Coordinate(finalI, finalJ).toLetterFormat());
                             }
@@ -481,14 +485,14 @@ public class GameView extends GuiView<GameController> {
                         @Override
                         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                             System.out.printf("Exit Case %d, %d\n", finalI, finalJ);
-                            if(!shoot) {
+                            if(!shoot && !currentPlayer.isAI()) {
                                 finalSnipeImage.setVisible(false);
                             }
                         }
 
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            if(!shoot && !paused) {
+                            if(!shoot && !paused && !currentPlayer.isAI()) {
                                 shoot = true;
                                 Coordinate coord = new Coordinate(finalI, finalJ);
 
@@ -550,6 +554,8 @@ public class GameView extends GuiView<GameController> {
                 }
             }
         }
+
+        return stacks;
     }
 
     /**
@@ -594,6 +600,9 @@ public class GameView extends GuiView<GameController> {
             }
         }
         else {
+            if(!Objects.equals(loliMsg.getText().substring(0), DialogHandler.getDialogText())) {
+                loliMsg.setText(DialogHandler.getDialogText());
+            }
             loliAnimation.setPlayMode(Animation.PlayMode.NORMAL);
         }
 
@@ -712,7 +721,7 @@ public class GameView extends GuiView<GameController> {
      * @param shipName name of ship
      * @return drawable of ship
      */
-    private TextureRegionDrawable getShipDrawable(String shipName) {
+    protected TextureRegionDrawable getShipDrawable(String shipName) {
         if (shipName == null) return null;
 
         switch (shipName) {
@@ -732,7 +741,7 @@ public class GameView extends GuiView<GameController> {
     /**
      * Update player ui tables
      */
-    private void updatePlayerTables() {
+    protected void updatePlayerTables() {
         updateTableWithModel(
             shipTable,
             currentPlayer.getGrid(),
@@ -740,7 +749,7 @@ public class GameView extends GuiView<GameController> {
             true
         );
 
-        updateTableWithModel(
+        trackingTableStack = updateTableWithModel(
             trackingTable,
             currentPlayer.getTrackingGrid(),
             true,
@@ -751,7 +760,7 @@ public class GameView extends GuiView<GameController> {
     /**
      * Toggle pause menu
      */
-    private void togglePause() {
+    protected void togglePause() {
         paused = !paused;
 
         pauseImage.setVisible(paused);

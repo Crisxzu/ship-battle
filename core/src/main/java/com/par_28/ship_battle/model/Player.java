@@ -3,9 +3,7 @@ package com.par_28.ship_battle.model;
 import java.util.*;
 
 import com.par_28.ship_battle.model.enums.*;
-import com.par_28.ship_battle.model.*;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Player model representing a game player
@@ -153,5 +151,15 @@ public class Player {
      */
     public List<Ship> getShips() {
         return ships;
+    }
+
+
+    /**
+     * Check if this player is an AI.
+     *
+     * @return returns false for normal player and true for AI
+     */
+    public boolean isAI() {
+        return false;
     }
 }

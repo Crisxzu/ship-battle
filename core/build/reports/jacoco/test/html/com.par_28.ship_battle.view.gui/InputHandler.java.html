@@ -1,11 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InputHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">InputHandler.java</span></div><h1>InputHandler.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-<span class="nc" id="L5">public class InputHandler {</span>
+/**
+ * Handler for input in the GUI.
+ */
+public class InputHandler implements Handler{
+    /**
+     * Touch position
+     */
+    static Vector2 touchPos;
 
+    /**
+     * Initialize input handler
+     */
+<span class="nc" id="L19">    public InputHandler() {</span>
+<span class="nc" id="L20">        touchPos = new Vector2();</span>
+<span class="nc" id="L21">    }</span>
+
+    /**
+     * Check if user just touched the screen
+     * 
+     * @return true if user just touched, false otherwise
+     */
     public static boolean userJustTouched(){
-<span class="nc" id="L8">        return Gdx.input.justTouched();</span>
+<span class="nc" id="L29">        return Gdx.input.justTouched();</span>
     }
+
+    /**
+     * Get touch position
+     * 
+     * @param viewport viewport to unproject
+     * @return touch position
+     */
+    public static Vector2 getTouchPos(Viewport viewport) {
+<span class="nc" id="L39">        Vector2 touchPos = new Vector2();</span>
+
+<span class="nc" id="L41">        touchPos.set(Gdx.input.getX(), Gdx.input.getY());</span>
+<span class="nc" id="L42">        viewport.unproject(touchPos);</span>
+
+<span class="nc" id="L44">        return touchPos;</span>
+    }
+
+    /**
+     * Check if a key was just pressed
+     * 
+     * @param keyCode key code to check
+     * @return true if key was just pressed, false otherwise
+     */
+    public static boolean isKeyJustPressed(int keyCode) {
+<span class="nc" id="L54">        return Gdx.input.isKeyJustPressed(keyCode);</span>
+    }
+
+    /**
+     * Dispose resources
+     */
+    @Override
+    public void dispose() {
+
+<span class="nc" id="L63">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

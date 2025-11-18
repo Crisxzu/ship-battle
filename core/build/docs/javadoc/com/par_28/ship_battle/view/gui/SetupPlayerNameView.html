@@ -70,7 +70,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class SetupPlayerNameView" class="title">Class SetupPlayerNameView</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>
+<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;
 <div class="inheritance">com.par_28.ship_battle.view.gui.SetupPlayerNameView</div>
 </div>
 </div>
@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SetupPlayerNameView</span>
-<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></span></div>
+<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</span></div>
 <div class="block">Setup player name menu</div>
 </section>
 <section class="summary">
@@ -95,30 +95,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private <a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a></code></div>
-<div class="col-second even-row-color"><code><a href="#controller" class="member-name-link">controller</a></code></div>
+<div class="col-first even-row-color"><code>private int</code></div>
+<div class="col-second even-row-color"><code><a href="#iPlayer" class="member-name-link">iPlayer</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Controller for setup menu</div>
-</div>
-<div class="col-first odd-row-color"><code>private int</code></div>
-<div class="col-second odd-row-color"><code><a href="#iPlayer" class="member-name-link">iPlayer</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block">Current player index</div>
 </div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.TextField</code></div>
-<div class="col-second even-row-color"><code><a href="#nameField" class="member-name-link">nameField</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.TextField</code></div>
+<div class="col-second odd-row-color"><code><a href="#nameField" class="member-name-link">nameField</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Name input field</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second odd-row-color"><code><a href="#titleLabel" class="member-name-link">titleLabel</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second even-row-color"><code><a href="#titleLabel" class="member-name-link">titleLabel</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Title label</div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Fields inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
+<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#controller">controller</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -167,7 +162,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Resize elements on window resize</div>
+<div class="block">Resize the screen</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;delta)</code></div>
@@ -184,7 +179,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Methods inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#loadTextures()">loadTextures</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a></code></div>
+<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#initUI()">initUI</a>, <a href="GuiView.html#loadTextures()">loadTextures</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -220,13 +215,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Current player index</div>
 </section>
 </li>
-<li>
-<section class="detail" id="controller">
-<h3>controller</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a></span>&nbsp;<span class="element-name">controller</span></div>
-<div class="block">Controller for setup menu</div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -260,10 +248,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="buildUI()">
 <h3>buildUI</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#buildUI()">GuiView</a></code></span></div>
 <div class="block">Build UI</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#buildUI()">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#buildUI()">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -278,10 +267,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update(float)">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(float&nbsp;delta)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#update(float)">GuiView</a></code></span></div>
 <div class="block">Update the screen</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#update(float)">update</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#update(float)">update</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>delta</code> - time since last update</dd>
 </dl>
@@ -299,12 +289,13 @@ loadScripts(document, 'script');</script>
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
-<div class="block">Resize elements on window resize</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#resize(int,int)">GuiView</a></code></span></div>
+<div class="block">Resize the screen</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>resize</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>width</code> - new width</dd>
 <dd><code>height</code> - new height</dd>
@@ -315,12 +306,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#dispose()">GuiView</a></code></span></div>
 <div class="block">Dispose resources</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
 </dl>
 </section>
 </li>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="EasyAI Shot Selection Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.232Z" hostname="MacBook-Pro.local" time="0.003">
+  <properties/>
+  <testcase name="Should select from all available coordinates randomly" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
+  <testcase name="Should never select the same coordinate twice" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
+  <testcase name="Should select a valid unshot coordinate" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

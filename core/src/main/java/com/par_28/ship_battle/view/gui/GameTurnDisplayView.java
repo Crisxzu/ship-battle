@@ -42,8 +42,9 @@ public class GameTurnDisplayView extends GuiView<GameController> {
 
         msg = new Label(
             String.format(
-                "Turn %d\n Player %s",
+                "Turn %d\n %s %s",
                 this.parent.app.game.getNbTurns()+1,
+                currentPlayer.isAI() ? "AI" : "Player",
                 currentPlayer.getName()
             ),
             skin

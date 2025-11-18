@@ -5,10 +5,8 @@ import com.par_28.ship_battle.model.enums.GameState;
 import com.par_28.ship_battle.model.exceptions.*;
 
 /**
- * Class representing the game state and logic
- * &lt;p&gt;
- * A game consists of two players who take turns attacking each other's ships on a grid.
- * &lt;/p&gt;
+ * Game state and logic
+ *
  * @see Player
  * @see Coordinate
  * @see AttackResponse
@@ -37,19 +35,19 @@ public class Game {
     /**
      * Number of turns played
      */
-<span class="fc" id="L40">    private int nbTurns = 0;</span>
+<span class="fc" id="L38">    private int nbTurns = 0;</span>
 
     /**
-     * Constructor to initialize game with two players
+     * Initialize game
      *
      * @param player1 First player
      * @param player2 Second player
      */
-<span class="fc" id="L48">    public Game(Player player1, Player player2) {</span>
-<span class="fc" id="L49">        this.player1 = player1;</span>
-<span class="fc" id="L50">        this.player2 = player2;</span>
-<span class="fc" id="L51">        this.gameState = GameState.SETUP;</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L46">    public Game(Player player1, Player player2) {</span>
+<span class="fc" id="L47">        this.player1 = player1;</span>
+<span class="fc" id="L48">        this.player2 = player2;</span>
+<span class="fc" id="L49">        this.gameState = GameState.SETUP;</span>
+<span class="fc" id="L50">    }</span>
 
     /**
      * Start the game if both players have ships placed and game is not already started
@@ -57,17 +55,17 @@ public class Game {
      * @throws IllegalGameStateException if game is already started or players have no ships
      */
     public void start() throws IllegalGameStateException {
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        if(gameState != GameState.SETUP) {</span>
-<span class="fc" id="L61">            throw new IllegalGameStateException(&quot;Game is already started&quot;);</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if(gameState != GameState.SETUP) {</span>
+<span class="nc" id="L59">            throw new IllegalGameStateException(&quot;Game is already started&quot;);</span>
         }
 
-<span class="fc bfc" id="L64" title="All 4 branches covered.">        if(player1.getShips().isEmpty() || player2.getShips().isEmpty()) {</span>
-<span class="fc" id="L65">            throw new IllegalGameStateException(&quot;Both players must have ships to start the game&quot;);</span>
+<span class="pc bpc" id="L62" title="2 of 4 branches missed.">        if(player1.getShips().isEmpty() || player2.getShips().isEmpty()) {</span>
+<span class="nc" id="L63">            throw new IllegalGameStateException(&quot;Both players must have ships to start the game&quot;);</span>
         }
 
-<span class="fc" id="L68">        gameState = GameState.PLAYER1_TURN;</span>
-<span class="fc" id="L69">        currentPlayer = player1;</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L66">        gameState = GameState.PLAYER1_TURN;</span>
+<span class="fc" id="L67">        currentPlayer = player1;</span>
+<span class="fc" id="L68">    }</span>
 
     /**
      * Play a turn for the current player by attacking the opponent at the given coordinate
@@ -85,40 +83,40 @@ public class Game {
      * @throws InvalidCoordinateException if the coordinate is invalid
      */
     public AttackResponse playTurn(Coordinate coord) throws IllegalGameStateException, InvalidCoordinateException {
-<span class="fc bfc" id="L88" title="All 2 branches covered.">        if(gameState == GameState.GAME_OVER) {</span>
-<span class="fc" id="L89">            throw new IllegalGameStateException(&quot;Game is already over&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if(gameState == GameState.GAME_OVER) {</span>
+<span class="nc" id="L87">            throw new IllegalGameStateException(&quot;Game is already over&quot;);</span>
         }
 
-<span class="fc" id="L92">        Player opponent = getOpponent();</span>
+<span class="nc" id="L90">        Player opponent = getOpponent();</span>
 
-<span class="fc" id="L94">        AttackResponse response = opponent.receiveAttack(coord);</span>
-<span class="fc" id="L95">        currentPlayer.recordAttack(coord, response);</span>
+<span class="nc" id="L92">        AttackResponse response = opponent.receiveAttack(coord);</span>
+<span class="nc" id="L93">        currentPlayer.recordAttack(coord, response);</span>
 
-<span class="fc bfc" id="L97" title="All 2 branches covered.">        if(opponent.isDead()) {</span>
-<span class="fc" id="L98">            gameState = GameState.GAME_OVER;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if(opponent.isDead()) {</span>
+<span class="nc" id="L96">            gameState = GameState.GAME_OVER;</span>
         }
         else {
-<span class="fc" id="L101">            switchPlayer();</span>
+<span class="nc" id="L99">            switchPlayer();</span>
         }
 
-<span class="fc" id="L104">        nbTurns++;</span>
+<span class="nc" id="L102">        nbTurns++;</span>
 
-<span class="fc" id="L106">        return response;</span>
+<span class="nc" id="L104">        return response;</span>
     }
 
     /**
      * Switch the current player to the other player
      */
     public void switchPlayer() {
-<span class="fc bfc" id="L113" title="All 2 branches covered.">        if(gameState == GameState.PLAYER1_TURN) {</span>
-<span class="fc" id="L114">            gameState = GameState.PLAYER2_TURN;</span>
-<span class="fc" id="L115">            currentPlayer = player2;</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if(gameState == GameState.PLAYER1_TURN) {</span>
+<span class="nc" id="L112">            gameState = GameState.PLAYER2_TURN;</span>
+<span class="nc" id="L113">            currentPlayer = player2;</span>
         }
         else {
-<span class="fc" id="L118">            gameState = GameState.PLAYER1_TURN;</span>
-<span class="fc" id="L119">            currentPlayer = player1;</span>
+<span class="nc" id="L116">            gameState = GameState.PLAYER1_TURN;</span>
+<span class="nc" id="L117">            currentPlayer = player1;</span>
         }
-<span class="fc" id="L121">    }</span>
+<span class="nc" id="L119">    }</span>
 
     /**
      * Check if the game is over
@@ -126,7 +124,7 @@ public class Game {
      * @return boolean true if game is over, false otherwise
      */
     public boolean isGameOver() {
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        return gameState == GameState.GAME_OVER;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        return gameState == GameState.GAME_OVER;</span>
     }
 
     /**
@@ -135,15 +133,15 @@ public class Game {
      * @return Player winner player who won the game, null if game is not over
      */
     public Player getWinner() {
-<span class="fc bfc" id="L138" title="All 2 branches covered.">        if(!isGameOver()) {</span>
-<span class="fc" id="L139">            return null;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if(!isGameOver()) {</span>
+<span class="nc" id="L137">            return null;</span>
         }
 
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        if(player1.isDead()) {</span>
-<span class="fc" id="L143">            return player2;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if(player1.isDead()) {</span>
+<span class="nc" id="L141">            return player2;</span>
         }
         else {
-<span class="fc" id="L146">            return player1;</span>
+<span class="nc" id="L144">            return player1;</span>
         }
     }
 
@@ -153,7 +151,7 @@ public class Game {
      * @return Player current player whose turn it is
      */
     public Player getCurrentPlayer() {
-<span class="fc" id="L156">        return currentPlayer;</span>
+<span class="fc" id="L154">        return currentPlayer;</span>
     }
 
     /**
@@ -162,7 +160,7 @@ public class Game {
      * @return Player opponent player who is not the current player
      */
     public Player getOpponent() {
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        return currentPlayer == player1 ? player2 : player1;</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        return currentPlayer == player1 ? player2 : player1;</span>
     }
 
     /**
@@ -171,7 +169,7 @@ public class Game {
      * @return GameState current state of the game
      */
     public GameState getGameState() {
-<span class="fc" id="L174">        return gameState;</span>
+<span class="nc" id="L172">        return gameState;</span>
     }
 
     /**
@@ -180,7 +178,7 @@ public class Game {
      * @return int number of turns played
      */
     public int getNbTurns() {
-<span class="fc" id="L183">        return nbTurns;</span>
+<span class="nc" id="L181">        return nbTurns;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -2,6 +2,8 @@ package com.par_28.ship_battle.controller.gui;
 
 import com.par_28.ship_battle.ShipBattleApplication;
 import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
 import com.par_28.ship_battle.model.enums.Direction;
 import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
 import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
@@ -45,12 +47,27 @@ public class ScreenController extends GuiController {
 
         // TODO Return to normal after game testing
         //changeController(GuiControllerEnum.MAIN_MENU);
-        this.app.player1 = new Player("Dazu", this.app.gridSize);
+        /*this.app.player1 = new Player("Dazu", this.app.gridSize);
         this.app.player2 = new Player("Daouda", this.app.gridSize);
 
         // Initialize ships with default positions
         initializeDefaultShips(this.app.player1);
-        initializeDefaultShips(this.app.player2);
+        initializeDefaultShips(this.app.player2);*/
+
+        this.app.player1 = new Player("Dazu", this.app.gridSize);
+        AIPlayer aiPlayer = new AIPlayer(AIPlayer.getRandomName(), this.app.gridSize, AIDifficulty.HARD);
+        this.app.player2 = aiPlayer;
+
+        initializeDefaultShips(this.app.player1);
+
+        Ship[] ships = {
+            new Carrier(),
+            new Cruiser(),
+            new Destroyer(),
+            new Torpedo()
+        };
+
+        aiPlayer.placeShipsRandomly(List.of(ships));
 
         this.app.game = new Game(this.app.player1, this.app.player2);
         this.app.game.start();

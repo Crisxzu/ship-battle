@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GuiView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">GuiView.java</span></div><h1>GuiView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.par_28.ship_battle.controller.gui.GuiController;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+
+/**
+ * Base for all GUI views
+ *
+ * @param &lt;T&gt; type of controller associated with the view
+ */
+public abstract class GuiView&lt;T extends GuiController&gt; implements Screen {
+    /**
+     * Background texture
+     */
+    protected Texture backgroundTexture;
+
+    /**
+     * Screen manager
+     */
+    protected ScreenController parent;
+
+    /**
+     * Stage for UI elements
+     */
+    public Stage stage;
+
+    /**
+     * UI skin
+     */
+    protected Skin skin;
+
+    /**
+     * Menu buttons
+     */
+    protected Array&lt;TextButton&gt; menuButtons;
+
+    /**
+     * Base size for scaling
+     */
+    float base;
+
+    /**
+     * Controller associated with the view
+     */
+    protected T controller;
+
+    /**
+     * Initialize menu
+     *
+     * @param parent screen manager
+     */
+<span class="nc" id="L63">    public GuiView(ScreenController parent) {</span>
+<span class="nc" id="L64">        this.parent = parent;</span>
+<span class="nc" id="L65">        initUI();</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Initialize menu with controller
+     *
+     * @param parent screen manager
+     * @param controller menu controller
+     */
+<span class="nc" id="L74">    public GuiView(ScreenController parent, T controller) {</span>
+<span class="nc" id="L75">        this.parent = parent;</span>
+<span class="nc" id="L76">        this.controller = controller;</span>
+<span class="nc" id="L77">        initUI();</span>
+<span class="nc" id="L78">    }</span>
+
+    /**
+     * Initialize base things for UI
+     */
+    protected void initUI() {
+<span class="nc" id="L84">        this.stage = new Stage(new ScreenViewport());</span>
+<span class="nc" id="L85">        skin = new Skin(Gdx.files.internal(&quot;uiskin.json&quot;));</span>
+<span class="nc" id="L86">        menuButtons = new Array&lt;&gt;();</span>
+<span class="nc" id="L87">    }</span>
+
+    /**
+     * Load necessary textures
+     */
+    protected void loadTextures() {
+<span class="nc" id="L93">        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     * Build UI
+     */
+    protected void buildUI() {
+<span class="nc" id="L100">        loadTextures();</span>
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Add a button to the menu
+     *
+     * @param table table to add the button to
+     * @param text button text
+     * @param action button action
+     * @return the created button cell
+     */
+    protected Cell&lt;TextButton&gt; addMenuButton(Table table, String text, Runnable action) {
+<span class="nc" id="L112">        TextButton button = new TextButton(text, skin);</span>
+<span class="nc" id="L113">        menuButtons.add(button);</span>
+<span class="nc" id="L114">        button.addListener(new ClickListener() {</span>
+            @Override public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L116">                action.run();</span>
+<span class="nc" id="L117">            }</span>
+        });
+<span class="nc" id="L119">        Cell&lt;TextButton&gt; cell =  table.add(button);</span>
+<span class="nc" id="L120">        cell.row();</span>
+
+<span class="nc" id="L122">        return cell;</span>
+    }
+
+    /**
+     * Show the screen
+     */
+    @Override
+    public void show() {
+<span class="nc" id="L130">        Gdx.input.setInputProcessor(stage);</span>
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Resize the screen
+     *
+     * @param width new width
+     * @param height new height
+     */
+    public void resize(int width, int height) {
+<span class="nc" id="L140">        stage.getViewport().update(width, height, true);</span>
+<span class="nc" id="L141">        base = Math.min(width, height);</span>
+<span class="nc" id="L142">        float buttonScale = base / 600f;</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if(menuButtons != null) {</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            for (TextButton button : menuButtons) {</span>
+<span class="nc" id="L145">                button.getLabel().setFontScale(buttonScale);</span>
+<span class="nc" id="L146">            }</span>
+        }
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Update the screen
+     *
+     * @param delta time since last update
+     */
+    public void update(float delta) {
+
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Render the screen
+     *
+     * @param delta time since last render
+     */
+    @Override
+    public void render(float delta) {
+<span class="nc" id="L166">        update(delta);</span>
+<span class="nc" id="L167">        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);</span>
+
+<span class="nc" id="L169">        stage.getBatch().begin();</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if(backgroundTexture != null) {</span>
+<span class="nc" id="L171">            stage.getBatch().draw(</span>
+                backgroundTexture,
+                0,
+                0,
+<span class="nc" id="L175">                Gdx.graphics.getWidth(),</span>
+<span class="nc" id="L176">                Gdx.graphics.getHeight()</span>
+            );
+        }
+<span class="nc" id="L179">        stage.getBatch().end();</span>
+
+<span class="nc" id="L181">        stage.act(delta);</span>
+<span class="nc" id="L182">        stage.draw();</span>
+<span class="nc" id="L183">    }</span>
+
+    /**
+     * Pause the screen
+     */
+    @Override
+    public void pause() {
+
+<span class="nc" id="L191">    }</span>
+
+    /**
+     * Resume the screen
+     */
+    @Override
+    public void resume() {
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * Hide the screen
+     */
+    @Override
+    public void hide() {
+<span class="nc" id="L205">        Gdx.input.setInputProcessor(null);</span>
+<span class="nc" id="L206">    }</span>
+
+    /**
+     * Dispose resources
+     */
+    @Override
+    public void dispose() {
+<span class="nc" id="L213">        stage.dispose();</span>
+<span class="nc" id="L214">        skin.dispose();</span>
+<span class="nc" id="L215">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

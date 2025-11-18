@@ -67,12 +67,16 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.par_28.ship_battle.view.gui</a></div>
-<h1 title="Class GuiView" class="title">Class GuiView</h1>
+<h1 title="Class GuiView" class="title">Class GuiView&lt;T extends <a href="../../controller/gui/GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a>&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.par_28.ship_battle.view.gui.GuiView</div>
+<div class="inheritance">com.par_28.ship_battle.view.gui.GuiView&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>T</code> - type of controller associated with the view</dd>
+</dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
 <dd><code>com.badlogic.gdx.Screen</code></dd>
@@ -82,7 +86,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="GameOverView.html" title="class in com.par_28.ship_battle.view.gui">GameOverView</a></code>, <code><a href="GameTurnDisplayView.html" title="class in com.par_28.ship_battle.view.gui">GameTurnDisplayView</a></code>, <code><a href="GameView.html" title="class in com.par_28.ship_battle.view.gui">GameView</a></code>, <code><a href="MainMenuView.html" title="class in com.par_28.ship_battle.view.gui">MainMenuView</a></code>, <code><a href="SettingsView.html" title="class in com.par_28.ship_battle.view.gui">SettingsView</a></code>, <code><a href="SetupPlayerNameView.html" title="class in com.par_28.ship_battle.view.gui">SetupPlayerNameView</a></code>, <code><a href="SetupPlayerShipView.html" title="class in com.par_28.ship_battle.view.gui">SetupPlayerShipView</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GuiView</span>
+<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GuiView&lt;T extends <a href="../../controller/gui/GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a>&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.badlogic.gdx.Screen</span></div>
 <div class="block">Base for all GUI views</div>
@@ -108,24 +112,29 @@ implements com.badlogic.gdx.Screen</span></div>
 <div class="col-last odd-row-color">
 <div class="block">Base size for scaling</div>
 </div>
-<div class="col-first even-row-color"><code>protected com.badlogic.gdx.utils.Array&lt;com.badlogic.gdx.scenes.scene2d.ui.TextButton&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#menuButtons" class="member-name-link">menuButtons</a></code></div>
+<div class="col-first even-row-color"><code>protected <a href="GuiView.html" title="type parameter in GuiView">T</a></code></div>
+<div class="col-second even-row-color"><code><a href="#controller" class="member-name-link">controller</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Controller associated with the view</div>
+</div>
+<div class="col-first odd-row-color"><code>protected com.badlogic.gdx.utils.Array&lt;com.badlogic.gdx.scenes.scene2d.ui.TextButton&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#menuButtons" class="member-name-link">menuButtons</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Menu buttons</div>
 </div>
-<div class="col-first odd-row-color"><code>protected <a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#parent" class="member-name-link">parent</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>protected <a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a></code></div>
+<div class="col-second even-row-color"><code><a href="#parent" class="member-name-link">parent</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Screen manager</div>
 </div>
-<div class="col-first even-row-color"><code>protected com.badlogic.gdx.scenes.scene2d.ui.Skin</code></div>
-<div class="col-second even-row-color"><code><a href="#skin" class="member-name-link">skin</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>protected com.badlogic.gdx.scenes.scene2d.ui.Skin</code></div>
+<div class="col-second odd-row-color"><code><a href="#skin" class="member-name-link">skin</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">UI skin</div>
 </div>
-<div class="col-first odd-row-color"><code>com.badlogic.gdx.scenes.scene2d.Stage</code></div>
-<div class="col-second odd-row-color"><code><a href="#stage" class="member-name-link">stage</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>com.badlogic.gdx.scenes.scene2d.Stage</code></div>
+<div class="col-second even-row-color"><code><a href="#stage" class="member-name-link">stage</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Stage for UI elements</div>
 </div>
 </div>
@@ -141,7 +150,12 @@ implements com.badlogic.gdx.Screen</span></div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.controller.gui.ScreenController)" class="member-name-link">GuiView</a><wbr>(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initialize GUI view</div>
+<div class="block">Initialize menu</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.controller.gui.ScreenController,T)" class="member-name-link">GuiView</a><wbr>(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent,
+ <a href="GuiView.html" title="type parameter in GuiView">T</a>&nbsp;controller)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Initialize menu with controller</div>
 </div>
 </div>
 </section>
@@ -180,39 +194,44 @@ implements com.badlogic.gdx.Screen</span></div>
 <div class="block">Hide the screen</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadTextures()" class="member-name-link">loadTextures</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initUI()" class="member-name-link">initUI</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Initialize base things for UI</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadTextures()" class="member-name-link">loadTextures</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Load necessary textures</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pause()" class="member-name-link">pause</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pause()" class="member-name-link">pause</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Pause the screen</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Render the screen</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resize the screen</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resume()" class="member-name-link">resume</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resume()" class="member-name-link">resume</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Resume the screen</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show()" class="member-name-link">show</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Show the screen</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;delta)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;delta)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update the screen</div>
 </div>
 </div>
@@ -274,6 +293,13 @@ implements com.badlogic.gdx.Screen</span></div>
 <div class="block">Base size for scaling</div>
 </section>
 </li>
+<li>
+<section class="detail" id="controller">
+<h3>controller</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="GuiView.html" title="type parameter in GuiView">T</a> extends <a href="../../controller/gui/GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></span>&nbsp;<span class="element-name">controller</span></div>
+<div class="block">Controller associated with the view</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -286,10 +312,23 @@ implements com.badlogic.gdx.Screen</span></div>
 <section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController)">
 <h3>GuiView</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GuiView</span><wbr><span class="parameters">(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</span></div>
-<div class="block">Initialize GUI view</div>
+<div class="block">Initialize menu</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>parent</code> - screen manager</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController,T)">
+<h3 id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController,com.par_28.ship_battle.controller.gui.GuiController)">GuiView</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GuiView</span><wbr><span class="parameters">(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent,
+ <a href="GuiView.html" title="type parameter in GuiView">T</a>&nbsp;controller)</span></div>
+<div class="block">Initialize menu with controller</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>parent</code> - screen manager</dd>
+<dd><code>controller</code> - menu controller</dd>
 </dl>
 </section>
 </li>
@@ -301,6 +340,13 @@ implements com.badlogic.gdx.Screen</span></div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="initUI()">
+<h3>initUI</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initUI</span>()</div>
+<div class="block">Initialize base things for UI</div>
+</section>
+</li>
 <li>
 <section class="detail" id="loadTextures()">
 <h3>loadTextures</h3>

@@ -1,140 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainMenuView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">MainMenuView.java</span></div><h1>MainMenuView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.MainMenuController;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 
+
 /**
- * MainMenuView avec Scene2D - Menu principal avec boutons interactifs
+ * Main menu
  */
-public class MainMenuView implements Screen {
-    private ScreenController parent;
-    private Stage stage;
-    private Skin skin;
-    private Texture backgroundTexture;
+public class MainMenuView extends GuiView&lt;MainMenuController&gt; {
+    /**
+     * Title label
+     */
+    private Label titleLabel;
 
-<span class="nc" id="L24">    public MainMenuView(ScreenController parent) {</span>
-<span class="nc" id="L25">        this.parent = parent;</span>
+    /**
+     * Version label
+     */
+    private Label versionLabel;
 
-<span class="nc" id="L27">        stage = new Stage(new ScreenViewport());</span>
-
-<span class="nc" id="L29">        backgroundTexture = new Texture(&quot;background.png&quot;);</span>
-<span class="nc" id="L30">        skin = new Skin(Gdx.files.internal(&quot;uiskin.json&quot;));</span>
-
+    /**
+     * Initialize main menu
+     *
+     * @param parent screen manager
+     */
+    public MainMenuView(ScreenController parent) {
+<span class="nc" id="L31">        super(parent);</span>
 <span class="nc" id="L32">        buildUI();</span>
 <span class="nc" id="L33">    }</span>
 
-    private void buildUI() {
-<span class="nc" id="L36">        Table root = new Table();</span>
-<span class="nc" id="L37">        root.setFillParent(true);</span>
-<span class="nc" id="L38">        stage.addActor(root);</span>
-
-        // Titre
-<span class="nc" id="L41">        Label title = new Label(&quot;ShipBattle&quot;, skin);</span>
-<span class="nc" id="L42">        title.setFontScale(2.5f);</span>
-<span class="nc" id="L43">        root.add(title).padBottom(80).row();</span>
-
-<span class="nc" id="L45">        TextButton newGameButton = new TextButton(&quot;Nouvelle Partie&quot;, skin);</span>
-<span class="nc" id="L46">        newGameButton.addListener(new ClickListener() {</span>
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-<span class="nc" id="L49">                System.out.println(&quot;Nouvelle Partie cliquée!&quot;);</span>
-<span class="nc" id="L50">            }</span>
-        });
-<span class="nc" id="L52">        root.add(newGameButton).width(300).height(60).padBottom(20).row();</span>
-
-<span class="nc" id="L54">        TextButton loadButton = new TextButton(&quot;Charger Partie&quot;, skin);</span>
-<span class="nc" id="L55">        loadButton.addListener(new ClickListener() {</span>
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-<span class="nc" id="L58">                System.out.println(&quot;Charger Partie cliquée!&quot;);</span>
-<span class="nc" id="L59">            }</span>
-        });
-<span class="nc" id="L61">        root.add(loadButton).width(300).height(60).padBottom(20).row();</span>
-
-<span class="nc" id="L63">        TextButton optionsButton = new TextButton(&quot;Options&quot;, skin);</span>
-<span class="nc" id="L64">        optionsButton.addListener(new ClickListener() {</span>
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-<span class="nc" id="L67">                System.out.println(&quot;Options cliquée!&quot;);</span>
-<span class="nc" id="L68">            }</span>
-        });
-<span class="nc" id="L70">        root.add(optionsButton).width(300).height(60).padBottom(20).row();</span>
-
-<span class="nc" id="L72">        TextButton quitButton = new TextButton(&quot;Quitter&quot;, skin);</span>
-<span class="nc" id="L73">        quitButton.addListener(new ClickListener() {</span>
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-<span class="nc" id="L76">                Gdx.app.exit();</span>
-<span class="nc" id="L77">            }</span>
-        });
-<span class="nc" id="L79">        root.add(quitButton).width(300).height(60).row();</span>
-
-<span class="nc" id="L81">        Label version = new Label(&quot;v1.0.0 - 2025&quot;, skin);</span>
-<span class="nc" id="L82">        version.setColor(Color.GRAY);</span>
-<span class="nc" id="L83">        root.row();</span>
-<span class="nc" id="L84">        root.add(version).padTop(40);</span>
-<span class="nc" id="L85">    }</span>
-
     @Override
-    public void show() {
-<span class="nc" id="L89">        Gdx.input.setInputProcessor(stage);</span>
-<span class="nc" id="L90">    }</span>
+    protected void buildUI() {
+<span class="nc" id="L37">        super.buildUI();</span>
+<span class="nc" id="L38">        Table root = new Table();</span>
+<span class="nc" id="L39">        root.setFillParent(true);</span>
 
-    @Override
-    public void render(float dt) {
-<span class="nc" id="L94">        ScreenUtils.clear(0.1f, 0.1f, 0.15f, 1f);</span>
+<span class="nc" id="L41">        titleLabel = new Label(&quot;ShipBattle&quot;, skin);</span>
+<span class="nc" id="L42">        titleLabel.setFontScale(2.5f);</span>
 
-<span class="nc" id="L96">        stage.getBatch().begin();</span>
-<span class="nc" id="L97">        stage.getBatch().draw(</span>
-            backgroundTexture,
-            0,
-            0,
-<span class="nc" id="L101">            Gdx.graphics.getWidth(),</span>
-<span class="nc" id="L102">            Gdx.graphics.getHeight()</span>
-        );
-<span class="nc" id="L104">        stage.getBatch().end();</span>
+<span class="nc" id="L44">        root.add(titleLabel)</span>
+<span class="nc" id="L45">            .expand()</span>
+<span class="nc" id="L46">            .height(Value.percentHeight(0.2f, root))</span>
+<span class="nc" id="L47">            .row();</span>
 
-<span class="nc" id="L106">        stage.act(dt);</span>
-<span class="nc" id="L107">        stage.draw();</span>
-<span class="nc" id="L108">    }</span>
 
-    public void update(float dt) {
+<span class="nc" id="L50">        Table buttons = new Table();</span>
+<span class="nc" id="L51">        buttons.defaults()</span>
+<span class="nc" id="L52">            .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L53">            .height(Value.percentHeight(0.1f, root))</span>
+<span class="nc" id="L54">            .pad(Value.percentHeight(0.02f, root));</span>
 
-<span class="nc" id="L112">    }</span>
+<span class="nc" id="L56">        addMenuButton(buttons, &quot;New game&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.SETUP_MENU));</span>
+<span class="nc" id="L57">        addMenuButton(buttons, &quot;Settings&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.SETTINGS));</span>
+<span class="nc" id="L58">        addMenuButton(buttons, &quot;Quit&quot;, Gdx.app::exit);</span>
+
+<span class="nc" id="L60">        root.add(buttons).expand().fill().center().row();</span>
+
+<span class="nc" id="L62">        versionLabel = new Label(&quot;v1.0.0 - 2025&quot;, skin);</span>
+<span class="nc" id="L63">        versionLabel.setColor(Color.GRAY);</span>
+<span class="nc" id="L64">        root.add(versionLabel).expand().height(Value.percentHeight(0.1f)).row();</span>
+
+<span class="nc" id="L66">        stage.addActor(root);</span>
+<span class="nc" id="L67">    }</span>
 
     @Override
     public void resize(int width, int height) {
-<span class="nc" id="L116">        stage.getViewport().update(width, height, true);</span>
-<span class="nc" id="L117">    }</span>
-
-    @Override
-    public void pause() {
-
-<span class="nc" id="L122">    }</span>
-
-    @Override
-    public void resume() {
-<span class="nc" id="L126">    }</span>
-
-    @Override
-    public void hide() {
-<span class="nc" id="L130">        Gdx.input.setInputProcessor(null);</span>
-<span class="nc" id="L131">    }</span>
+<span class="nc" id="L71">        super.resize(width, height);</span>
+<span class="nc" id="L72">        titleLabel.setFontScale(base / 200f);</span>
+<span class="nc" id="L73">        versionLabel.setFontScale(base / 500f);</span>
+<span class="nc" id="L74">    }</span>
 
     @Override
     public void dispose() {
-<span class="nc" id="L135">        stage.dispose();</span>
-<span class="nc" id="L136">        skin.dispose();</span>
-<span class="nc" id="L137">        backgroundTexture.dispose();</span>
-<span class="nc" id="L138">    }</span>
+<span class="nc" id="L78">        super.dispose();</span>
+<span class="nc" id="L79">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,22 +1,25 @@
 package com.par_28.ship_battle.controller.gui;
 
 import com.par_28.ship_battle.model.Player;
-import com.par_28.ship_battle.view.gui.SetupPlayerNameView;
-import com.par_28.ship_battle.view.gui.SetupPlayerShipView;
-import com.par_28.ship_battle.view.gui.SoundHandler;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
+import com.par_28.ship_battle.view.gui.*;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
- * Mananger of setup menu where players enter their names and set up ships.
+ * Manager of setup menu where players enter their names and set up ships.
  */
 public class SetupMenuController extends GuiController {
     /**
      * List of player names entered.
      */
     List<String> names = new ArrayList<>();
+
+    AIDifficulty aiDifficulty = null;
 
     /**
      * Initialize the menu controller.
@@ -63,11 +66,22 @@ public class SetupMenuController extends GuiController {
 
         this.names.add(name);
 
-        if(this.names.size() >= this.parent.app.nbPlayers) {
-            // Play some music maybe
-            Player player1 = new Player(this.names.get(0), this.parent.app.gridSize);
-            Player player2 = new Player(this.names.get(1), this.parent.app.gridSize);
+        if(isAIMode()) {
+            this.names.add(AIPlayer.getRandomName());
+        }
 
+        if(this.names.size() >= this.parent.app.nbPlayers) {
+            Player player1;
+            Player player2;
+
+            if(isAIMode()) {
+                player1 = new Player(this.names.get(0), this.parent.app.gridSize);
+                player2 = new AIPlayer(this.names.get(1), this.parent.app.gridSize, aiDifficulty);
+            }
+            else {
+                player1 = new Player(this.names.get(0), this.parent.app.gridSize);
+                player2 = new Player(this.names.get(1), this.parent.app.gridSize);
+            }
 
             this.parent.app.player1 = player1;
             this.parent.app.player2 = player2;
@@ -78,6 +92,26 @@ public class SetupMenuController extends GuiController {
         }
 
         return true;
+    }
+
+    public boolean isAIMode() {
+        return aiDifficulty != null;
+    }
+
+    public void setAIDifficulty(AIDifficulty aiDifficulty) {
+        this.aiDifficulty = aiDifficulty;
+    }
+
+    public void goToDifficultyMenu() {
+        changeView(new DifficultyView(this.parent, this));
+    }
+
+    public void gotoSetupPlayerNameMenu() {
+        changeView(new SetupPlayerNameView(this.parent, this));
+    }
+
+    public void gotoGameModeMenu() {
+        changeView(new GameModeView(this.parent, this));
     }
 
     /**
@@ -99,6 +133,6 @@ public class SetupMenuController extends GuiController {
         if(names != null) {
             names.clear();
         }
-        view = new SetupPlayerNameView(this.parent, this);
+        changeView(new GameModeView(this.parent, this));
     }
 }

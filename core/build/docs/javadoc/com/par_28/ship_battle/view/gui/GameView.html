@@ -70,7 +70,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class GameView" class="title">Class GameView</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>
+<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;
 <div class="inheritance">com.par_28.ship_battle.view.gui.GameView</div>
 </div>
 </div>
@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">GameView</span>
-<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></span></div>
+<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</span></div>
 <div class="block">Game menu</div>
 </section>
 <section class="summary">
@@ -100,175 +100,170 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Carrier ship texture</div>
 </div>
-<div class="col-first odd-row-color"><code>private <a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#controller" class="member-name-link">controller</a></code></div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second odd-row-color"><code><a href="#coordLabel" class="member-name-link">coordLabel</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Game menu controller</div>
-</div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second even-row-color"><code><a href="#coordLabel" class="member-name-link">coordLabel</a></code></div>
-<div class="col-last even-row-color">
 <div class="block">Coordinate label displaying selected grid position</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#cruiserTexture" class="member-name-link">cruiserTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#cruiserTexture" class="member-name-link">cruiserTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Cruiser ship texture</div>
 </div>
-<div class="col-first even-row-color"><code>private <a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
-<div class="col-second even-row-color"><code><a href="#currentPlayer" class="member-name-link">currentPlayer</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private <a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#currentPlayer" class="member-name-link">currentPlayer</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Current player</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#destroyerTexture" class="member-name-link">destroyerTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#destroyerTexture" class="member-name-link">destroyerTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Destroyer ship texture</div>
 </div>
-<div class="col-first even-row-color"><code>private float</code></div>
-<div class="col-second even-row-color"><code><a href="#elapsed" class="member-name-link">elapsed</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private float</code></div>
+<div class="col-second odd-row-color"><code><a href="#elapsed" class="member-name-link">elapsed</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Elapsed time for animation</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#gridCaseTexture" class="member-name-link">gridCaseTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#gridCaseTexture" class="member-name-link">gridCaseTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Grid case texture</div>
 </div>
-<div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#headerLabels" class="member-name-link">headerLabels</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#headerLabels" class="member-name-link">headerLabels</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Header labels for each grid column</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#hitTexture" class="member-name-link">hitTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#hitTexture" class="member-name-link">hitTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Hit texture</div>
 </div>
-<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#loliAnimation" class="member-name-link">loliAnimation</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#loliAnimation" class="member-name-link">loliAnimation</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Loli talking animation</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Image</code></div>
-<div class="col-second odd-row-color"><code><a href="#loliImage" class="member-name-link">loliImage</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Image</code></div>
+<div class="col-second even-row-color"><code><a href="#loliImage" class="member-name-link">loliImage</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Loli image UI element</div>
 </div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second even-row-color"><code><a href="#loliMsg" class="member-name-link">loliMsg</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second odd-row-color"><code><a href="#loliMsg" class="member-name-link">loliMsg</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Loli message label</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#loliTexture" class="member-name-link">loliTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#loliTexture" class="member-name-link">loliTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Loli talking texture</div>
 </div>
-<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second even-row-color"><code><a href="#missTexture" class="member-name-link">missTexture</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second odd-row-color"><code><a href="#missTexture" class="member-name-link">missTexture</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Miss texture</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second odd-row-color"><code><a href="#nameLabel" class="member-name-link">nameLabel</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second even-row-color"><code><a href="#nameLabel" class="member-name-link">nameLabel</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Player name label</div>
 </div>
-<div class="col-first even-row-color"><code>private boolean</code></div>
-<div class="col-second even-row-color"><code><a href="#paused" class="member-name-link">paused</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#paused" class="member-name-link">paused</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Paused flag</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Image</code></div>
-<div class="col-second odd-row-color"><code><a href="#pauseImage" class="member-name-link">pauseImage</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Image</code></div>
+<div class="col-second even-row-color"><code><a href="#pauseImage" class="member-name-link">pauseImage</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Pause image overlay</div>
 </div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
-<div class="col-second even-row-color"><code><a href="#pauseTable" class="member-name-link">pauseTable</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second odd-row-color"><code><a href="#pauseTable" class="member-name-link">pauseTable</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Pause table UI element</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#pauseTexture" class="member-name-link">pauseTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#pauseTexture" class="member-name-link">pauseTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Pause background texture</div>
 </div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second even-row-color"><code><a href="#pauseTitleLabel" class="member-name-link">pauseTitleLabel</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second odd-row-color"><code><a href="#pauseTitleLabel" class="member-name-link">pauseTitleLabel</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Pause title label</div>
 </div>
-<div class="col-first odd-row-color"><code>private <a href="../../model/AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#response" class="member-name-link">response</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private <a href="../../model/AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
+<div class="col-second even-row-color"><code><a href="#response" class="member-name-link">response</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Attack response after shooting</div>
 </div>
-<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
-<div class="col-second even-row-color"><code><a href="#root" class="member-name-link">root</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second odd-row-color"><code><a href="#root" class="member-name-link">root</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Root table of the UI</div>
 </div>
-<div class="col-first odd-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#rowLabels" class="member-name-link">rowLabels</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#rowLabels" class="member-name-link">rowLabels</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Row labels for each grid row</div>
 </div>
-<div class="col-first even-row-color"><code>com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
-<div class="col-second even-row-color"><code><a href="#shipTable" class="member-name-link">shipTable</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second odd-row-color"><code><a href="#shipTable" class="member-name-link">shipTable</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Table for player's ship grid</div>
 </div>
-<div class="col-first odd-row-color"><code>private boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#shoot" class="member-name-link">shoot</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#shoot" class="member-name-link">shoot</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Shoot flag</div>
 </div>
-<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second even-row-color"><code><a href="#snipeTexture" class="member-name-link">snipeTexture</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second odd-row-color"><code><a href="#snipeTexture" class="member-name-link">snipeTexture</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Snipe texture</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Stack</code></div>
-<div class="col-second odd-row-color"><code><a href="#stack" class="member-name-link">stack</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Stack</code></div>
+<div class="col-second even-row-color"><code><a href="#stack" class="member-name-link">stack</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Stack for layering UI elements</div>
 </div>
-<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second even-row-color"><code><a href="#sunkTexture" class="member-name-link">sunkTexture</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second odd-row-color"><code><a href="#sunkTexture" class="member-name-link">sunkTexture</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Sunk texture</div>
 </div>
-<div class="col-first odd-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
-<div class="col-second odd-row-color"><code><a href="#torpedoTexture" class="member-name-link">torpedoTexture</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>(package private) com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#torpedoTexture" class="member-name-link">torpedoTexture</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Torpedo texture</div>
 </div>
-<div class="col-first even-row-color"><code>com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
-<div class="col-second even-row-color"><code><a href="#trackingTable" class="member-name-link">trackingTable</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second odd-row-color"><code><a href="#trackingTable" class="member-name-link">trackingTable</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Table for player's tracking grid</div>
 </div>
-<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
-<div class="col-second odd-row-color"><code><a href="#turnLabel" class="member-name-link">turnLabel</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second even-row-color"><code><a href="#turnLabel" class="member-name-link">turnLabel</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Turn label</div>
 </div>
-<div class="col-first even-row-color"><code>private boolean</code></div>
-<div class="col-second even-row-color"><code><a href="#turnPlayed" class="member-name-link">turnPlayed</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>private boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#turnPlayed" class="member-name-link">turnPlayed</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Turn played flag</div>
 </div>
-<div class="col-first odd-row-color"><code>private float</code></div>
-<div class="col-second odd-row-color"><code><a href="#waitTimer" class="member-name-link">waitTimer</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private float</code></div>
+<div class="col-second even-row-color"><code><a href="#waitTimer" class="member-name-link">waitTimer</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Wait timer for delays</div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Fields inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
+<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#controller">controller</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -301,7 +296,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI()" class="member-name-link">buildUI</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Build game menu UI</div>
+<div class="block">Build UI</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
@@ -316,7 +311,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadTextures()" class="member-name-link">loadTextures</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Load textures</div>
+<div class="block">Load necessary textures</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>(package private) void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playDialog(com.par_28.ship_battle.view.gui.DialogHandler.DialogID,float)" class="member-name-link">playDialog</a><wbr>(<a href="DialogHandler.DialogID.html" title="enum class in com.par_28.ship_battle.view.gui">DialogHandler.DialogID</a>&nbsp;dialogID,
@@ -333,7 +328,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Resize elements on window resize</div>
+<div class="block">Resize the screen</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#togglePause()" class="member-name-link">togglePause</a>()</code></div>
@@ -343,7 +338,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;delta)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Update game menu</div>
+<div class="block">Update the screen</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerTables()" class="member-name-link">updatePlayerTables</a>()</code></div>
@@ -363,7 +358,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Methods inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a></code></div>
+<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#initUI()">initUI</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -575,13 +570,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="controller">
-<h3>controller</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a></span>&nbsp;<span class="element-name">controller</span></div>
-<div class="block">Game menu controller</div>
-</section>
-</li>
-<li>
 <section class="detail" id="turnPlayed">
 <h3>turnPlayed</h3>
 <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">turnPlayed</span></div>
@@ -649,10 +637,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="loadTextures()">
 <h3>loadTextures</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadTextures</span>()</div>
-<div class="block">Load textures</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#loadTextures()">GuiView</a></code></span></div>
+<div class="block">Load necessary textures</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#loadTextures()">loadTextures</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#loadTextures()">loadTextures</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -660,10 +649,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="buildUI()">
 <h3>buildUI</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span>()</div>
-<div class="block">Build game menu UI</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#buildUI()">GuiView</a></code></span></div>
+<div class="block">Build UI</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#buildUI()">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#buildUI()">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -701,12 +691,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update(float)">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(float&nbsp;delta)</span></div>
-<div class="block">Update game menu</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#update(float)">GuiView</a></code></span></div>
+<div class="block">Update the screen</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#update(float)">update</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#update(float)">update</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>delta</code> - time since last frame</dd>
+<dd><code>delta</code> - time since last update</dd>
 </dl>
 </section>
 </li>
@@ -719,7 +710,7 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code>render</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#render(float)">render</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#render(float)">render</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>delta</code> - time since last render</dd>
 </dl>
@@ -730,12 +721,13 @@ loadScripts(document, 'script');</script>
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
  int&nbsp;height)</span></div>
-<div class="block">Resize elements on window resize</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#resize(int,int)">GuiView</a></code></span></div>
+<div class="block">Resize the screen</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>resize</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>width</code> - new width</dd>
 <dd><code>height</code> - new height</dd>
@@ -773,12 +765,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#dispose()">GuiView</a></code></span></div>
 <div class="block">Dispose resources</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="GuiView.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></code></dd>
+<dd><code><a href="GuiView.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/GameController.html" title="class in com.par_28.ship_battle.controller.gui">GameController</a>&gt;</code></dd>
 </dl>
 </section>
 </li>

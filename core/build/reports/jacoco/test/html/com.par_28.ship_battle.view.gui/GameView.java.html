@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">GameView.java</span></div><h1>GameView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.Align;
+import com.par_28.ship_battle.controller.gui.GameController;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.Cell;
+import com.par_28.ship_battle.model.enums.*;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * Game menu
+ */
+public class GameView extends GuiView&lt;GameController&gt; {
+    /**
+     * Stack for layering UI elements
+     */
+    private Stack stack;
+
+    /**
+     * Table for player's tracking grid
+     */
+    public Table trackingTable;
+
+    /**
+     * Table for player's ship grid
+     */
+    public Table shipTable;
+
+    /**
+     * Root table of the UI
+     */
+    private Table root;
+
+    /**
+     * Pause table UI element
+     */
+    private Table pauseTable;
+    /**
+     * Header labels for each grid column
+     */
+<span class="nc" id="L54">    private List&lt;Label&gt; headerLabels = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Row labels for each grid row
+     */
+<span class="nc" id="L59">    private List&lt;Label&gt; rowLabels = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Loli message label
+     */
+    private Label loliMsg;
+
+    /**
+     * Coordinate label displaying selected grid position
+     */
+    private Label coordLabel;
+
+    /**
+     * Pause title label
+     */
+    private Label pauseTitleLabel;
+
+    /**
+     * Turn label
+     */
+    private Label turnLabel;
+
+    /**
+     * Player name label
+     */
+    private Label nameLabel;
+
+    /**
+     * Pause image overlay
+     */
+    private Image pauseImage;
+
+    /**
+     * Loli image UI element
+     */
+    private Image loliImage;
+
+    /**
+     * Grid case texture
+     */
+    TextureRegionDrawable gridCaseTexture;
+
+    /**
+     * Snipe texture
+     */
+    TextureRegionDrawable snipeTexture;
+
+    /**
+     * Carrier ship texture
+     */
+    TextureRegionDrawable carrierTexture;
+
+    /**
+     * Cruiser ship texture
+     */
+    TextureRegionDrawable cruiserTexture;
+
+    /**
+     * Destroyer ship texture
+     */
+    TextureRegionDrawable destroyerTexture;
+
+    /**
+     * Torpedo texture
+     */
+    TextureRegionDrawable torpedoTexture;
+
+    /**
+     * Miss texture
+     */
+    TextureRegionDrawable missTexture;
+
+    /**
+     * Hit texture
+     */
+    TextureRegionDrawable hitTexture;
+
+    /**
+     * Sunk texture
+     */
+    TextureRegionDrawable sunkTexture;
+
+    /**
+     * Loli talking texture
+     */
+    TextureRegionDrawable loliTexture;
+
+    /**
+     * Pause background texture
+     */
+    TextureRegionDrawable pauseTexture;
+
+    /**
+     * Loli talking animation
+     */
+    Animation&lt;TextureRegion&gt; loliAnimation;
+
+
+    /**
+     * Current player
+     */
+    private Player currentPlayer;
+
+    /**
+     * Attack response after shooting
+     */
+    private AttackResponse response;
+
+    /**
+     * Turn played flag
+     */
+<span class="nc" id="L170">    private boolean turnPlayed = false;</span>
+
+    /**
+     * Shoot flag
+     */
+<span class="nc" id="L175">    private boolean shoot = false;</span>
+
+    /**
+     * Wait timer for delays
+     */
+<span class="nc" id="L180">    private float waitTimer = 0f;</span>
+
+    /**
+     * Elapsed time for animation
+     */
+<span class="nc" id="L185">    private float elapsed = 0f;</span>
+
+    /**
+     * Paused flag
+     */
+<span class="nc" id="L190">    private boolean paused = false;</span>
+
+    /**
+     * Initialize game menu
+     *
+     * @param parent screen manager
+     * @param controller game menu controller
+     */
+    public GameView(ScreenController parent, GameController controller) {
+<span class="nc" id="L199">        super(parent, controller);</span>
+<span class="nc" id="L200">        buildUI();</span>
+<span class="nc" id="L201">        playDialog(</span>
+            DialogHandler.DialogID.TURN_START,
+<span class="nc" id="L203">            (float) (loliAnimation.getAnimationDuration() * 1.25)</span>
+        );
+<span class="nc" id="L205">    }</span>
+
+    @Override
+    protected void loadTextures() {
+<span class="nc" id="L209">        super.loadTextures();</span>
+<span class="nc" id="L210">        Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);</span>
+<span class="nc" id="L211">        this.gridCaseTexture = new TextureRegionDrawable(new TextureRegion(gridCaseTexture));</span>
+
+<span class="nc" id="L213">        Texture snipeTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SNIPE);</span>
+<span class="nc" id="L214">        this.snipeTexture = new TextureRegionDrawable(new TextureRegion(snipeTexture));</span>
+
+<span class="nc" id="L216">        Texture carrierTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER);</span>
+<span class="nc" id="L217">        this.carrierTexture = new TextureRegionDrawable(new TextureRegion(carrierTexture));</span>
+
+<span class="nc" id="L219">        Texture cruiserTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CRUISER);</span>
+<span class="nc" id="L220">        this.cruiserTexture = new TextureRegionDrawable(new TextureRegion(cruiserTexture));</span>
+
+<span class="nc" id="L222">        Texture destroyerTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.DESTROYER);</span>
+<span class="nc" id="L223">        this.destroyerTexture = new TextureRegionDrawable(new TextureRegion(destroyerTexture));</span>
+
+<span class="nc" id="L225">        Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO);</span>
+<span class="nc" id="L226">        this.torpedoTexture = new TextureRegionDrawable(new TextureRegion(torpedoTexture));</span>
+
+<span class="nc" id="L228">        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.MISS);</span>
+<span class="nc" id="L229">        this.missTexture = new TextureRegionDrawable(new TextureRegion(missTexture));</span>
+
+<span class="nc" id="L231">        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.HIT);</span>
+<span class="nc" id="L232">        this.hitTexture = new TextureRegionDrawable(new TextureRegion(hitTexture));</span>
+
+<span class="nc" id="L234">        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);</span>
+<span class="nc" id="L235">        this.sunkTexture = new TextureRegionDrawable(new TextureRegion(sunkTexture));</span>
+
+<span class="nc" id="L237">        Texture pauseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.PAUSE_BACKGROUND);</span>
+<span class="nc" id="L238">        this.pauseTexture = new TextureRegionDrawable(new TextureRegion(pauseTexture));</span>
+
+<span class="nc" id="L240">        loliAnimation = GifDecoder.loadGIFAnimation(</span>
+            Animation.PlayMode.LOOP,
+<span class="nc" id="L242">            Gdx.files.internal(&quot;loli_talking.gif&quot;).read()</span>
+        );
+
+<span class="nc" id="L245">        loliTexture = new TextureRegionDrawable(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));</span>
+<span class="nc" id="L246">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L250">        super.buildUI();</span>
+
+<span class="nc" id="L252">        currentPlayer = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc" id="L254">        stack = new Stack();</span>
+<span class="nc" id="L255">        stack.setFillParent(true);</span>
+
+<span class="nc" id="L257">        root = new Table();</span>
+<span class="nc" id="L258">        root.setFillParent(true);</span>
+
+<span class="nc" id="L260">        HorizontalGroup statusGroup = new HorizontalGroup();</span>
+<span class="nc" id="L261">        statusGroup.space(10f);</span>
+
+<span class="nc" id="L263">        turnLabel = new Label(</span>
+<span class="nc" id="L264">            String.format(&quot;Turn %d&quot;, this.parent.app.game.getNbTurns()+1),</span>
+            skin
+        );
+
+<span class="nc" id="L268">        statusGroup.addActor(turnLabel);</span>
+
+<span class="nc" id="L270">        nameLabel = new Label(</span>
+<span class="nc" id="L271">            String.format(&quot;%s&quot;, currentPlayer.getName()),</span>
+            skin
+        );
+
+<span class="nc" id="L275">        statusGroup.addActor(nameLabel);</span>
+
+<span class="nc" id="L277">        root.add(statusGroup)</span>
+<span class="nc" id="L278">            .colspan(2);</span>
+
+<span class="nc" id="L280">        com.badlogic.gdx.scenes.scene2d.ui.Cell&lt;TextButton&gt; pauseBtn = addMenuButton(root, &quot;Pause&quot;, this::togglePause);</span>
+<span class="nc" id="L281">        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));</span>
+<span class="nc" id="L282">        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L284">        root.row();</span>
+
+<span class="nc" id="L286">        shipTable = new Table();</span>
+<span class="nc" id="L287">        shipTable.defaults().expand().fill();</span>
+
+<span class="nc" id="L289">        trackingTable = new Table();</span>
+<span class="nc" id="L290">        trackingTable.defaults().expand().fill();</span>
+
+<span class="nc" id="L292">        updatePlayerTables();</span>
+
+<span class="nc" id="L294">        root.add(shipTable)</span>
+<span class="nc" id="L295">            .width(Value.percentWidth(0.3f, root))</span>
+<span class="nc" id="L296">            .height(Value.percentHeight(0.5f, root))</span>
+<span class="nc" id="L297">            .expand();</span>
+<span class="nc" id="L298">        root.add(trackingTable)</span>
+<span class="nc" id="L299">            .width(Value.percentWidth(0.5f, root))</span>
+<span class="nc" id="L300">            .height(Value.percentHeight(0.7f, root))</span>
+<span class="nc" id="L301">            .expand();</span>
+
+<span class="nc" id="L303">        root.row();</span>
+
+<span class="nc" id="L305">        HorizontalGroup dialogGroup = new HorizontalGroup();</span>
+<span class="nc" id="L306">        dialogGroup.space(10f);</span>
+<span class="nc" id="L307">        dialogGroup.expand().fill();</span>
+
+<span class="nc" id="L309">        loliImage = new Image(loliAnimation.getKeyFrame(elapsed));</span>
+<span class="nc" id="L310">        Container&lt;Image&gt; loliImageContainer = new Container&lt;&gt;(loliImage);</span>
+
+<span class="nc" id="L312">        loliImageContainer.pad(10f);</span>
+
+<span class="nc" id="L314">        dialogGroup.addActor(loliImageContainer);</span>
+
+<span class="nc" id="L316">        loliMsg = new Label(&quot;Test&quot;, skin);</span>
+<span class="nc" id="L317">        loliMsg.setAlignment(Align.left);</span>
+<span class="nc" id="L318">        loliMsg.setFontScale(1.2f);</span>
+
+<span class="nc" id="L320">        dialogGroup.addActor(loliMsg);</span>
+
+<span class="nc" id="L322">        coordLabel = new Label(&quot;XX&quot;, skin);</span>
+<span class="nc" id="L323">        coordLabel.setAlignment(Align.center);</span>
+<span class="nc" id="L324">        coordLabel.setFontScale(1.2f);</span>
+
+<span class="nc" id="L326">        root.add(dialogGroup)</span>
+<span class="nc" id="L327">            .expandX()</span>
+<span class="nc" id="L328">            .fill()</span>
+<span class="nc" id="L329">            .height(Value.percentHeight(0.2f, root))</span>
+<span class="nc" id="L330">            .colspan(2);</span>
+
+<span class="nc" id="L332">        root</span>
+<span class="nc" id="L333">            .add(coordLabel)</span>
+<span class="nc" id="L334">            .width(Value.percentWidth(0.1f, root));</span>
+
+<span class="nc" id="L336">        root.row();</span>
+
+<span class="nc" id="L338">        stack.add(root);</span>
+
+<span class="nc" id="L340">        pauseImage = new Image(pauseTexture);</span>
+<span class="nc" id="L341">        pauseImage.setFillParent(true);</span>
+<span class="nc" id="L342">        pauseImage.setVisible(paused);</span>
+
+<span class="nc" id="L344">        stack.add(pauseImage);</span>
+
+<span class="nc" id="L346">        pauseTable = new Table();</span>
+<span class="nc" id="L347">        pauseTable.setFillParent(true);</span>
+
+<span class="nc" id="L349">        stack.add(pauseTable);</span>
+
+<span class="nc" id="L351">        stage.addActor(stack);</span>
+
+<span class="nc" id="L353">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L354">    }</span>
+
+    /**
+     * Update table with model data
+     *
+     * @param table table to update
+     * @param playerGrid player's grid data
+     * @param caseSelectable if cases are selectable
+     * @param showShips if ships should be shown
+     */
+    void updateTableWithModel(Table table, Grid playerGrid, boolean caseSelectable, boolean showShips) {
+<span class="nc" id="L365">        Cell[][] cells = playerGrid.getCells();</span>
+<span class="nc" id="L366">        int width = cells.length;</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">        int height = (width &gt; 0) ? cells[0].length : 0;</span>
+
+<span class="nc" id="L369">        table.clearChildren();</span>
+
+        // -1 = no ship, 0+ = index in ship positions
+<span class="nc" id="L372">        int[][] shipPartIndex = new int[width][height];</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">        for (int i = 0; i &lt; width; i++) {</span>
+<span class="nc bnc" id="L374" title="All 2 branches missed.">            for (int j = 0; j &lt; height; j++) {</span>
+<span class="nc" id="L375">                shipPartIndex[i][j] = -1;</span>
+            }
+        }
+
+<span class="nc bnc" id="L379" title="All 2 branches missed.">        if (showShips) {</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            for (int i = 0; i &lt; width; i++) {</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">                for (int j = 0; j &lt; height; j++) {</span>
+<span class="nc" id="L382">                    Cell cell = cells[i][j];</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                    if (cell.hasShip()) {</span>
+<span class="nc" id="L384">                        Ship ship = cell.getShip();</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">                        if (ship.getPositions() != null) {</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">                            for (int idx = 0; idx &lt; ship.getPositions().size(); idx++) {</span>
+<span class="nc" id="L387">                                Coordinate pos = ship.getPositions().get(idx);</span>
+<span class="nc bnc" id="L388" title="All 4 branches missed.">                                if (pos.getX() == i &amp;&amp; pos.getY() == j) {</span>
+<span class="nc" id="L389">                                    shipPartIndex[i][j] = idx;</span>
+<span class="nc" id="L390">                                    break;</span>
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+<span class="nc" id="L399">        Stack[][] stacks = new Stack[width][height];</span>
+
+        // Deactivate default for header
+<span class="nc" id="L402">        table.defaults().reset();</span>
+
+        // Empty cell at top left
+<span class="nc" id="L405">        table.add().size(30f);</span>
+
+        // Add letter header
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        for (int i = 0; i &lt; width; i++) {</span>
+<span class="nc" id="L409">            char columnLetter = (char) ('A' + i);</span>
+<span class="nc" id="L410">            Label headerLabel = new Label(String.valueOf(columnLetter), skin);</span>
+<span class="nc" id="L411">            headerLabel.setAlignment(Align.center);</span>
+<span class="nc" id="L412">            headerLabel.setFontScale(1f);</span>
+<span class="nc" id="L413">            headerLabels.add(headerLabel);</span>
+<span class="nc" id="L414">            table.add(headerLabel).center().expandX().fillX().height(30f);</span>
+        }
+<span class="nc" id="L416">        table.row();</span>
+
+
+        // Create base grid
+<span class="nc bnc" id="L420" title="All 2 branches missed.">        for (int j = 0; j &lt; height; j++) {</span>
+            // Add number header
+<span class="nc" id="L422">            Label rowLabel = new Label(String.valueOf(j + 1), skin);</span>
+<span class="nc" id="L423">            rowLabel.setAlignment(Align.center);</span>
+<span class="nc" id="L424">            rowLabel.setFontScale(1f);</span>
+<span class="nc" id="L425">            rowLabels.add(rowLabel);</span>
+<span class="nc" id="L426">            table.add(rowLabel).center().expandY().fillY().width(30f);</span>
+
+            // Activate defaults
+<span class="nc" id="L429">            table.defaults().expand().fill();</span>
+
+<span class="nc bnc" id="L431" title="All 2 branches missed.">            for (int i = 0; i &lt; width; i++) {</span>
+<span class="nc" id="L432">                Cell cell = cells[i][j];</span>
+<span class="nc" id="L433">                Stack stack = new Stack();</span>
+<span class="nc" id="L434">                stacks[i][j] = stack;</span>
+
+<span class="nc" id="L436">                Image gridCase = new Image(gridCaseTexture);</span>
+<span class="nc" id="L437">                gridCase.setFillParent(true);</span>
+<span class="nc" id="L438">                stack.add(gridCase);</span>
+
+<span class="nc" id="L440">                int finalI = i;</span>
+<span class="nc" id="L441">                int finalJ = j;</span>
+
+<span class="nc bnc" id="L443" title="All 2 branches missed.">                if(cell.isShot()) {</span>
+<span class="nc bnc" id="L444" title="All 2 branches missed.">                    if(cell.hasShip()) {</span>
+<span class="nc bnc" id="L445" title="All 2 branches missed.">                        if(cell.getShip().isDestroyed()) {</span>
+<span class="nc" id="L446">                            Image sunkImage = new Image(sunkTexture);</span>
+<span class="nc" id="L447">                            sunkImage.setFillParent(true);</span>
+<span class="nc" id="L448">                            stack.add(sunkImage);</span>
+<span class="nc" id="L449">                        }</span>
+                        else {
+<span class="nc" id="L451">                            Image hitImage = new Image(hitTexture);</span>
+<span class="nc" id="L452">                            hitImage.setFillParent(true);</span>
+<span class="nc" id="L453">                            stack.add(hitImage);</span>
+<span class="nc" id="L454">                        }</span>
+                    }
+                    else {
+<span class="nc" id="L457">                        Image missImage = new Image(missTexture);</span>
+<span class="nc" id="L458">                        missImage.setFillParent(true);</span>
+<span class="nc" id="L459">                        stack.add(missImage);</span>
+                    }
+                }
+
+<span class="nc bnc" id="L463" title="All 2 branches missed.">                if(caseSelectable) {</span>
+<span class="nc" id="L464">                    Image snipeImage = new Image(snipeTexture);</span>
+<span class="nc" id="L465">                    snipeImage.setFillParent(true);</span>
+<span class="nc" id="L466">                    snipeImage.setVisible(false);</span>
+<span class="nc" id="L467">                    stack.add(snipeImage);</span>
+
+<span class="nc" id="L469">                    final Image finalSnipeImage = snipeImage;</span>
+
+<span class="nc" id="L471">                    stack.addListener(new ClickListener() {</span>
+                        @Override
+                        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+<span class="nc" id="L474">                            System.out.printf(&quot;Enter Case %d, %d\n&quot;, finalI, finalJ);</span>
+<span class="nc bnc" id="L475" title="All 4 branches missed.">                            if(!shoot &amp;&amp; !paused) {</span>
+<span class="nc" id="L476">                                finalSnipeImage.setVisible(true);</span>
+<span class="nc" id="L477">                                coordLabel.setText(new Coordinate(finalI, finalJ).toLetterFormat());</span>
+                            }
+<span class="nc" id="L479">                        }</span>
+
+                        @Override
+                        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+<span class="nc" id="L483">                            System.out.printf(&quot;Exit Case %d, %d\n&quot;, finalI, finalJ);</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">                            if(!shoot) {</span>
+<span class="nc" id="L485">                                finalSnipeImage.setVisible(false);</span>
+                            }
+<span class="nc" id="L487">                        }</span>
+
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+<span class="nc bnc" id="L491" title="All 4 branches missed.">                            if(!shoot &amp;&amp; !paused) {</span>
+<span class="nc" id="L492">                                shoot = true;</span>
+<span class="nc" id="L493">                                Coordinate coord = new Coordinate(finalI, finalJ);</span>
+
+<span class="nc" id="L495">                                response = controller.playTurn(coord);</span>
+                            }
+<span class="nc" id="L497">                        }</span>
+                    });
+                }
+
+<span class="nc" id="L501">                table.add(stack);</span>
+            }
+<span class="nc" id="L503">            table.row();</span>
+        }
+
+<span class="nc bnc" id="L506" title="All 2 branches missed.">        if (showShips) {</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">            for (int j = 0; j &lt; height; j++) {</span>
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                for (int i = 0; i &lt; width; i++) {</span>
+<span class="nc" id="L509">                    Cell cell = cells[i][j];</span>
+<span class="nc bnc" id="L510" title="All 6 branches missed.">                    if (!cell.isShot() &amp;&amp;cell.hasShip() &amp;&amp; shipPartIndex[i][j] &gt;= 0) {</span>
+<span class="nc" id="L511">                        Ship ship = cell.getShip();</span>
+<span class="nc" id="L512">                        TextureRegionDrawable shipDrawable = getShipDrawable(ship.getName());</span>
+
+<span class="nc bnc" id="L514" title="All 2 branches missed.">                        if (shipDrawable != null) {</span>
+<span class="nc" id="L515">                            int partIdx = shipPartIndex[i][j];</span>
+<span class="nc" id="L516">                            int shipLength = ship.getLength();</span>
+
+<span class="nc" id="L518">                            Texture shipTexture = shipDrawable.getRegion().getTexture();</span>
+<span class="nc" id="L519">                            int textureWidth = shipTexture.getWidth();</span>
+<span class="nc" id="L520">                            int textureHeight = shipTexture.getHeight();</span>
+
+                            TextureRegion partRegion;
+
+<span class="nc bnc" id="L524" title="All 2 branches missed.">                            if (ship.getDirection() == Direction.HORIZONTAL) {</span>
+                                // Verticul cut of texture
+<span class="nc" id="L526">                                int partHeight = textureHeight / shipLength;</span>
+<span class="nc" id="L527">                                int yOffset = partIdx * partHeight;</span>
+<span class="nc" id="L528">                                partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);</span>
+
+                                // Add image with an offset because of rotation (not for last case)
+<span class="nc bnc" id="L531" title="All 2 branches missed.">                                if (i + 1 &lt; width) {</span>
+<span class="nc" id="L532">                                    Image shipPartImage = new Image(new TextureRegionDrawable(partRegion));</span>
+<span class="nc" id="L533">                                    shipPartImage.setScaling(com.badlogic.gdx.utils.Scaling.fit);</span>
+<span class="nc" id="L534">                                    shipPartImage.setRotation(90);</span>
+<span class="nc" id="L535">                                    shipPartImage.setFillParent(true);</span>
+<span class="nc" id="L536">                                    stacks[i + 1][j].add(shipPartImage);</span>
+                                }
+<span class="nc" id="L538">                            } else {</span>
+                                // Verticul cut of texture
+<span class="nc" id="L540">                                int partHeight = textureHeight / shipLength;</span>
+<span class="nc" id="L541">                                int yOffset = partIdx * partHeight;</span>
+<span class="nc" id="L542">                                partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);</span>
+
+<span class="nc" id="L544">                                Image shipPartImage = new Image(new TextureRegionDrawable(partRegion));</span>
+<span class="nc" id="L545">                                shipPartImage.setFillParent(true);</span>
+<span class="nc" id="L546">                                stacks[i][j].add(shipPartImage);</span>
+                            }
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L553">    }</span>
+
+    /**
+     * Play dialog
+     *
+     * @param dialogID dialog identifier
+     * @param duration duration of dialog
+     */
+    void playDialog(DialogHandler.DialogID dialogID, float duration) {
+<span class="nc" id="L562">        loliMsg.setText(&quot;&quot;);</span>
+<span class="nc" id="L563">        elapsed = 0;</span>
+
+<span class="nc" id="L565">        loliAnimation.setPlayMode(Animation.PlayMode.LOOP);</span>
+
+<span class="nc" id="L567">        DialogHandler.playDialog(</span>
+            dialogID,
+            duration
+        );
+<span class="nc" id="L571">    }</span>
+
+    @Override
+    public void update(float delta) {
+<span class="nc bnc" id="L575" title="All 2 branches missed.">        if(InputHandler.isKeyJustPressed(Input.Keys.ESCAPE)) {</span>
+<span class="nc" id="L576">            togglePause();</span>
+        }
+
+<span class="nc bnc" id="L579" title="All 2 branches missed.">        if(paused) {</span>
+<span class="nc" id="L580">            return;</span>
+        }
+
+<span class="nc" id="L583">        super.update(delta);</span>
+
+<span class="nc" id="L585">        elapsed += delta;</span>
+
+<span class="nc bnc" id="L587" title="All 2 branches missed.">        if(elapsed &lt;= DialogHandler.getDialogDuration()) {</span>
+<span class="nc" id="L588">            int charCount = DialogHandler.getCharCountThisFrame(elapsed);</span>
+
+<span class="nc bnc" id="L590" title="All 2 branches missed.">            if(charCount &gt; 0) {</span>
+<span class="nc" id="L591">                String text = DialogHandler.getDialogText().substring(0, charCount-1);</span>
+
+<span class="nc" id="L593">                loliMsg.setText(text);</span>
+            }
+<span class="nc" id="L595">        }</span>
+        else {
+<span class="nc" id="L597">            loliAnimation.setPlayMode(Animation.PlayMode.NORMAL);</span>
+        }
+
+<span class="nc" id="L600">        loliTexture.setRegion(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));</span>
+<span class="nc" id="L601">        loliImage.setDrawable(new TextureRegionDrawable(loliTexture));</span>
+
+<span class="nc bnc" id="L603" title="All 4 branches missed.">        if(shoot &amp;&amp; !turnPlayed) {</span>
+<span class="nc" id="L604">            waitTimer += delta;</span>
+<span class="nc bnc" id="L605" title="All 2 branches missed.">            if(waitTimer &gt; 1.5f) {</span>
+<span class="nc" id="L606">                AttackResult result = response.getResult();</span>
+<span class="nc bnc" id="L607" title="All 2 branches missed.">                if(response.isHit()) {</span>
+<span class="nc bnc" id="L608" title="All 2 branches missed.">                    if(result == AttackResult.SUNK) {</span>
+<span class="nc" id="L609">                        SoundHandler.playSound(</span>
+                            SoundHandler.SoundID.SUNK,
+<span class="nc" id="L611">                            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                        );
+<span class="nc" id="L613">                        playDialog(</span>
+                            DialogHandler.DialogID.SUNK,
+<span class="nc" id="L615">                            (float) (loliAnimation.getAnimationDuration() * 0.60)</span>
+                        );
+                    }
+                    else {
+<span class="nc" id="L619">                        SoundHandler.playSound(</span>
+                            SoundHandler.SoundID.HIT,
+<span class="nc" id="L621">                            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                        );
+<span class="nc" id="L623">                        playDialog(</span>
+                            DialogHandler.DialogID.HIT,
+<span class="nc" id="L625">                            (float) (loliAnimation.getAnimationDuration() * 0.60)</span>
+                        );
+                    }
+                }
+                else {
+<span class="nc bnc" id="L630" title="All 2 branches missed.">                    if(response.getResult() == AttackResult.ALREADY_HIT) {</span>
+<span class="nc" id="L631">                        SoundHandler.playSound(</span>
+                            SoundHandler.SoundID.ALREADY_HIT,
+<span class="nc" id="L633">                            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                        );
+<span class="nc" id="L635">                        playDialog(</span>
+                            DialogHandler.DialogID.ALREADY_HIT,
+<span class="nc" id="L637">                            (float) (loliAnimation.getAnimationDuration() * 0.60)</span>
+                        );
+                    }
+                    else {
+<span class="nc" id="L641">                        SoundHandler.playSound(</span>
+                            SoundHandler.SoundID.MISS,
+<span class="nc" id="L643">                            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                        );
+<span class="nc" id="L645">                        playDialog(</span>
+                            DialogHandler.DialogID.MISS,
+<span class="nc" id="L647">                            (float) (loliAnimation.getAnimationDuration() * 0.60)</span>
+                        );
+                    }
+                }
+<span class="nc" id="L651">                updatePlayerTables();</span>
+<span class="nc" id="L652">                resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L653">                turnPlayed = true;</span>
+<span class="nc" id="L654">                waitTimer = 0;</span>
+            }
+        }
+
+<span class="nc bnc" id="L658" title="All 2 branches missed.">        if(turnPlayed) {</span>
+<span class="nc" id="L659">            waitTimer += delta;</span>
+
+<span class="nc bnc" id="L661" title="All 2 branches missed.">            if(waitTimer &gt; 3f) {</span>
+<span class="nc" id="L662">                Gdx.app.postRunnable(() -&gt; controller.changeTurn());</span>
+            }
+        }
+<span class="nc" id="L665">    }</span>
+
+    /**
+     * Render game menu
+     */
+    @Override
+    public void render(float delta) {
+<span class="nc" id="L672">        super.render(delta);</span>
+<span class="nc" id="L673">    }</span>
+
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L678">        super.resize(width, height);</span>
+
+<span class="nc bnc" id="L680" title="All 2 branches missed.">        for(Label headerLabel : headerLabels) {</span>
+<span class="nc" id="L681">            headerLabel.setFontScale(base / 550f);</span>
+<span class="nc" id="L682">        }</span>
+
+<span class="nc bnc" id="L684" title="All 2 branches missed.">        for(Label rowLabel : rowLabels) {</span>
+<span class="nc" id="L685">            rowLabel.setFontScale(base / 550f);</span>
+<span class="nc" id="L686">        }</span>
+
+<span class="nc bnc" id="L688" title="All 2 branches missed.">        if(loliMsg != null) {</span>
+<span class="nc" id="L689">            loliMsg.setFontScale(base / 425f);</span>
+        }
+
+<span class="nc bnc" id="L692" title="All 2 branches missed.">        if(coordLabel != null) {</span>
+<span class="nc" id="L693">            coordLabel.setFontScale(base / 425f);</span>
+        }
+
+<span class="nc bnc" id="L696" title="All 2 branches missed.">        if(pauseTitleLabel != null) {</span>
+<span class="nc" id="L697">            pauseTitleLabel.setFontScale(base / 200f);</span>
+        }
+
+<span class="nc bnc" id="L700" title="All 2 branches missed.">        if(turnLabel != null) {</span>
+<span class="nc" id="L701">            turnLabel.setFontScale(base / 300f);</span>
+        }
+
+<span class="nc bnc" id="L704" title="All 2 branches missed.">        if(nameLabel != null) {</span>
+<span class="nc" id="L705">            nameLabel.setFontScale(base / 300f);</span>
+        }
+<span class="nc" id="L707">    }</span>
+
+    /**
+     * Get ship drawable by name
+     *
+     * @param shipName name of ship
+     * @return drawable of ship
+     */
+    private TextureRegionDrawable getShipDrawable(String shipName) {
+<span class="nc bnc" id="L716" title="All 2 branches missed.">        if (shipName == null) return null;</span>
+
+<span class="nc bnc" id="L718" title="All 5 branches missed.">        switch (shipName) {</span>
+            case &quot;Carrier&quot;:
+<span class="nc" id="L720">                return carrierTexture;</span>
+            case &quot;Cruiser&quot;:
+<span class="nc" id="L722">                return cruiserTexture;</span>
+            case &quot;Destroyer&quot;:
+<span class="nc" id="L724">                return destroyerTexture;</span>
+            case &quot;Torpedo&quot;:
+<span class="nc" id="L726">                return torpedoTexture;</span>
+            default:
+<span class="nc" id="L728">                return null;</span>
+        }
+    }
+
+    /**
+     * Update player ui tables
+     */
+    private void updatePlayerTables() {
+<span class="nc" id="L736">        updateTableWithModel(</span>
+            shipTable,
+<span class="nc" id="L738">            currentPlayer.getGrid(),</span>
+            false,
+            true
+        );
+
+<span class="nc" id="L743">        updateTableWithModel(</span>
+            trackingTable,
+<span class="nc" id="L745">            currentPlayer.getTrackingGrid(),</span>
+            true,
+            false
+        );
+<span class="nc" id="L749">    }</span>
+
+    /**
+     * Toggle pause menu
+     */
+    private void togglePause() {
+<span class="nc bnc" id="L755" title="All 2 branches missed.">        paused = !paused;</span>
+
+<span class="nc" id="L757">        pauseImage.setVisible(paused);</span>
+<span class="nc" id="L758">        Color pauseColor = pauseImage.getColor();</span>
+<span class="nc" id="L759">        pauseColor.set(pauseColor.r, pauseColor.g, pauseColor.b, 0.2f);</span>
+<span class="nc" id="L760">        pauseImage.setColor(pauseColor);</span>
+
+<span class="nc bnc" id="L762" title="All 2 branches missed.">        if(paused) {</span>
+<span class="nc" id="L763">            pauseTable.defaults()</span>
+<span class="nc" id="L764">                .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L765">                .height(Value.percentHeight(0.1f, root))</span>
+<span class="nc" id="L766">                .pad(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L768">            pauseTitleLabel = new Label(&quot;Pause&quot;, skin);</span>
+<span class="nc" id="L769">            pauseTitleLabel.setFontScale(2.5f);</span>
+<span class="nc" id="L770">            pauseTitleLabel.setAlignment(Align.center);</span>
+
+<span class="nc" id="L772">            pauseTable.add(pauseTitleLabel).row();;</span>
+
+<span class="nc" id="L774">            addMenuButton(pauseTable, &quot;Continue&quot;, this::togglePause);</span>
+<span class="nc" id="L775">            addMenuButton(pauseTable,  &quot;Return to Title&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.MAIN_MENU));</span>
+
+        }
+        else {
+<span class="nc" id="L779">            pauseTable.clear();</span>
+<span class="nc" id="L780">            pauseTitleLabel = null;</span>
+        }
+<span class="nc" id="L782">    }</span>
+
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L787">        super.dispose();</span>
+
+<span class="nc" id="L789">        gridCaseTexture = null;</span>
+<span class="nc" id="L790">        snipeTexture = null;</span>
+<span class="nc" id="L791">        carrierTexture = null;</span>
+<span class="nc" id="L792">        cruiserTexture = null;</span>
+<span class="nc" id="L793">        destroyerTexture = null;</span>
+<span class="nc" id="L794">        torpedoTexture = null;</span>
+<span class="nc" id="L795">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

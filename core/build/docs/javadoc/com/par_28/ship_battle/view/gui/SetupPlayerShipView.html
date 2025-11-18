@@ -66,7 +66,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class SetupPlayerShipView" class="title">Class SetupPlayerShipView</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>
+<div class="inheritance"><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">com.par_28.ship_battle.view.gui.GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;
 <div class="inheritance">com.par_28.ship_battle.view.gui.SetupPlayerShipView</div>
 </div>
 </div>
@@ -77,7 +77,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SetupPlayerShipView</span>
-<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></span></div>
+<span class="extends-implements">extends <a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Fields inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
+<code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#controller">controller</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -109,7 +109,7 @@ loadScripts(document, 'script');</script>
 <h2>Method Summary</h2>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Methods inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#buildUI()">buildUI</a>, <a href="GuiView.html#dispose()">dispose</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#loadTextures()">loadTextures</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resize(int,int)">resize</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a>, <a href="GuiView.html#update(float)">update</a></code></div>
+<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#buildUI()">buildUI</a>, <a href="GuiView.html#dispose()">dispose</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#initUI()">initUI</a>, <a href="GuiView.html#loadTextures()">loadTextures</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resize(int,int)">resize</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a>, <a href="GuiView.html#update(float)">update</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>

@@ -2,6 +2,8 @@ package com.par_28.ship_battle.controller.gui;
 
 import com.par_28.ship_battle.model.AttackResponse;
 import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.view.gui.*;
 
 /**
@@ -43,7 +45,14 @@ public class GameController extends GuiController {
      * Start a player's turn.
      */
     public void startTurn() {
-        changeView(new GameView(parent, this));
+        Player current = this.parent.app.game.getCurrentPlayer();
+
+        if(current.isAI()) {
+            changeView(new AIGameView(parent, this));
+        }
+        else {
+            changeView(new GameView(parent, this));
+        }
     }
 
     /**
@@ -74,7 +83,13 @@ public class GameController extends GuiController {
      * @return Attack response
      */
     public AttackResponse playTurn(Coordinate attackCord) {
+        Player current = this.parent.app.game.getCurrentPlayer();
+
         AttackResponse response = this.parent.app.game.playTurn(attackCord);
+
+        if(current instanceof AIPlayer aiPlayer) {
+            aiPlayer.notifyAttackResult(attackCord, response);
+        }
 
         SoundHandler.playSound(
             SoundHandler.SoundID.CANNON_SHOT,
@@ -82,6 +97,16 @@ public class GameController extends GuiController {
         );
 
         return response;
+    }
+
+    public Coordinate getAIShot() {
+        Player current = this.parent.app.game.getCurrentPlayer();
+
+        if(current instanceof AIPlayer aiPlayer) {
+            return aiPlayer.chooseShot(this.parent.app.game.getOpponent().getShips());
+        }
+
+        return null;
     }
 
     /**

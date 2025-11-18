@@ -3,9 +3,7 @@
 import java.util.*;
 
 import com.par_28.ship_battle.model.enums.*;
-import com.par_28.ship_battle.model.*;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Player model representing a game player
@@ -45,12 +43,12 @@ public class Player {
      * @param name Player's name
      * @param gridSize Size of the player's grid
      */
-<span class="fc" id="L48">    public Player(String name, int gridSize) {</span>
-<span class="fc" id="L49">        this.name = name;</span>
-<span class="fc" id="L50">        this.grid = new Grid(gridSize, gridSize);</span>
-<span class="fc" id="L51">        this.trackingGrid = new Grid(gridSize, gridSize);</span>
-<span class="fc" id="L52">        this.ships = new ArrayList&lt;Ship&gt;();</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc" id="L46">    public Player(String name, int gridSize) {</span>
+<span class="fc" id="L47">        this.name = name;</span>
+<span class="fc" id="L48">        this.grid = new Grid(gridSize, gridSize);</span>
+<span class="fc" id="L49">        this.trackingGrid = new Grid(gridSize, gridSize);</span>
+<span class="fc" id="L50">        this.ships = new ArrayList&lt;Ship&gt;();</span>
+<span class="fc" id="L51">    }</span>
 
     /**
      * Check if player is dead (all ships destroyed)
@@ -58,16 +56,16 @@ public class Player {
      * @return boolean True if player is dead, false otherwise
      */
     public boolean isDead() {
-<span class="fc" id="L61">        boolean result = true;</span>
+<span class="fc" id="L59">        boolean result = true;</span>
 
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Ship ship: ships) {</span>
-<span class="fc bfc" id="L64" title="All 2 branches covered.">            if(!ship.isDestroyed()) {</span>
-<span class="fc" id="L65">                result = false;</span>
-<span class="fc" id="L66">                break;</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        for (Ship ship: ships) {</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            if(!ship.isDestroyed()) {</span>
+<span class="nc" id="L63">                result = false;</span>
+<span class="nc" id="L64">                break;</span>
             }
-<span class="fc" id="L68">        }</span>
+<span class="nc" id="L66">        }</span>
 
-<span class="fc" id="L70">        return result;</span>
+<span class="fc" id="L68">        return result;</span>
     }
 
     /**
@@ -76,8 +74,8 @@ public class Player {
      * @param ship Ship to add
      */
     public void addShip(Ship ship) {
-<span class="fc" id="L79">        ships.add(ship);</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L77">        ships.add(ship);</span>
+<span class="fc" id="L78">    }</span>
 
     /**
      * Place ship on player's grid
@@ -89,8 +87,8 @@ public class Player {
      * @throws ShipPlacementException if the ship cannot be placed at the given coordinate and direction
      */
     public void placeShipOnGrid(Ship ship, Coordinate coord, Direction direction) throws InvalidCoordinateException, ShipPlacementException {
-<span class="fc" id="L92">        grid.placeShip(ship, coord, direction);</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L90">        grid.placeShip(ship, coord, direction);</span>
+<span class="fc" id="L91">    }</span>
 
     /**
      * Receive attack on player's grid
@@ -100,7 +98,7 @@ public class Player {
      * @throws InvalidCoordinateException if the coordinate is invalid
      */
     public AttackResponse receiveAttack(Coordinate coord) throws InvalidCoordinateException {
-<span class="fc" id="L103">        return grid.receiveAttack(coord);</span>
+<span class="nc" id="L101">        return grid.receiveAttack(coord);</span>
     }
 
 
@@ -111,13 +109,13 @@ public class Player {
      * @param response Response of the attack with hit/miss and ship info
      */
     public void recordAttack(Coordinate coord, AttackResponse response) {
-<span class="fc" id="L114">        Cell trackingCell = trackingGrid.getCell(coord);</span>
-<span class="fc" id="L115">        trackingCell.shoot();</span>
+<span class="nc" id="L112">        Cell trackingCell = trackingGrid.getCell(coord);</span>
+<span class="nc" id="L113">        trackingCell.shoot();</span>
 
-<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (response.isHit()) {</span>
-<span class="fc" id="L118">            trackingCell.setShip(response.getShip());</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (response.isHit()) {</span>
+<span class="nc" id="L116">            trackingCell.setShip(response.getShip());</span>
         }
-<span class="fc" id="L120">    }</span>
+<span class="nc" id="L118">    }</span>
 
     /**
      * Get player's name
@@ -125,7 +123,7 @@ public class Player {
      * @return String Player's name
      */
     public String getName(){
-<span class="fc" id="L128">        return name;</span>
+<span class="fc" id="L126">        return name;</span>
     }
 
     /**
@@ -134,7 +132,7 @@ public class Player {
      * @return Grid Player's grid
      */
     public Grid getGrid() {
-<span class="fc" id="L137">        return grid;</span>
+<span class="fc" id="L135">        return grid;</span>
     }
 
     /**
@@ -143,7 +141,7 @@ public class Player {
      * @return Grid Player's tracking grid
      */
     public Grid getTrackingGrid() {
-<span class="fc" id="L146">        return trackingGrid;</span>
+<span class="fc" id="L144">        return trackingGrid;</span>
     }
 
     /**
@@ -152,7 +150,17 @@ public class Player {
      * @return Player's ships
      */
     public List&lt;Ship&gt; getShips() {
-<span class="fc" id="L155">        return ships;</span>
+<span class="fc" id="L153">        return ships;</span>
+    }
+
+
+    /**
+     * Check if this player is an AI.
+     *
+     * @return returns false for normal player and true for AI
+     */
+    public boolean isAI() {
+<span class="nc" id="L163">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

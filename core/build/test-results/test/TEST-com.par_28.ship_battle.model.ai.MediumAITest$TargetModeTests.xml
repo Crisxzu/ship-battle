@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="MediumAI Target Mode Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.241Z" hostname="MacBook-Pro.local" time="0.003">
+  <properties/>
+  <testcase name="Should target all four adjacent cells after a hit" classname="com.par_28.ship_battle.model.ai.MediumAITest$TargetModeTests" time="0.0"/>
+  <testcase name="Should switch to TARGET mode after a hit" classname="com.par_28.ship_battle.model.ai.MediumAITest$TargetModeTests" time="0.002"/>
+  <testcase name="Should handle multiple hits and continue targeting" classname="com.par_28.ship_battle.model.ai.MediumAITest$TargetModeTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

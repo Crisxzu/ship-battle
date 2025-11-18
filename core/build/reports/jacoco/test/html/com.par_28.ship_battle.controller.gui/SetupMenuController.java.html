@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetupMenuController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.controller.gui</a> &gt; <span class="el_source">SetupMenuController.java</span></div><h1>SetupMenuController.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.controller.gui;
+
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.view.gui.SetupPlayerNameView;
+import com.par_28.ship_battle.view.gui.SetupPlayerShipView;
+import com.par_28.ship_battle.view.gui.SoundHandler;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Mananger of setup menu where players enter their names and set up ships.
+ */
+public class SetupMenuController extends GuiController {
+    /**
+     * List of player names entered.
+     */
+<span class="nc" id="L19">    List&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Initialize the menu controller.
+     *
+     * @param parent Reference to the parent screen controller
+     */
+    public SetupMenuController(ScreenController parent) {
+<span class="nc" id="L27">        super(parent);</span>
+<span class="nc" id="L28">    }</span>
+
+    /**
+     * Update menu controller.
+     *
+     * @param dt Delta time since last update
+     */
+    public void update(float dt){
+
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Add a player name to the setup.
+     *
+     * @param name Player name to add
+     * @return true if name added successfully, false otherwise
+     */
+    public boolean addName(String name) {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(name.isEmpty()) {</span>
+<span class="nc" id="L47">            SoundHandler.playSound(</span>
+                SoundHandler.SoundID.ERROR,
+<span class="nc" id="L49">                0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+            );
+<span class="nc" id="L51">            Dialogs.showErrorDialog(view.stage, &quot;Please enter a name&quot;);</span>
+<span class="nc" id="L52">            return false;</span>
+        }
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if(names.contains(name)) {</span>
+<span class="nc" id="L56">            SoundHandler.playSound(</span>
+                SoundHandler.SoundID.ERROR,
+<span class="nc" id="L58">                0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+            );
+<span class="nc" id="L60">            Dialogs.showErrorDialog(view.stage, String.format(&quot;%s already registered&quot;, name));</span>
+<span class="nc" id="L61">            return false;</span>
+        }
+
+<span class="nc" id="L64">        this.names.add(name);</span>
+
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(this.names.size() &gt;= this.parent.app.nbPlayers) {</span>
+            // Play some music maybe
+<span class="nc" id="L68">            Player player1 = new Player(this.names.get(0), this.parent.app.gridSize);</span>
+<span class="nc" id="L69">            Player player2 = new Player(this.names.get(1), this.parent.app.gridSize);</span>
+
+
+<span class="nc" id="L72">            this.parent.app.player1 = player1;</span>
+<span class="nc" id="L73">            this.parent.app.player2 = player2;</span>
+
+<span class="nc" id="L75">            view = new SetupPlayerShipView(parent);</span>
+
+            //this.parent.changeController(GuiControllerEnum.GAME);
+        }
+
+<span class="nc" id="L80">        return true;</span>
+    }
+
+    /**
+     * Render menu view.
+     *
+     * @param dt Delta time since last render
+     */
+    @Override
+    public void render(float dt){
+<span class="nc" id="L90">        super.render(dt);</span>
+<span class="nc" id="L91">        view.render(dt);</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * Reset menu to initial state.
+     */
+    @Override
+    public void reset() {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if(names != null) {</span>
+<span class="nc" id="L100">            names.clear();</span>
+        }
+<span class="nc" id="L102">        view = new SetupPlayerNameView(this.parent, this);</span>
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

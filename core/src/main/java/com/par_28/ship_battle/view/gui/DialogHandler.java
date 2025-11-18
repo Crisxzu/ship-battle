@@ -44,6 +44,11 @@ public class DialogHandler implements Handler {
         ALREADY_HIT(
             4,
             "Baka ! You have already hit this case."
+        ),
+
+        TURN_START_AI(
+            5,
+            "Hum, let some time to the AI to think."
         );
 
         /**
@@ -78,8 +83,8 @@ public class DialogHandler implements Handler {
     private static float dialogDuration = 0;
 
     /**
-     * Play a dialog 
-     * 
+     * Play a dialog
+     *
      * @param dialogID specified dialog
      * @param duration duration to display dialog
      */
@@ -99,7 +104,7 @@ public class DialogHandler implements Handler {
 
     /**
      * Get dialog duration
-     * 
+     *
      * @return dialog duration
      */
     public static float getDialogDuration() {
@@ -108,7 +113,7 @@ public class DialogHandler implements Handler {
 
     /**
      * Get dialog text
-     * 
+     *
      * @return dialog text
      */
     public static String getDialogText() {

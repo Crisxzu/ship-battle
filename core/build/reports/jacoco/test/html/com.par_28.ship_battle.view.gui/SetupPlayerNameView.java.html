@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetupPlayerNameView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">SetupPlayerNameView.java</span></div><h1>SetupPlayerNameView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.controller.gui.SetupMenuController;
+
+/**
+ * Setup player name menu
+ */
+public class SetupPlayerNameView extends GuiView&lt;SetupMenuController&gt; {
+    /**
+     * Title label
+     */
+    private Label titleLabel;
+
+    /**
+     * Name input field
+     */
+    private TextField nameField;
+
+    /**
+     * Current player index
+     */
+<span class="nc" id="L26">    private int iPlayer = 0;</span>
+
+    /**
+     * Initialize menu
+     *
+     * @param parent parent controller
+     * @param controller setup menu controller
+     */
+    public SetupPlayerNameView(ScreenController parent, SetupMenuController controller) {
+<span class="nc" id="L35">        super(parent, controller);</span>
+<span class="nc" id="L36">        buildUI();</span>
+<span class="nc" id="L37">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L41">        super.buildUI();</span>
+<span class="nc" id="L42">        Table root = new Table();</span>
+<span class="nc" id="L43">        root.setFillParent(true);</span>
+
+<span class="nc" id="L45">        root.defaults()</span>
+<span class="nc" id="L46">            .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L47">            .height(Value.percentHeight(0.1f, root))</span>
+<span class="nc" id="L48">            .pad(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L50">        Cell&lt;TextButton&gt; backBtn = addMenuButton(root, &quot;Back to Title&quot;, () -&gt; {</span>
+<span class="nc" id="L51">            parent.changeController(GuiControllerEnum.MAIN_MENU);</span>
+<span class="nc" id="L52">        });</span>
+<span class="nc" id="L53">        backBtn.expandX().left().width(Value.percentWidth(0.15f, root));</span>
+
+<span class="nc" id="L55">        root.add().height(Value.percentHeight(0.1f, root)).row();</span>
+
+<span class="nc" id="L57">        titleLabel = new Label(&quot;&quot;, skin);</span>
+<span class="nc" id="L58">        titleLabel.setFontScale(2.5f);</span>
+
+<span class="nc" id="L60">        root.add(titleLabel).row();</span>
+
+<span class="nc" id="L62">        nameField = new TextField(&quot;&quot;, skin);</span>
+<span class="nc" id="L63">        nameField.setMessageText(&quot;Enter your name&quot;);</span>
+
+<span class="nc" id="L65">        updateUI();</span>
+
+<span class="nc" id="L67">        root.add(nameField).row();</span>
+
+<span class="nc" id="L69">        addMenuButton(root, &quot;OK&quot;, this::addName);</span>
+
+<span class="nc" id="L71">        root.add().expand().row();</span>
+
+<span class="nc" id="L73">        stage.addActor(root);</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Update UI elements
+     */
+    void updateUI() {
+<span class="nc" id="L80">        titleLabel.setText(String.format(&quot;Player %d&quot;, iPlayer+1));</span>
+<span class="nc" id="L81">        nameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L82">    }</span>
+
+
+    @Override
+    public void update(float delta) {
+<span class="nc" id="L87">        super.update(delta);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if(InputHandler.isKeyJustPressed(Input.Keys.ENTER)) {</span>
+<span class="nc" id="L89">            addName();</span>
+        }
+<span class="nc" id="L91">    }</span>
+
+    /**
+     * Add player name
+     */
+    private void addName() {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if(controller.addName(nameField.getText())) {</span>
+<span class="nc" id="L98">            iPlayer++;</span>
+<span class="nc" id="L99">            updateUI();</span>
+        }
+<span class="nc" id="L101">    }</span>
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L105">        super.resize(width, height);</span>
+<span class="nc" id="L106">        titleLabel.setFontScale(base / 300f);</span>
+<span class="nc" id="L107">        TextField.TextFieldStyle style = nameField.getStyle();</span>
+<span class="nc" id="L108">        style.font.getData().setScale(base / 600f);</span>
+<span class="nc" id="L109">        nameField.setStyle(style);</span>
+<span class="nc" id="L110">    }</span>
+
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L115">        super.dispose();</span>
+<span class="nc" id="L116">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

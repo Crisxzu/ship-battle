@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIPlayer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model.ai</a> &gt; <span class="el_source">AIPlayer.java</span></div><h1>AIPlayer.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model.ai;
+
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.enums.*;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * AI-controlled player
+ * &lt;p&gt;
+ * This player uses an AI strategy to automatically select shots during gameplay.
+ * The strategy can be configured by difficulty level (Easy, Medium, Hard).
+ * &lt;/p&gt;
+ */
+public class AIPlayer extends Player {
+    /**
+     * Strategy used for decision-making
+     */
+    private final AIStrategy strategy;
+
+    /**
+     * Difficulty level of this AI
+     */
+    private final AIDifficulty difficulty;
+
+    /**
+     * Create an AI player with difficulty-based strategy selection.
+     *
+     * @param name AI player's display name
+     * @param gridSize Size of the game grid
+     * @param difficulty Difficulty level (determines which strategy to use)
+     */
+    public AIPlayer(String name, int gridSize, AIDifficulty difficulty) {
+<span class="fc" id="L37">        super(name, gridSize);</span>
+<span class="fc" id="L38">        this.difficulty = difficulty;</span>
+<span class="fc" id="L39">        this.strategy = createStrategyFromDifficulty(difficulty);</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Create the appropriate strategy based on difficulty level.
+     *
+     * @param difficulty Desired difficulty
+     * @return Corresponding AI strategy
+     */
+    private static AIStrategy createStrategyFromDifficulty(AIDifficulty difficulty) {
+<span class="pc bpc" id="L49" title="1 of 4 branches missed.">        return switch (difficulty) {</span>
+<span class="fc" id="L50">            case EASY -&gt; new EasyAI();</span>
+<span class="fc" id="L51">            case MEDIUM -&gt; new MediumAI();</span>
+<span class="fc" id="L52">            case HARD -&gt; new HardAI();</span>
+<span class="nc" id="L53">            default -&gt; new EasyAI();</span>
+        };
+    }
+
+    /**
+     * Chooses the next shot coordinate based on its strategy.
+     *
+     * @param opponentShips List of opponent's ships (to check which are still alive)
+     * @return Coordinate selected by the AI to attack
+     */
+    public Coordinate chooseShot(List&lt;Ship&gt; opponentShips) {
+<span class="fc" id="L64">        return strategy.chooseShot(getTrackingGrid(), opponentShips);</span>
+    }
+
+    /**
+     * Update the AI's internal state after a shot is made.
+     *
+     * @param shot The coordinate that was attacked
+     * @param response The result of the attack
+     */
+    public void notifyAttackResult(Coordinate shot, AttackResponse response) {
+<span class="fc" id="L74">        strategy.updateAfterShot(shot, response);</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Reset the AI's strategy state for a new game.
+     */
+    public void resetStrategy() {
+<span class="fc" id="L81">        strategy.reset();</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Get the AI's difficulty level.
+     *
+     * @return Difficulty level
+     */
+    public AIDifficulty getDifficulty() {
+<span class="fc" id="L90">        return difficulty;</span>
+    }
+
+    /**
+     * Get the AI's strategy.
+     *
+     * @return AI strategy
+     */
+    public AIStrategy getStrategy() {
+<span class="fc" id="L99">        return strategy;</span>
+    }
+
+    @Override
+    public boolean isAI() {
+<span class="fc" id="L104">        return true;</span>
+    }
+
+    /**
+     * Randomly place a single ship on the AI's grid.
+     * &lt;p&gt;
+     * Attempts to place the ship at random positions and orientations
+     * until a valid placement is found.
+     * &lt;/p&gt;
+     *
+     * @param ship Ship to place
+     * @param random Random number generator (for deterministic testing)
+     * @param maxAttempts Maximum number of placement attempts before giving up
+     * @return true if ship was successfully placed, false otherwise
+     */
+    public boolean placeShipRandomly(Ship ship, Random random, int maxAttempts) {
+<span class="fc" id="L120">        int gridSize = getGrid().getWidth();</span>
+<span class="fc" id="L121">        int attempts = 0;</span>
+
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        while (attempts &lt; maxAttempts) {</span>
+            // Random position
+<span class="fc" id="L125">            int x = random.nextInt(gridSize);</span>
+<span class="fc" id="L126">            int y = random.nextInt(gridSize);</span>
+<span class="fc" id="L127">            Coordinate coord = new Coordinate(x, y);</span>
+
+            // Random direction
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            Direction direction = random.nextBoolean() ? Direction.HORIZONTAL : Direction.VERTICAL;</span>
+
+            try {
+                // Try to place the ship
+<span class="fc" id="L134">                placeShipOnGrid(ship, coord, direction);</span>
+<span class="fc" id="L135">                return true; // Success!</span>
+<span class="fc" id="L136">            } catch (InvalidCoordinateException | ShipPlacementException e) {</span>
+                // Failed, try again
+<span class="fc" id="L138">                attempts++;</span>
+            }
+<span class="fc" id="L140">        }</span>
+
+<span class="nc" id="L142">        return false; // Failed to place after max attempts</span>
+    }
+
+    /**
+     * Randomly place a single ship on the AI's grid with default parameters.
+     *
+     * @param ship Ship to place
+     * @return true if ship was successfully placed, false otherwise
+     */
+    public boolean placeShipRandomly(Ship ship) {
+<span class="fc" id="L152">        return placeShipRandomly(ship, new Random(), 1000);</span>
+    }
+
+    /**
+     * Automatically place all ships from a list randomly on the AI's grid.
+     * &lt;p&gt;
+     * This method will:
+     * 1. Add each ship to the AI's fleet
+     * 2. Place each ship randomly on the grid
+     * 3. Stop if any ship cannot be placed
+     * &lt;/p&gt;
+     *
+     * @param ships List of ships to add and place
+     * @return true if all ships were successfully placed, false otherwise
+     */
+    public boolean placeShipsRandomly(List&lt;Ship&gt; ships) {
+<span class="fc" id="L168">        Random random = new Random();</span>
+
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
+<span class="fc" id="L171">            addShip(ship);</span>
+<span class="fc" id="L172">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
+
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">            if (!placed) {</span>
+<span class="nc" id="L175">                return false; // Failed to place this ship</span>
+            }
+<span class="fc" id="L177">        }</span>
+
+<span class="fc" id="L179">        return true; // All ships placed successfully</span>
+    }
+
+    /**
+     * Automatically place all ships from a list with a custom seed.
+     * &lt;p&gt;
+     * Useful for deterministic placement in tests.
+     * &lt;/p&gt;
+     *
+     * @param ships List of ships to add and place
+     * @param seed Random seed for deterministic placement
+     * @return true if all ships were successfully placed, false otherwise
+     */
+    public boolean placeShipsRandomly(List&lt;Ship&gt; ships, long seed) {
+<span class="fc" id="L193">        Random random = new Random(seed);</span>
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
+<span class="fc" id="L196">            addShip(ship);</span>
+<span class="fc" id="L197">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
+
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            if (!placed) {</span>
+<span class="nc" id="L200">                return false;</span>
+            }
+<span class="fc" id="L202">        }</span>
+
+<span class="fc" id="L204">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

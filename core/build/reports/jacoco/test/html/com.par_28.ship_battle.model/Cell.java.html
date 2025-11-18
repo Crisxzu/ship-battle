@@ -39,7 +39,7 @@ public class Cell {
      * @return Coordinate of cell
      */
     public Coordinate getCoordinate() {
-<span class="fc" id="L42">        return coordinate;</span>
+<span class="nc" id="L42">        return coordinate;</span>
     }
 
     /**
@@ -48,7 +48,7 @@ public class Cell {
      * @return Ship or null
      */
     public Ship getShip() {
-<span class="fc" id="L51">        return ship;</span>
+<span class="nc" id="L51">        return ship;</span>
     }
 
     /**
@@ -69,10 +69,10 @@ public class Cell {
      * &lt;/p&gt;
      */
     public void shoot() {
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (!shot) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!shot) {</span>
 <span class="fc" id="L73">            shot = true;</span>
-<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (ship != null) {</span>
-<span class="fc" id="L75">                ship.receiveDamage();</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (ship != null) {</span>
+<span class="nc" id="L75">                ship.receiveDamage();</span>
             }
         }
 <span class="fc" id="L78">    }</span>

@@ -1,23 +1,9 @@
 package com.par_28.ship_battle.controller.gui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.par_28.ship_battle.ShipBattleApplication;
-import com.par_28.ship_battle.model.Carrier;
-import com.par_28.ship_battle.model.Coordinate;
-import com.par_28.ship_battle.model.Cruiser;
-import com.par_28.ship_battle.model.Destroyer;
-import com.par_28.ship_battle.model.Game;
-import com.par_28.ship_battle.model.Player;
-import com.par_28.ship_battle.model.Ship;
-import com.par_28.ship_battle.model.Torpedo;
-import com.par_28.ship_battle.model.ai.AIPlayer;
-import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
-import com.par_28.ship_battle.model.enums.Direction;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 
 /**
  * Manager of screens and controllers.
@@ -43,6 +29,7 @@ public class ScreenController extends GuiController {
      *
      * @param app Reference to the main application
      */
+    @SuppressWarnings("OverridableMethodCallDuringObjectConstruction")
     public ScreenController(ShipBattleApplication app) {
         super(null);
         this.app = app;
@@ -54,33 +41,7 @@ public class ScreenController extends GuiController {
         controllers.put(GuiControllerEnum.GAME, new GameController(this));
         controllers.put(GuiControllerEnum.SETTINGS, new SettingsController(this));
 
-        // TODO Return to normal after game testing
-        //changeController(GuiControllerEnum.MAIN_MENU);
-        /*this.app.player1 = new Player("Dazu", this.app.gridSize);
-        this.app.player2 = new Player("Daouda", this.app.gridSize);
-
-        // Initialize ships with default positions
-        initializeDefaultShips(this.app.player1);
-        initializeDefaultShips(this.app.player2);*/
-
-        this.app.player1 = new Player("Dazu", this.app.gridSize);
-        AIPlayer aiPlayer = new AIPlayer(AIPlayer.getRandomName(), this.app.gridSize, AIDifficulty.HARD);
-        this.app.player2 = aiPlayer;
-
-        initializeDefaultShips(this.app.player1);
-
-        Ship[] ships = {
-            new Carrier(),
-            new Cruiser(),
-            new Destroyer(),
-            new Torpedo()
-        };
-
-        aiPlayer.placeShipsRandomly(List.of(ships));
-
-        this.app.game = new Game(this.app.player1, this.app.player2);
-        this.app.game.start();
-        changeController(GuiControllerEnum.MAIN_MENU);
+        activateController(GuiControllerEnum.MAIN_MENU);
     }
 
     /**
@@ -88,6 +49,7 @@ public class ScreenController extends GuiController {
      *
      * @param dt Delta time since last update
      */
+    @Override
     public void update(float dt){
 
     }
@@ -109,10 +71,18 @@ public class ScreenController extends GuiController {
      * @param controller The new controller to activate
      */
     public void changeController(GuiControllerEnum controller){
+        activateController(controller);
+    }
+
+    private void activateController(GuiControllerEnum controller) {
         currentController = controllers.get(controller);
-        System.out.println(currentController);
+        if(currentController == null) {
+            return;
+        }
         currentController.reset();
-        currentController.view.show();
+        if(currentController.view != null) {
+            currentController.view.show();
+        }
     }
 
     /**
@@ -137,38 +107,6 @@ public class ScreenController extends GuiController {
     public void dispose() {
         for (GuiController controller : controllers.values()) {
             controller.dispose();
-        }
-    }
-
-    // TODO : Remove this method and implement proper ship placement in SetupMenuController
-    private void initializeDefaultShips(Player player) {
-        try {
-            // Create ships
-            Ship carrier = new Carrier();
-            Ship cruiser = new Cruiser();
-            Ship destroyer = new Destroyer();
-            Ship torpedo = new Torpedo();
-
-            // Place ships with default positions
-            // Carrier (length 5) at (0,0) horizontally
-            player.addShip(carrier);
-            player.placeShipOnGrid(carrier, new Coordinate(6, 1), Direction.VERTICAL);
-
-            // Cruiser (length 4) at (0,2) horizontally
-            player.addShip(cruiser);
-            player.placeShipOnGrid(cruiser, new Coordinate(0, 2), Direction.HORIZONTAL);
-
-            // Destroyer (length 3) at (0,4) horizontally
-            player.addShip(destroyer);
-            player.placeShipOnGrid(destroyer, new Coordinate(0, 4), Direction.HORIZONTAL);
-
-            // Torpedo (length 2) at (0,6) horizontally
-            player.addShip(torpedo);
-            player.placeShipOnGrid(torpedo, new Coordinate(0, 6), Direction.HORIZONTAL);
-
-            System.out.println("Ships initialized for player: " + player.getName());
-        } catch (InvalidCoordinateException | ShipPlacementException e) {
-            System.err.println("Error initializing ships for player " + player.getName() + ": " + e.getMessage());
         }
     }
 }

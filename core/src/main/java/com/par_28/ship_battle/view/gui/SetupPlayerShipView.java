@@ -55,6 +55,8 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
     private Label titleLabel;
     private Label instructionLabel;
     private Label directionLabel;
+    private Label helperLabel;
+    private TextButton readyButton;
 
     private Direction placementDirection = Direction.HORIZONTAL;
     private Coordinate lastHoveredCell = null;
@@ -125,9 +127,26 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         directionLabel.setAlignment(Align.left);
         leftPanel.add(directionLabel).left().row();
 
+        helperLabel = new Label("Place every ship to continue", skin);
+        helperLabel.setAlignment(Align.left);
+        leftPanel.add(helperLabel).left().padBottom(6f).row();
+
         shipListTable = new Table();
         shipListTable.defaults().growX().padBottom(8f);
         leftPanel.add(shipListTable).growY().top().row();
+
+        readyButton = new TextButton("Fleet ready", skin);
+        readyButton.setDisabled(true);
+        readyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                handleReadyButton();
+            }
+        });
+        leftPanel.add(readyButton)
+            .growX()
+            .padTop(10f)
+            .row();
 
         root.add(leftPanel)
             .width(Value.percentWidth(0.3f, root))
@@ -247,6 +266,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         activeShipButton = null;
 
         List<Ship> ships = controller.getShipsToPlace();
+        updateReadyState(ships.isEmpty());
         if(ships.isEmpty()) {
             Label doneLabel = new Label("All ships placed", skin);
             shipListTable.add(doneLabel).left();
@@ -281,6 +301,33 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
             });
             shipListTable.add(button).row();
             shipButtons.put(ship, button);
+        }
+    }
+
+    private void handleReadyButton() {
+        if(controller == null || readyButton == null) {
+            return;
+        }
+
+        if(controller.getShipsToPlaceCount() > 0) {
+            helperLabel.setText("Finish placing every ship before validating.");
+            return;
+        }
+
+        readyButton.setDisabled(true);
+        controller.handlePlacementComplete();
+    }
+
+    private void updateReadyState(boolean fleetComplete) {
+        if(readyButton != null) {
+            readyButton.setDisabled(!fleetComplete);
+        }
+        if(helperLabel != null) {
+            helperLabel.setText(
+                fleetComplete
+                    ? "Fleet complete! Validate to continue."
+                    : "Place every ship to continue"
+            );
         }
     }
 
@@ -525,6 +572,9 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         if(directionLabel != null) {
             directionLabel.setFontScale(scaleMedium);
         }
+        if(helperLabel != null) {
+            helperLabel.setFontScale(scaleMedium);
+        }
         for (Label header : headerLabels) {
             header.setFontScale(base / 600f);
         }
@@ -535,6 +585,9 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
             shipButtons.values().forEach(button ->
                 button.getLabel().setFontScale(base / 450f)
             );
+        }
+        if(readyButton != null) {
+            readyButton.getLabel().setFontScale(base / 450f);
         }
     }
 

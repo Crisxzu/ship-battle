@@ -1,10 +1,14 @@
 package com.par_28.ship_battle.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import com.par_28.ship_battle.model.enums.*;
-import com.par_28.ship_battle.model.exceptions.*;
+import com.par_28.ship_battle.model.enums.AttackResult;
+import com.par_28.ship_battle.model.enums.Direction;
+import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
+import com.par_28.ship_battle.model.exceptions.InvalidGridDimension;
+import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
 
 /**
  * Grid model representing a player's board.
@@ -203,6 +207,30 @@ public class Grid {
         }
 
         return positions;
+    }
+
+    /**
+     * Preview a ship placement without mutating the grid.
+     *
+     * @param ship ship to evaluate
+     * @param start starting coordinate
+     * @param direction direction for placement
+     * @return immutable list of coordinates if placement is possible, empty list otherwise
+     */
+    public List<Coordinate> previewPlacement(Ship ship, Coordinate start, Direction direction) {
+        List<Coordinate> positions;
+        try {
+            positions = canPlaceShip(ship, start, direction);
+        }
+        catch (RuntimeException e) {
+            return Collections.emptyList();
+        }
+
+        if(positions.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList(positions);
     }
 
     /**

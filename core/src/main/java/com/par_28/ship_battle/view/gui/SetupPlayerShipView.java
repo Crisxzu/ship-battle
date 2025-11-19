@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -55,6 +56,8 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
     private Stack[][] cellStacks;
     private Image[][] highlightLayers;
 
+    private float cellPixelSize = 64f;
+
     private Label titleLabel;
     private Label instructionLabel;
     private Label directionLabel;
@@ -85,6 +88,9 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         super.loadTextures();
         Texture gridTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
         gridCaseDrawable = new TextureRegionDrawable(new TextureRegion(gridTexture));
+        if(gridCaseDrawable != null && gridCaseDrawable.getMinWidth() > 0f) {
+            cellPixelSize = gridCaseDrawable.getMinWidth();
+        }
 
         carrierTexture = new TextureRegionDrawable(new TextureRegion(
             SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER)
@@ -161,12 +167,35 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         gridTable.defaults().pad(2f);
         buildGrid();
 
+        scheduleCellSizeUpdate();
+
         root.add(gridTable)
             .expand()
             .fill();
 
         refreshShipList();
         refreshPlacedShips();
+    }
+
+    private void scheduleCellSizeUpdate() {
+        if(stage != null) {
+            stage.addAction(Actions.run(this::updateCellPixelSize));
+        }
+    }
+
+    private void updateCellPixelSize() {
+        if(cellStacks == null || cellStacks.length == 0 || cellStacks[0].length == 0) {
+            return;
+        }
+        Stack firstCell = cellStacks[0][0];
+        if(firstCell == null) {
+            return;
+        }
+        float currentSize = Math.min(firstCell.getWidth(), firstCell.getHeight());
+        if(currentSize > 0f) {
+            cellPixelSize = currentSize;
+            updateCursorForSelection(controller.getSelectedShip());
+        }
     }
 
     private void buildGrid() {
@@ -292,20 +321,39 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if(controller.selectShip(ship)) {
-                        placementDirection = Direction.HORIZONTAL;
-                        updateDirectionLabel();
-                        highlightSelectionButton(button);
-                        updateCursorForSelection(ship);
-                        lastHoveredCell = null;
-                        clearHover();
+                    handleShipSelection(ship, button);
+                }
+            });
+            button.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int buttonCode) {
+                    if(pointer > 0 || buttonCode != Input.Buttons.LEFT) {
+                        return false;
                     }
+                    Ship current = controller.getSelectedShip();
+                    if(current != null && current != ship) {
+                        return handleShipSelection(ship, button);
+                    }
+                    return false;
                 }
             });
             Table row = buildShipSelectionRow(ship, button);
             shipListTable.add(row).growX().row();
             shipButtons.put(ship, button);
         }
+    }
+
+    private boolean handleShipSelection(Ship ship, TextButton button) {
+        if(!controller.selectShip(ship)) {
+            return false;
+        }
+        placementDirection = Direction.HORIZONTAL;
+        updateDirectionLabel();
+        highlightSelectionButton(button);
+        updateCursorForSelection(ship);
+        lastHoveredCell = null;
+        clearHover();
+        return true;
     }
 
     private Table buildShipSelectionRow(Ship ship, TextButton button) {
@@ -516,6 +564,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
                     Image partImage = new Image(new TextureRegionDrawable(partRegion));
                     partImage.setFillParent(true);
                     partImage.setOrigin(Align.center);
+                    partImage.setScaling(Scaling.stretch);
                     if(ship.getDirection() == Direction.HORIZONTAL) {
                         partImage.setRotation(90f);
                     }
@@ -552,12 +601,18 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
 
         Pixmap pixmap = new Pixmap(Gdx.files.internal(spritePath));
-        pixmap = alignCursorPixmapToDirection(pixmap);
-        int originalWidth = pixmap.getWidth();
-        int originalHeight = pixmap.getHeight();
+        pixmap = prepareCursorPixmap(pixmap, ship);
+        if(pixmap == null) {
+            return;
+        }
+
         cursorPixmap = ensureCursorPixmapIsValid(pixmap);
-        int hotspotX = Math.min(originalWidth / 2, cursorPixmap.getWidth() - 1);
-        int hotspotY = Math.min(originalHeight / 2, cursorPixmap.getHeight() - 1);
+        if(cursorPixmap == null) {
+            return;
+        }
+
+        int hotspotX = Math.min(cursorPixmap.getWidth() / 2, cursorPixmap.getWidth() - 1);
+        int hotspotY = Math.min(cursorPixmap.getHeight() / 2, cursorPixmap.getHeight() - 1);
         customCursor = Gdx.graphics.newCursor(cursorPixmap, hotspotX, hotspotY);
         Gdx.graphics.setCursor(customCursor);
     }
@@ -584,6 +639,9 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
     }
 
     private Pixmap ensureCursorPixmapIsValid(Pixmap source) {
+        if(source == null) {
+            return null;
+        }
         int width = source.getWidth();
         int height = source.getHeight();
         int pow2Width = MathUtils.nextPowerOfTwo(width);
@@ -596,6 +654,15 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         resized.drawPixmap(source, 0, 0);
         source.dispose();
         return resized;
+    }
+
+    private Pixmap prepareCursorPixmap(Pixmap source, Ship ship) {
+        if(source == null) {
+            return null;
+        }
+
+        Pixmap aligned = alignCursorPixmapToDirection(source);
+        return scalePixmapToCellSize(aligned, ship);
     }
 
     private Pixmap alignCursorPixmapToDirection(Pixmap source) {
@@ -620,6 +687,42 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
         source.dispose();
         return rotated;
+    }
+
+    private Pixmap scalePixmapToCellSize(Pixmap source, Ship ship) {
+        if(source == null || ship == null) {
+            return source;
+        }
+
+        int cellSize = Math.max(1, Math.round(cellPixelSize));
+        int shipLength = Math.max(1, ship.getLength());
+
+        int targetWidth = cellSize;
+        int targetHeight = cellSize * shipLength;
+
+        if(placementDirection == Direction.HORIZONTAL) {
+            targetWidth = cellSize * shipLength;
+            targetHeight = cellSize;
+        }
+
+        if(source.getWidth() == targetWidth && source.getHeight() == targetHeight) {
+            return source;
+        }
+
+        Pixmap scaled = new Pixmap(targetWidth, targetHeight, source.getFormat());
+        scaled.drawPixmap(
+            source,
+            0,
+            0,
+            source.getWidth(),
+            source.getHeight(),
+            0,
+            0,
+            targetWidth,
+            targetHeight
+        );
+        source.dispose();
+        return scaled;
     }
 
     @Override
@@ -654,6 +757,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         if(readyButton != null) {
             readyButton.getLabel().setFontScale(base / 450f);
         }
+        scheduleCellSizeUpdate();
     }
 
     @Override

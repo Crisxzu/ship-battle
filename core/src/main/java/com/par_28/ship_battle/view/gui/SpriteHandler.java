@@ -56,7 +56,7 @@ public class SpriteHandler implements Handler {
          * Miss sprite
          */
         MISS(7, "Miss"),
-        
+
         /**
          * Hit sprite
          */
@@ -70,7 +70,9 @@ public class SpriteHandler implements Handler {
         /**
          * Pause background sprite
          */
-        PAUSE_BACKGROUND(10, "PauseBackground"),;
+        PAUSE_BACKGROUND(10, "PauseBackground"),
+
+        LOGO(11, "Logo"),;
 
         /**
          * Name of sprite
@@ -81,10 +83,10 @@ public class SpriteHandler implements Handler {
          * Index of sprite
          */
         private final int value;
-        
+
         /**
          * Initialize sprite
-         * 
+         *
          * @param value index of sprite
          * @param name name of sprite
          */
@@ -117,12 +119,13 @@ public class SpriteHandler implements Handler {
             new Texture("hit.png"),
             new Texture("sunk.png"),
             new Texture("pause_background.png"),
+            new Texture("logo.png"),
         };
     }
 
     /**
      * Get texture by sprite ID
-     * 
+     *
      * @param spriteID sprite identifier
      * @return texture
      */
@@ -135,7 +138,7 @@ public class SpriteHandler implements Handler {
 
     /**
      * Get ship texture by name
-     * 
+     *
      * @param shipName name of ship
      * @return texture
      */

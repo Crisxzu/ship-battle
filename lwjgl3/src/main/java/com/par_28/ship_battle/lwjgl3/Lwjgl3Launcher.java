@@ -8,7 +8,7 @@ import com.par_28.ship_battle.ShipBattleApplication;
 public class Lwjgl3Launcher {
     /**
      * Entry point for application
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class Lwjgl3Launcher {
 
     /**
      * Create the application
-     * 
+     *
      * @return the created application
      */
     private static Lwjgl3Application createApplication() {
@@ -27,7 +27,7 @@ public class Lwjgl3Launcher {
 
     /**
      * Get default configuration for the application
-     * 
+     *
      * @return default configuration
      */
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -46,7 +46,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(800, 500);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("loli_iconx128.png", "loli_iconx64.png", "loli_iconx32.png", "loli_iconx16.png");
 
         configuration.setWindowSizeLimits(
             800,

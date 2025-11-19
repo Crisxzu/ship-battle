@@ -63,7 +63,7 @@ public class ScreenController extends GuiController {
         initializeDefaultShips(this.app.player1);
         initializeDefaultShips(this.app.player2);*/
 
-        this.app.player1 = new Player("Dazu", this.app.gridSize);
+        /*this.app.player1 = new Player("Dazu", this.app.gridSize);
         AIPlayer aiPlayer = new AIPlayer(AIPlayer.getRandomName(), this.app.gridSize, AIDifficulty.HARD);
         this.app.player2 = aiPlayer;
 
@@ -79,7 +79,7 @@ public class ScreenController extends GuiController {
         aiPlayer.placeShipsRandomly(List.of(ships));
 
         this.app.game = new Game(this.app.player1, this.app.player2);
-        this.app.game.start();
+        this.app.game.start();*/
         changeController(GuiControllerEnum.MAIN_MENU);
     }
 

@@ -35,7 +35,7 @@ import com.par_28.ship_battle.model.Player;
 import com.par_28.ship_battle.model.Ship;
 import com.par_28.ship_battle.model.enums.Direction;
 
-public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
+public class SetupPlayerShipView extends GuiView<SetupMenuController> {
 
     private static final Color VALID_COLOR = new Color(0f, 1f, 0f, 0.35f);
     private static final Color INVALID_COLOR = new Color(1f, 0f, 0f, 0.35f);
@@ -251,6 +251,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
             Label doneLabel = new Label("All ships placed", skin);
             shipListTable.add(doneLabel).left();
             updateCursorForSelection(null);
+            Gdx.app.postRunnable(() -> controller.handlePlacementComplete());
             return;
         }
 

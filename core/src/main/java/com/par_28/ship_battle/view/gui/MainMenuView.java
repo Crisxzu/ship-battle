@@ -2,7 +2,10 @@ package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.MainMenuController;
 import com.par_28.ship_battle.controller.gui.ScreenController;
@@ -22,6 +25,8 @@ public class MainMenuView extends GuiView<MainMenuController> {
      */
     private Label versionLabel;
 
+    private TextureRegionDrawable logoTexture;
+
     /**
      * Initialize main menu
      *
@@ -33,6 +38,13 @@ public class MainMenuView extends GuiView<MainMenuController> {
     }
 
     @Override
+    protected void loadTextures() {
+        super.loadTextures();
+        Texture logoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.LOGO);
+        this.logoTexture = new TextureRegionDrawable(new TextureRegion(logoTexture));
+    }
+
+    @Override
     protected void buildUI() {
         super.buildUI();
         Table root = new Table();
@@ -41,9 +53,15 @@ public class MainMenuView extends GuiView<MainMenuController> {
         titleLabel = new Label("ShipBattle", skin);
         titleLabel.setFontScale(2.5f);
 
-        root.add(titleLabel)
-            .expand()
-            .height(Value.percentHeight(0.2f, root))
+        Image logo = new Image(logoTexture);
+
+        Container<Image> logoContainer = new Container<>(logo);
+
+        logoContainer.pad(10f);
+
+        root.add(logoContainer)
+            .width(Value.percentWidth(0.50f, root))
+            .height(Value.percentHeight(0.35f, root))
             .row();
 
 

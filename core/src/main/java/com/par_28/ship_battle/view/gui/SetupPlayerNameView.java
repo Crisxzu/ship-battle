@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
@@ -94,10 +95,14 @@ public class SetupPlayerNameView extends GuiView<SetupMenuController> {
      * Add player name
      */
     private void addName() {
-        if(controller.addName(nameField.getText())) {
-            iPlayer++;
-            updateUI();
-        }
+        Gdx.app.postRunnable(() -> {
+            if(controller.addName(nameField.getText())) {
+                iPlayer++;
+                if(this.controller.getNamesNumber() < this.parent.app.nbPlayers) {
+                    updateUI();
+                }
+            }
+        });
     }
 
     @Override

@@ -130,6 +130,10 @@ public class SetupMenuController extends GuiController {
         return true;
     }
 
+    public int getNamesNumber() {
+        return this.names.size();
+    }
+
     public boolean isAIMode() {
         return aiDifficulty != null;
     }

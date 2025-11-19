@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.controller.gui.SetupMenuController;
 import com.par_28.ship_battle.model.Cell;
@@ -36,6 +37,8 @@ import com.par_28.ship_battle.model.Ship;
 import com.par_28.ship_battle.model.enums.Direction;
 
 public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
+
+    private static final float SHIP_ICON_SIZE = 48f;
 
     private static final Color VALID_COLOR = new Color(0f, 1f, 0f, 0.35f);
     private static final Color INVALID_COLOR = new Color(1f, 0f, 0f, 0.35f);
@@ -299,9 +302,45 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
                     }
                 }
             });
-            shipListTable.add(button).row();
+            Table row = buildShipSelectionRow(ship, button);
+            shipListTable.add(row).growX().row();
             shipButtons.put(ship, button);
         }
+    }
+
+    private Table buildShipSelectionRow(Ship ship, TextButton button) {
+        Table row = new Table();
+        row.left();
+
+        Image icon = createShipIcon(ship);
+        if(icon != null) {
+            row.add(icon)
+                .size(SHIP_ICON_SIZE)
+                .padRight(10f)
+                .center();
+        }
+
+        row.add(button)
+            .growX()
+            .left();
+
+        return row;
+    }
+
+    private Image createShipIcon(Ship ship) {
+        if(ship == null) {
+            return null;
+        }
+
+        TextureRegionDrawable drawable = getShipDrawable(ship.getName());
+        if(drawable == null) {
+            return null;
+        }
+
+        Image icon = new Image(drawable);
+        icon.setScaling(Scaling.fit);
+        icon.setAlign(Align.center);
+        return icon;
     }
 
     private void handleReadyButton() {
@@ -417,6 +456,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
             ? Direction.VERTICAL
             : Direction.HORIZONTAL;
         updateDirectionLabel();
+        updateCursorForSelection(controller.getSelectedShip());
         if(lastHoveredCell != null) {
             handleHover(lastHoveredCell.getX(), lastHoveredCell.getY());
         }
@@ -512,6 +552,7 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
 
         Pixmap pixmap = new Pixmap(Gdx.files.internal(spritePath));
+        pixmap = alignCursorPixmapToDirection(pixmap);
         int originalWidth = pixmap.getWidth();
         int originalHeight = pixmap.getHeight();
         cursorPixmap = ensureCursorPixmapIsValid(pixmap);
@@ -555,6 +596,30 @@ public final class SetupPlayerShipView extends GuiView<SetupMenuController> {
         resized.drawPixmap(source, 0, 0);
         source.dispose();
         return resized;
+    }
+
+    private Pixmap alignCursorPixmapToDirection(Pixmap source) {
+        if(source == null) {
+            return null;
+        }
+
+        if(placementDirection != Direction.HORIZONTAL) {
+            return source;
+        }
+
+        return rotatePixmap90Degrees(source);
+    }
+
+    private Pixmap rotatePixmap90Degrees(Pixmap source) {
+        Pixmap rotated = new Pixmap(source.getHeight(), source.getWidth(), source.getFormat());
+        for (int x = 0; x < source.getWidth(); x++) {
+            for (int y = 0; y < source.getHeight(); y++) {
+                int pixel = source.getPixel(x, y);
+                rotated.drawPixel(source.getHeight() - 1 - y, x, pixel);
+            }
+        }
+        source.dispose();
+        return rotated;
     }
 
     @Override

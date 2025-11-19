@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Player Status Tests" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.354Z" hostname="OHBADBOY" time="0.005">
+  <properties/>
+  <testcase name="Should be dead when no ships are added" classname="com.par_28.ship_battle.model.PlayerTest$PlayerStatusTests" time="0.001"/>
+  <testcase name="Should be dead when all ships are destroyed" classname="com.par_28.ship_battle.model.PlayerTest$PlayerStatusTests" time="0.0"/>
+  <testcase name="Should be alive when at least one ship is not destroyed" classname="com.par_28.ship_battle.model.PlayerTest$PlayerStatusTests" time="0.0"/>
+  <testcase name="Should be alive when some ships are destroyed but not all" classname="com.par_28.ship_battle.model.PlayerTest$PlayerStatusTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

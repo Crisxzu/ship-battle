@@ -42,30 +42,31 @@ public class GameTurnDisplayView extends GuiView&lt;GameController&gt; {
 
 <span class="nc" id="L43">        msg = new Label(</span>
 <span class="nc" id="L44">            String.format(</span>
-                &quot;Turn %d\n Player %s&quot;,
+                &quot;Turn %d\n %s %s&quot;,
 <span class="nc" id="L46">                this.parent.app.game.getNbTurns()+1,</span>
-<span class="nc" id="L47">                currentPlayer.getName()</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">                currentPlayer.isAI() ? &quot;AI&quot; : &quot;Player&quot;,</span>
+<span class="nc" id="L48">                currentPlayer.getName()</span>
             ),
             skin
         );
-<span class="nc" id="L51">        msg.setAlignment(Align.center);</span>
-<span class="nc" id="L52">        msg.setFontScale(2.5f);</span>
-<span class="nc" id="L53">        root.add(msg).row();</span>
+<span class="nc" id="L52">        msg.setAlignment(Align.center);</span>
+<span class="nc" id="L53">        msg.setFontScale(2.5f);</span>
+<span class="nc" id="L54">        root.add(msg).row();</span>
 
-<span class="nc" id="L55">        addMenuButton(root, &quot;Continue&quot;, () -&gt; {</span>
-<span class="nc" id="L56">            Gdx.app.postRunnable(() -&gt; controller.startTurn());</span>
-<span class="nc" id="L57">        }).width(Value.percentWidth(0.35f, root))</span>
-<span class="nc" id="L58">            .height(Value.percentHeight(0.1f, root));</span>
-<span class="nc" id="L59">        stage.addActor(root);</span>
-<span class="nc" id="L60">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
-<span class="nc" id="L61">    }</span>
+<span class="nc" id="L56">        addMenuButton(root, &quot;Continue&quot;, () -&gt; {</span>
+<span class="nc" id="L57">            Gdx.app.postRunnable(() -&gt; controller.startTurn());</span>
+<span class="nc" id="L58">        }).width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L59">            .height(Value.percentHeight(0.1f, root));</span>
+<span class="nc" id="L60">        stage.addActor(root);</span>
+<span class="nc" id="L61">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L62">    }</span>
 
     @Override
     public void resize(int width, int height) {
-<span class="nc" id="L65">        super.resize(width, height);</span>
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(msg != null) {</span>
-<span class="nc" id="L67">            msg.setFontScale(base / 200f);</span>
+<span class="nc" id="L66">        super.resize(width, height);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if(msg != null) {</span>
+<span class="nc" id="L68">            msg.setFontScale(base / 200f);</span>
         }
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

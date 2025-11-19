@@ -1,9 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="EasyAI Shot Selection Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.232Z" hostname="MacBook-Pro.local" time="0.003">
+<testsuite name="EasyAI Shot Selection Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.488Z" hostname="OHBADBOY" time="0.012">
   <properties/>
-  <testcase name="Should select from all available coordinates randomly" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
-  <testcase name="Should never select the same coordinate twice" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
+  <testcase name="Should select from all available coordinates randomly" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.003"/>
+  <testcase name="Should never select the same coordinate twice" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.006"/>
   <testcase name="Should select a valid unshot coordinate" classname="com.par_28.ship_battle.model.ai.EasyAITest$ShotSelectionTests" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
+  <system-out><![CDATA[randomIndex: 2
+randomIndex: 15
+randomIndex: 13
+randomIndex: 4
+randomIndex: 12
+randomIndex: 17
+randomIndex: 1
+randomIndex: 0
+randomIndex: 8
+randomIndex: 3
+randomIndex: 3
+randomIndex: 1
+randomIndex: 11
+randomIndex: 4
+randomIndex: 3
+randomIndex: 8
+randomIndex: 8
+randomIndex: 6
+randomIndex: 0
+randomIndex: 1
+randomIndex: 1
+randomIndex: 1
+randomIndex: 2
+randomIndex: 0
+randomIndex: 0
+randomIndex: 14
+randomIndex: 21
+randomIndex: 90
+randomIndex: 65
+randomIndex: 18
+randomIndex: 4
+randomIndex: 50
+randomIndex: 27
+randomIndex: 45
+randomIndex: 33
+randomIndex: 45
+randomIndex: 33
+randomIndex: 24
+randomIndex: 4
+randomIndex: 85
+randomIndex: 30
+randomIndex: 14
+randomIndex: 58
+randomIndex: 2
+randomIndex: 36
+randomIndex: 19
+randomIndex: 54
+randomIndex: 19
+randomIndex: 48
+randomIndex: 18
+randomIndex: 21
+randomIndex: 23
+randomIndex: 72
+randomIndex: 48
+randomIndex: 11
+randomIndex: 27
+randomIndex: 37
+randomIndex: 17
+randomIndex: 59
+randomIndex: 50
+randomIndex: 33
+randomIndex: 51
+randomIndex: 28
+randomIndex: 39
+randomIndex: 0
+randomIndex: 29
+randomIndex: 53
+randomIndex: 16
+randomIndex: 17
+randomIndex: 25
+randomIndex: 16
+randomIndex: 32
+randomIndex: 48
+randomIndex: 3
+randomIndex: 28
+randomIndex: 30
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

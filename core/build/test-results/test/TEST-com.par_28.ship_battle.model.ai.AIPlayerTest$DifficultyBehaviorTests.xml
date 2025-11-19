@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AIPlayer Difficulty Behavior Tests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.212Z" hostname="MacBook-Pro.local" time="0.001">
+<testsuite name="AIPlayer Difficulty Behavior Tests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.442Z" hostname="OHBADBOY" time="0.001">
   <properties/>
   <testcase name="Different difficulties should use different strategies" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$DifficultyBehaviorTests" time="0.001"/>
   <system-out><![CDATA[]]></system-out>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MediumAI State Management Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.505Z" hostname="OHBADBOY" time="0.003">
-  <properties/>
-  <testcase name="Should reset successfully" classname="com.par_28.ship_battle.model.ai.MediumAITest$StateManagementTests" time="0.001"/>
-  <testcase name="Should ignore MISS updates" classname="com.par_28.ship_battle.model.ai.MediumAITest$StateManagementTests" time="0.001"/>
-  <testcase name="Should handle ALREADY_HIT gracefully" classname="com.par_28.ship_battle.model.ai.MediumAITest$StateManagementTests" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

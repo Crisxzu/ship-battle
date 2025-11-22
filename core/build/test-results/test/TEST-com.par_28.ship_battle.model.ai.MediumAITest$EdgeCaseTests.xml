@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MediumAI Edge Cases" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.502Z" hostname="OHBADBOY" time="0.001">
-  <properties/>
-  <testcase name="Should use seed for deterministic behavior" classname="com.par_28.ship_battle.model.ai.MediumAITest$EdgeCaseTests" time="0.0"/>
-  <testcase name="Should handle hit near grid edge" classname="com.par_28.ship_battle.model.ai.MediumAITest$EdgeCaseTests" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

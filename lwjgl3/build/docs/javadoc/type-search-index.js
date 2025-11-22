@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.par_28.ship_battle.lwjgl3","l":"Lwjgl3Launcher"},{"p":"com.par_28.ship_battle.lwjgl3","l":"StartupHelper"}];updateSearchResults();

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AIPlayer Integration Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.444Z" hostname="OHBADBOY" time="0.003">
-  <properties/>
-  <testcase name="Should play a complete sequence of turns" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$IntegrationTests" time="0.001"/>
-  <testcase name="Should inherit Player functionality" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$IntegrationTests" time="0.0"/>
-  <testcase name="Should work with ship placement" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$IntegrationTests" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

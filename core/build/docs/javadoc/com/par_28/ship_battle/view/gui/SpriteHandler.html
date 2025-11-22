@@ -95,8 +95,13 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="SpriteHandler.SpriteID.html" class="type-name-link" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.SpriteID</a></code></div>
+<div class="col-second even-row-color"><code><a href="SpriteHandler.AnimationID.html" class="type-name-link" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.AnimationID</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Animation identifiers.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="SpriteHandler.TextureID.html" class="type-name-link" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.TextureID</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Sprite identifiers.</div>
 </div>
 </div>
@@ -111,9 +116,14 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private static com.badlogic.gdx.graphics.Texture[]</code></div>
-<div class="col-second even-row-color"><code><a href="#textures" class="member-name-link">textures</a></code></div>
+<div class="col-first even-row-color"><code>private static com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;[]</code></div>
+<div class="col-second even-row-color"><code><a href="#animations" class="member-name-link">animations</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Animations</div>
+</div>
+<div class="col-first odd-row-color"><code>private static com.badlogic.gdx.graphics.Texture[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#textures" class="member-name-link">textures</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Textures</div>
 </div>
 </div>
@@ -150,19 +160,24 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Dispose resources</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.graphics.Texture</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getShipByName(java.lang.String)" class="member-name-link">getShipByName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnimation(com.par_28.ship_battle.view.gui.SpriteHandler.AnimationID)" class="member-name-link">getAnimation</a><wbr>(<a href="SpriteHandler.AnimationID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.AnimationID</a>&nbsp;animationID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Get ship texture by name</div>
+<div class="block">Get animation by animation ID</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.graphics.Texture</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTexture(com.par_28.ship_battle.view.gui.SpriteHandler.SpriteID)" class="member-name-link">getTexture</a><wbr>(<a href="SpriteHandler.SpriteID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.SpriteID</a>&nbsp;spriteID)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getShipByName(java.lang.String)" class="member-name-link">getShipByName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get ship texture by name</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.graphics.Texture</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTexture(com.par_28.ship_battle.view.gui.SpriteHandler.TextureID)" class="member-name-link">getTexture</a><wbr>(<a href="SpriteHandler.TextureID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.TextureID</a>&nbsp;textureID)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get texture by sprite ID</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadContent()" class="member-name-link">loadContent</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadContent()" class="member-name-link">loadContent</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Load textures.</div>
 </div>
 </div>
@@ -187,6 +202,13 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <h3>textures</h3>
 <div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture[]</span>&nbsp;<span class="element-name">textures</span></div>
 <div class="block">Textures</div>
+</section>
+</li>
+<li>
+<section class="detail" id="animations">
+<h3>animations</h3>
+<div class="member-signature"><span class="modifiers">private static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;[]</span>&nbsp;<span class="element-name">animations</span></div>
+<div class="block">Animations</div>
 </section>
 </li>
 </ul>
@@ -220,15 +242,28 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 </section>
 </li>
 <li>
-<section class="detail" id="getTexture(com.par_28.ship_battle.view.gui.SpriteHandler.SpriteID)">
+<section class="detail" id="getTexture(com.par_28.ship_battle.view.gui.SpriteHandler.TextureID)">
 <h3>getTexture</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="element-name">getTexture</span><wbr><span class="parameters">(<a href="SpriteHandler.SpriteID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.SpriteID</a>&nbsp;spriteID)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="element-name">getTexture</span><wbr><span class="parameters">(<a href="SpriteHandler.TextureID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.TextureID</a>&nbsp;textureID)</span></div>
 <div class="block">Get texture by sprite ID</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>spriteID</code> - sprite identifier</dd>
+<dd><code>textureID</code> - sprite identifier</dd>
 <dt>Returns:</dt>
 <dd>texture</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAnimation(com.par_28.ship_battle.view.gui.SpriteHandler.AnimationID)">
+<h3>getAnimation</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.g2d.Animation&lt;com.badlogic.gdx.graphics.g2d.TextureRegion&gt;</span>&nbsp;<span class="element-name">getAnimation</span><wbr><span class="parameters">(<a href="SpriteHandler.AnimationID.html" title="enum class in com.par_28.ship_battle.view.gui">SpriteHandler.AnimationID</a>&nbsp;animationID)</span></div>
+<div class="block">Get animation by animation ID</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>animationID</code> - animation identifier</dd>
+<dt>Returns:</dt>
+<dd>animation</dd>
 </dl>
 </section>
 </li>

@@ -259,6 +259,9 @@ public class Player {
         return radarCharges > 0;
     }
 
+    /**
+     * Refill bomb and radar charges to default values
+     */
     public void refillPowers() {
         radarCharges = DEFAULT_RADAR_CHARGES;
         bombCharges = DEFAULT_BOMB_CHARGES;

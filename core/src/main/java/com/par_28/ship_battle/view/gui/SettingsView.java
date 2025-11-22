@@ -144,15 +144,11 @@ public class SettingsView extends GuiView<SettingsController> {
         });
         addMenuButton(buttons, "Return to title", () -> this.parent.changeController(GuiControllerEnum.MAIN_MENU));
 
-        buttons.debug();
-
         root.add(buttons)
             .expand()
             .fill()
             .center()
             .row();
-
-        root.debug();
 
         stage.addActor(root);
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

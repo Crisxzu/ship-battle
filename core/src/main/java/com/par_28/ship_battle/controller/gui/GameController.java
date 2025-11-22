@@ -137,6 +137,11 @@ public class GameController extends GuiController {
         return response;
     }
 
+    /**
+     * Get the next shot coordinate chosen by the AI player.
+     * 
+     * @return Coordinate chosen by AI
+     */
     public Coordinate getAIShot() {
         Player current = this.parent.app.game.getCurrentPlayer();
 
@@ -204,6 +209,9 @@ public class GameController extends GuiController {
         }
     }
 
+    /**
+     * Apply the Konami code effect: refill all power charges for the current player.
+     */
     public void applyKonamiCode() {
         Player current = this.parent.app.game.getCurrentPlayer();
 

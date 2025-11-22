@@ -25,6 +25,9 @@ public class MainMenuView extends GuiView<MainMenuController> {
      */
     private Label versionLabel;
 
+    /**
+     * Logo texture
+     */
     private TextureRegionDrawable logoTexture;
 
     /**

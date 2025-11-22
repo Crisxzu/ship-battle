@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SetupMenuController</span>
 <span class="extends-implements">extends <a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></span></div>
-<div class="block">Mananger of setup menu where players enter their names and set up ships.</div>
+<div class="block">Manager of setup menu where players enter their names and set up ships.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,10 +91,35 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>(package private) <a href="../../model/ai/enums/AIDifficulty.html" title="enum class in com.par_28.ship_battle.model.ai.enums">AIDifficulty</a></code></div>
+<div class="col-second even-row-color"><code><a href="#aiDifficulty" class="member-name-link">aiDifficulty</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">AI difficulty level if playing against AI, null otherwise.</div>
+</div>
+<div class="col-first odd-row-color"><code>private int</code></div>
+<div class="col-second odd-row-color"><code><a href="#currentSetupPlayerIndex" class="member-name-link">currentSetupPlayerIndex</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Index of the player currently placing ships.</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#names" class="member-name-link">names</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">List of player names entered.</div>
+</div>
+<div class="col-first odd-row-color"><code>private final boolean[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#placementDone" class="member-name-link">placementDone</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Track which players have completed manual placement.</div>
+</div>
+<div class="col-first even-row-color"><code>private <a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a></code></div>
+<div class="col-second even-row-color"><code><a href="#selectedShip" class="member-name-link">selectedShip</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Ship currently selected by the player.</div>
+</div>
+<div class="col-first odd-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#shipsToPlace" class="member-name-link">shipsToPlace</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">List of ships waiting to be placed by the current player.</div>
 </div>
 </div>
 <div class="inherited-list">
@@ -133,19 +158,156 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Add a player name to the setup.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#autoPlaceAIShips()" class="member-name-link">autoPlaceAIShips</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Auto place ships for AI player if needed.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canPlaceSelectedShip(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)" class="member-name-link">canPlaceSelectedShip</a><wbr>(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if the currently selected ship can be placed at the given coordinate.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createDefaultFleet()" class="member-name-link">createDefaultFleet</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Create default fleet of ships.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findNextHumanNeedingPlacement()" class="member-name-link">findNextHumanNeedingPlacement</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Find the next human player needing ship placement.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentSetupPlayer()" class="member-name-link">getCurrentSetupPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the current setup player.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentSetupPlayerName()" class="member-name-link">getCurrentSetupPlayerName</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the current setup player's name.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNamesNumber()" class="member-name-link">getNamesNumber</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get number of names entered.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlacedShips()" class="member-name-link">getPlacedShips</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get ships already placed on the grid.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayerByIndex(int)" class="member-name-link">getPlayerByIndex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get player by index.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedShip()" class="member-name-link">getSelectedShip</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the currently selected ship.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSetupPlayer()" class="member-name-link">getSetupPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the player currently setting up their ships.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShipsToPlace()" class="member-name-link">getShipsToPlace</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get an immutable view of ships waiting for placement.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShipsToPlaceCount()" class="member-name-link">getShipsToPlaceCount</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get number of ships left to place.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#goToDifficultyMenu()" class="member-name-link">goToDifficultyMenu</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Go to difficulty selection menu.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#gotoGameModeMenu()" class="member-name-link">gotoGameModeMenu</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Go to game mode selection menu.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#gotoSetupPlayerNameMenu()" class="member-name-link">gotoSetupPlayerNameMenu</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Go to player name setup menu.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlePlacementComplete()" class="member-name-link">handlePlacementComplete</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handle completion of ship placement for the current player.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initializeShipsToPlace()" class="member-name-link">initializeShipsToPlace</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reset available ships and clear the current selection.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAIMode()" class="member-name-link">isAIMode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if battle will be played against ai.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isHumanPlayer(int)" class="member-name-link">isHumanPlayer</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if player at index is human.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markPlacementDone(int)" class="member-name-link">markPlacementDone</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mark placement as done for player at index.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placeSelectedShip(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)" class="member-name-link">placeSelectedShip</a><wbr>(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Place the selected ship on the player's grid.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Render menu view.</div>
+<div class="block">Render controller view.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reset()" class="member-name-link">reset</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Reset menu to initial state.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetPlacementTracking()" class="member-name-link">resetPlacementTracking</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reset placement tracking for all players.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectShip(com.par_28.ship_battle.model.Ship)" class="member-name-link">selectShip</a><wbr>(<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Select a ship to place on the grid.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAIDifficulty(com.par_28.ship_battle.model.ai.enums.AIDifficulty)" class="member-name-link">setAIDifficulty</a><wbr>(<a href="../../model/ai/enums/AIDifficulty.html" title="enum class in com.par_28.ship_battle.model.ai.enums">AIDifficulty</a>&nbsp;aiDifficulty)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set AI difficulty level.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startGameAndTransition()" class="member-name-link">startGameAndTransition</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start the game and transition to the game view.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startPlacementFlow()" class="member-name-link">startPlacementFlow</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start the ship placement flow.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update menu controller.</div>
 </div>
 </div>
@@ -173,6 +335,41 @@ loadScripts(document, 'script');</script>
 <h3>names</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">names</span></div>
 <div class="block">List of player names entered.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="aiDifficulty">
+<h3>aiDifficulty</h3>
+<div class="member-signature"><span class="return-type"><a href="../../model/ai/enums/AIDifficulty.html" title="enum class in com.par_28.ship_battle.model.ai.enums">AIDifficulty</a></span>&nbsp;<span class="element-name">aiDifficulty</span></div>
+<div class="block">AI difficulty level if playing against AI, null otherwise.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="shipsToPlace">
+<h3>shipsToPlace</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</span>&nbsp;<span class="element-name">shipsToPlace</span></div>
+<div class="block">List of ships waiting to be placed by the current player.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="selectedShip">
+<h3>selectedShip</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a></span>&nbsp;<span class="element-name">selectedShip</span></div>
+<div class="block">Ship currently selected by the player.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="currentSetupPlayerIndex">
+<h3>currentSetupPlayerIndex</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">currentSetupPlayerIndex</span></div>
+<div class="block">Index of the player currently placing ships.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementDone">
+<h3>placementDone</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">placementDone</span></div>
+<div class="block">Track which players have completed manual placement.</div>
 </section>
 </li>
 </ul>
@@ -229,10 +426,65 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getNamesNumber()">
+<h3>getNamesNumber</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getNamesNumber</span>()</div>
+<div class="block">Get number of names entered.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>number of names entered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isAIMode()">
+<h3>isAIMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAIMode</span>()</div>
+<div class="block">Check if battle will be played against ai.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if ai mode is selected, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setAIDifficulty(com.par_28.ship_battle.model.ai.enums.AIDifficulty)">
+<h3>setAIDifficulty</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAIDifficulty</span><wbr><span class="parameters">(<a href="../../model/ai/enums/AIDifficulty.html" title="enum class in com.par_28.ship_battle.model.ai.enums">AIDifficulty</a>&nbsp;aiDifficulty)</span></div>
+<div class="block">Set AI difficulty level.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>aiDifficulty</code> - AI difficulty level to set</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="goToDifficultyMenu()">
+<h3>goToDifficultyMenu</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">goToDifficultyMenu</span>()</div>
+<div class="block">Go to difficulty selection menu.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="gotoSetupPlayerNameMenu()">
+<h3>gotoSetupPlayerNameMenu</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gotoSetupPlayerNameMenu</span>()</div>
+<div class="block">Go to player name setup menu.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="gotoGameModeMenu()">
+<h3>gotoGameModeMenu</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gotoGameModeMenu</span>()</div>
+<div class="block">Go to game mode selection menu.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="render(float)">
 <h3>render</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">render</span><wbr><span class="parameters">(float&nbsp;dt)</span></div>
-<div class="block">Render menu view.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiController.html#render(float)">GuiController</a></code></span></div>
+<div class="block">Render controller view.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="GuiController.html#render(float)">render</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
@@ -249,6 +501,227 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="GuiController.html#reset()">reset</a></code>&nbsp;in class&nbsp;<code><a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSetupPlayer()">
+<h3>getSetupPlayer</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></span>&nbsp;<span class="element-name">getSetupPlayer</span>()</div>
+<div class="block">Get the player currently setting up their ships.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>current setup player</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentSetupPlayer()">
+<h3>getCurrentSetupPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></span>&nbsp;<span class="element-name">getCurrentSetupPlayer</span>()</div>
+<div class="block">Get the current setup player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>current setup player</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentSetupPlayerName()">
+<h3>getCurrentSetupPlayerName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCurrentSetupPlayerName</span>()</div>
+<div class="block">Get the current setup player's name.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>current setup player's name</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canPlaceSelectedShip(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)">
+<h3>canPlaceSelectedShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canPlaceSelectedShip</span><wbr><span class="parameters">(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</span></div>
+<div class="block">Check if the currently selected ship can be placed at the given coordinate.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coord</code> - starting coordinate on the grid</dd>
+<dd><code>direction</code> - placement direction</dd>
+<dt>Returns:</dt>
+<dd>true if placement would be valid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="placeSelectedShip(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)">
+<h3>placeSelectedShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeSelectedShip</span><wbr><span class="parameters">(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</span></div>
+<div class="block">Place the selected ship on the player's grid.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coord</code> - starting coordinate</dd>
+<dd><code>direction</code> - placement direction</dd>
+<dt>Returns:</dt>
+<dd>true if placement succeeded</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPlacedShips()">
+<h3>getPlacedShips</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</span>&nbsp;<span class="element-name">getPlacedShips</span>()</div>
+<div class="block">Get ships already placed on the grid.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>immutable list of placed ships</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getShipsToPlace()">
+<h3>getShipsToPlace</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</span>&nbsp;<span class="element-name">getShipsToPlace</span>()</div>
+<div class="block">Get an immutable view of ships waiting for placement.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>list of ships to place</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getShipsToPlaceCount()">
+<h3>getShipsToPlaceCount</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getShipsToPlaceCount</span>()</div>
+<div class="block">Get number of ships left to place.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>number of ships left to place</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="selectShip(com.par_28.ship_battle.model.Ship)">
+<h3>selectShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">selectShip</span><wbr><span class="parameters">(<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship)</span></div>
+<div class="block">Select a ship to place on the grid.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>ship</code> - ship reference from the available list</dd>
+<dt>Returns:</dt>
+<dd>true if the selection is valid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSelectedShip()">
+<h3>getSelectedShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a></span>&nbsp;<span class="element-name">getSelectedShip</span>()</div>
+<div class="block">Get the currently selected ship.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>selected ship or null when nothing is selected</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="initializeShipsToPlace()">
+<h3>initializeShipsToPlace</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initializeShipsToPlace</span>()</div>
+<div class="block">Reset available ships and clear the current selection.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPlayerByIndex(int)">
+<h3>getPlayerByIndex</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/Player.html" title="class in com.par_28.ship_battle.model">Player</a></span>&nbsp;<span class="element-name">getPlayerByIndex</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Get player by index.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - player index</dd>
+<dt>Returns:</dt>
+<dd>player at index</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isHumanPlayer(int)">
+<h3>isHumanPlayer</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isHumanPlayer</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Check if player at index is human.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - player index</dd>
+<dt>Returns:</dt>
+<dd>true if human player, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createDefaultFleet()">
+<h3>createDefaultFleet</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</span>&nbsp;<span class="element-name">createDefaultFleet</span>()</div>
+<div class="block">Create default fleet of ships.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>list of ships</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="resetPlacementTracking()">
+<h3>resetPlacementTracking</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetPlacementTracking</span>()</div>
+<div class="block">Reset placement tracking for all players.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="startPlacementFlow()">
+<h3>startPlacementFlow</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startPlacementFlow</span>()</div>
+<div class="block">Start the ship placement flow.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handlePlacementComplete()">
+<h3>handlePlacementComplete</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handlePlacementComplete</span>()</div>
+<div class="block">Handle completion of ship placement for the current player.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="autoPlaceAIShips()">
+<h3>autoPlaceAIShips</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">autoPlaceAIShips</span>()</div>
+<div class="block">Auto place ships for AI player if needed.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="startGameAndTransition()">
+<h3>startGameAndTransition</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startGameAndTransition</span>()</div>
+<div class="block">Start the game and transition to the game view.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="markPlacementDone(int)">
+<h3>markPlacementDone</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markPlacementDone</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Mark placement as done for player at index.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - player index</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="findNextHumanNeedingPlacement()">
+<h3>findNextHumanNeedingPlacement</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">findNextHumanNeedingPlacement</span>()</div>
+<div class="block">Find the next human player needing ship placement.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>index of next human player needing placement, -1 if none found</dd>
 </dl>
 </section>
 </li>

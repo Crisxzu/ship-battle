@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -45,9 +49,9 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search-input">SEARCH:</label>
@@ -85,6 +89,90 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Image&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#activeHighlights" class="member-name-link">activeHighlights</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.TextButton</code></div>
+<div class="col-second odd-row-color"><code><a href="#activeShipButton" class="member-name-link">activeShipButton</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#carrierTexture" class="member-name-link">carrierTexture</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Stack[][]</code></div>
+<div class="col-second odd-row-color"><code><a href="#cellStacks" class="member-name-link">cellStacks</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#cruiserTexture" class="member-name-link">cruiserTexture</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.graphics.Pixmap</code></div>
+<div class="col-second odd-row-color"><code><a href="#cursorPixmap" class="member-name-link">cursorPixmap</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.graphics.Cursor</code></div>
+<div class="col-second even-row-color"><code><a href="#customCursor" class="member-name-link">customCursor</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second odd-row-color"><code><a href="#destroyerTexture" class="member-name-link">destroyerTexture</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second even-row-color"><code><a href="#directionLabel" class="member-name-link">directionLabel</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second odd-row-color"><code><a href="#gridCaseDrawable" class="member-name-link">gridCaseDrawable</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second even-row-color"><code><a href="#gridTable" class="member-name-link">gridTable</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#headerLabels" class="member-name-link">headerLabels</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Image[][]</code></div>
+<div class="col-second even-row-color"><code><a href="#highlightLayers" class="member-name-link">highlightLayers</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.graphics.Texture</code></div>
+<div class="col-second odd-row-color"><code><a href="#highlightTexture" class="member-name-link">highlightTexture</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second even-row-color"><code><a href="#instructionLabel" class="member-name-link">instructionLabel</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private static final com.badlogic.gdx.graphics.Color</code></div>
+<div class="col-second odd-row-color"><code><a href="#INVALID_COLOR" class="member-name-link">INVALID_COLOR</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private <a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a></code></div>
+<div class="col-second even-row-color"><code><a href="#lastHoveredCell" class="member-name-link">lastHoveredCell</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Image&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#placedShipImages" class="member-name-link">placedShipImages</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private <a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a></code></div>
+<div class="col-second even-row-color"><code><a href="#placementDirection" class="member-name-link">placementDirection</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second odd-row-color"><code><a href="#root" class="member-name-link">root</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#rowLabels" class="member-name-link">rowLabels</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>,<wbr>com.badlogic.gdx.scenes.scene2d.ui.TextButton&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#shipButtons" class="member-name-link">shipButtons</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Table</code></div>
+<div class="col-second even-row-color"><code><a href="#shipListTable" class="member-name-link">shipListTable</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private com.badlogic.gdx.scenes.scene2d.ui.Label</code></div>
+<div class="col-second odd-row-color"><code><a href="#titleLabel" class="member-name-link">titleLabel</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color"><code><a href="#torpedoTexture" class="member-name-link">torpedoTexture</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>private static final com.badlogic.gdx.graphics.Color</code></div>
+<div class="col-second odd-row-color"><code><a href="#VALID_COLOR" class="member-name-link">VALID_COLOR</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Fields inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
 <code><a href="GuiView.html#backgroundTexture">backgroundTexture</a>, <a href="GuiView.html#base">base</a>, <a href="GuiView.html#controller">controller</a>, <a href="GuiView.html#menuButtons">menuButtons</a>, <a href="GuiView.html#parent">parent</a>, <a href="GuiView.html#skin">skin</a>, <a href="GuiView.html#stage">stage</a></code></div>
@@ -98,7 +186,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.controller.gui.ScreenController)" class="member-name-link">SetupPlayerShipView</a><wbr>(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.par_28.ship_battle.controller.gui.ScreenController,com.par_28.ship_battle.controller.gui.SetupMenuController)" class="member-name-link">SetupPlayerShipView</a><wbr>(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent,
+ <a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&nbsp;controller)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -107,9 +196,94 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#attemptPlacement(int,int)" class="member-name-link">attemptPlacement</a><wbr>(int&nbsp;x,
+ int&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildGrid()" class="member-name-link">buildGrid</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildSpan(com.par_28.ship_battle.model.Coordinate,int)" class="member-name-link">buildSpan</a><wbr>(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;origin,
+ int&nbsp;length)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildUI()" class="member-name-link">buildUI</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Build UI</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearCursor()" class="member-name-link">clearCursor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearHover()" class="member-name-link">clearHover</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#directionText()" class="member-name-link">directionText</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispose resources</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private com.badlogic.gdx.graphics.Pixmap</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ensureCursorPixmapIsValid(com.badlogic.gdx.graphics.Pixmap)" class="member-name-link">ensureCursorPixmapIsValid</a><wbr>(com.badlogic.gdx.graphics.Pixmap&nbsp;source)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCursorSpritePath(java.lang.String)" class="member-name-link">getCursorSpritePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShipDrawable(java.lang.String)" class="member-name-link">getShipDrawable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleHover(int,int)" class="member-name-link">handleHover</a><wbr>(int&nbsp;x,
+ int&nbsp;y)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#highlightSelectionButton(com.badlogic.gdx.scenes.scene2d.ui.TextButton)" class="member-name-link">highlightSelectionButton</a><wbr>(com.badlogic.gdx.scenes.scene2d.ui.TextButton&nbsp;button)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isInsideGrid(com.par_28.ship_battle.model.Coordinate)" class="member-name-link">isInsideGrid</a><wbr>(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadTextures()" class="member-name-link">loadTextures</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Load necessary textures</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refreshPlacedShips()" class="member-name-link">refreshPlacedShips</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refreshShipList()" class="member-name-link">refreshShipList</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
+ int&nbsp;height)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resize the screen</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toggleDirection()" class="member-name-link">toggleDirection</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateCursorForSelection(com.par_28.ship_battle.model.Ship)" class="member-name-link">updateCursorForSelection</a><wbr>(<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateDirectionLabel()" class="member-name-link">updateDirectionLabel</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.par_28.ship_battle.view.gui.GuiView">Methods inherited from class&nbsp;com.par_28.ship_battle.view.gui.<a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a></h3>
-<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#buildUI()">buildUI</a>, <a href="GuiView.html#dispose()">dispose</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#initUI()">initUI</a>, <a href="GuiView.html#loadTextures()">loadTextures</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resize(int,int)">resize</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a>, <a href="GuiView.html#update(float)">update</a></code></div>
+<code><a href="GuiView.html#addMenuButton(com.badlogic.gdx.scenes.scene2d.ui.Table,java.lang.String,java.lang.Runnable)">addMenuButton</a>, <a href="GuiView.html#hide()">hide</a>, <a href="GuiView.html#initUI()">initUI</a>, <a href="GuiView.html#pause()">pause</a>, <a href="GuiView.html#render(float)">render</a>, <a href="GuiView.html#resume()">resume</a>, <a href="GuiView.html#show()">show</a>, <a href="GuiView.html#update(float)">update</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -119,15 +293,349 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="VALID_COLOR">
+<h3>VALID_COLOR</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Color</span>&nbsp;<span class="element-name">VALID_COLOR</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="INVALID_COLOR">
+<h3>INVALID_COLOR</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Color</span>&nbsp;<span class="element-name">INVALID_COLOR</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="root">
+<h3>root</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Table</span>&nbsp;<span class="element-name">root</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="shipListTable">
+<h3>shipListTable</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Table</span>&nbsp;<span class="element-name">shipListTable</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="gridTable">
+<h3>gridTable</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Table</span>&nbsp;<span class="element-name">gridTable</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="headerLabels">
+<h3>headerLabels</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</span>&nbsp;<span class="element-name">headerLabels</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="rowLabels">
+<h3>rowLabels</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Label&gt;</span>&nbsp;<span class="element-name">rowLabels</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="shipButtons">
+<h3>shipButtons</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>,<wbr>com.badlogic.gdx.scenes.scene2d.ui.TextButton&gt;</span>&nbsp;<span class="element-name">shipButtons</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="activeHighlights">
+<h3>activeHighlights</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Image&gt;</span>&nbsp;<span class="element-name">activeHighlights</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="placedShipImages">
+<h3>placedShipImages</h3>
+<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.badlogic.gdx.scenes.scene2d.ui.Image&gt;</span>&nbsp;<span class="element-name">placedShipImages</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="cellStacks">
+<h3>cellStacks</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Stack[][]</span>&nbsp;<span class="element-name">cellStacks</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="highlightLayers">
+<h3>highlightLayers</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Image[][]</span>&nbsp;<span class="element-name">highlightLayers</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="titleLabel">
+<h3>titleLabel</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Label</span>&nbsp;<span class="element-name">titleLabel</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="instructionLabel">
+<h3>instructionLabel</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Label</span>&nbsp;<span class="element-name">instructionLabel</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="directionLabel">
+<h3>directionLabel</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.Label</span>&nbsp;<span class="element-name">directionLabel</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="placementDirection">
+<h3>placementDirection</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a></span>&nbsp;<span class="element-name">placementDirection</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="lastHoveredCell">
+<h3>lastHoveredCell</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a></span>&nbsp;<span class="element-name">lastHoveredCell</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="activeShipButton">
+<h3>activeShipButton</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.ui.TextButton</span>&nbsp;<span class="element-name">activeShipButton</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="gridCaseDrawable">
+<h3>gridCaseDrawable</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">gridCaseDrawable</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="carrierTexture">
+<h3>carrierTexture</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">carrierTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="cruiserTexture">
+<h3>cruiserTexture</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">cruiserTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="destroyerTexture">
+<h3>destroyerTexture</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">destroyerTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="torpedoTexture">
+<h3>torpedoTexture</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">torpedoTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="highlightTexture">
+<h3>highlightTexture</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Texture</span>&nbsp;<span class="element-name">highlightTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="customCursor">
+<h3>customCursor</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Cursor</span>&nbsp;<span class="element-name">customCursor</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="cursorPixmap">
+<h3>cursorPixmap</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Pixmap</span>&nbsp;<span class="element-name">cursorPixmap</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController)">
+<section class="detail" id="&lt;init&gt;(com.par_28.ship_battle.controller.gui.ScreenController,com.par_28.ship_battle.controller.gui.SetupMenuController)">
 <h3>SetupPlayerShipView</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SetupPlayerShipView</span><wbr><span class="parameters">(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">SetupPlayerShipView</span><wbr><span class="parameters">(<a href="../../controller/gui/ScreenController.html" title="class in com.par_28.ship_battle.controller.gui">ScreenController</a>&nbsp;parent,
+ <a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&nbsp;controller)</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="loadTextures()">
+<h3>loadTextures</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadTextures</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#loadTextures()">GuiView</a></code></span></div>
+<div class="block">Load necessary textures</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="GuiView.html#loadTextures()">loadTextures</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="buildUI()">
+<h3>buildUI</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildUI</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#buildUI()">GuiView</a></code></span></div>
+<div class="block">Build UI</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="GuiView.html#buildUI()">buildUI</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="buildGrid()">
+<h3>buildGrid</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buildGrid</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="refreshShipList()">
+<h3>refreshShipList</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refreshShipList</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="highlightSelectionButton(com.badlogic.gdx.scenes.scene2d.ui.TextButton)">
+<h3>highlightSelectionButton</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">highlightSelectionButton</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.ui.TextButton&nbsp;button)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleHover(int,int)">
+<h3>handleHover</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleHover</span><wbr><span class="parameters">(int&nbsp;x,
+ int&nbsp;y)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearHover()">
+<h3>clearHover</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearHover</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="attemptPlacement(int,int)">
+<h3>attemptPlacement</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">attemptPlacement</span><wbr><span class="parameters">(int&nbsp;x,
+ int&nbsp;y)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildSpan(com.par_28.ship_battle.model.Coordinate,int)">
+<h3>buildSpan</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&gt;</span>&nbsp;<span class="element-name">buildSpan</span><wbr><span class="parameters">(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;origin,
+ int&nbsp;length)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isInsideGrid(com.par_28.ship_battle.model.Coordinate)">
+<h3>isInsideGrid</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isInsideGrid</span><wbr><span class="parameters">(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="toggleDirection()">
+<h3>toggleDirection</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">toggleDirection</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateDirectionLabel()">
+<h3>updateDirectionLabel</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateDirectionLabel</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="directionText()">
+<h3>directionText</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">directionText</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="refreshPlacedShips()">
+<h3>refreshPlacedShips</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refreshPlacedShips</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getShipDrawable(java.lang.String)">
+<h3>getShipDrawable</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable</span>&nbsp;<span class="element-name">getShipDrawable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="updateCursorForSelection(com.par_28.ship_battle.model.Ship)">
+<h3>updateCursorForSelection</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateCursorForSelection</span><wbr><span class="parameters">(<a href="../../model/Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearCursor()">
+<h3>clearCursor</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearCursor</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCursorSpritePath(java.lang.String)">
+<h3>getCursorSpritePath</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCursorSpritePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shipName)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="ensureCursorPixmapIsValid(com.badlogic.gdx.graphics.Pixmap)">
+<h3>ensureCursorPixmapIsValid</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Pixmap</span>&nbsp;<span class="element-name">ensureCursorPixmapIsValid</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.Pixmap&nbsp;source)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="resize(int,int)">
+<h3>resize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;width,
+ int&nbsp;height)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#resize(int,int)">GuiView</a></code></span></div>
+<div class="block">Resize the screen</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>resize</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="GuiView.html#resize(int,int)">resize</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>width</code> - new width</dd>
+<dd><code>height</code> - new height</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="dispose()">
+<h3>dispose</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="GuiView.html#dispose()">GuiView</a></code></span></div>
+<div class="block">Dispose resources</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="GuiView.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GuiView.html" title="class in com.par_28.ship_battle.view.gui">GuiView</a>&lt;<a href="../../controller/gui/SetupMenuController.html" title="class in com.par_28.ship_battle.controller.gui">SetupMenuController</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 </ul>

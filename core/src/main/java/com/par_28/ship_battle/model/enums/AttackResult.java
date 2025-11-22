@@ -21,5 +21,8 @@ public enum AttackResult {
      */
     ALREADY_HIT,
 
+    /**
+     * Radar power was used.
+     */
     RADAR_USED
 }

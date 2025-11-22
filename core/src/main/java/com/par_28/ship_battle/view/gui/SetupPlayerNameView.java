@@ -51,7 +51,7 @@ public class SetupPlayerNameView extends GuiView<SetupMenuController> {
         Cell<TextButton> backBtn = addMenuButton(root, "Back to Title", () -> {
             parent.changeController(GuiControllerEnum.MAIN_MENU);
         });
-        backBtn.expandX().left().width(Value.percentWidth(0.15f, root));
+        backBtn.expandX().left().width(Value.percentWidth(0.2f, root));
 
         root.add().height(Value.percentHeight(0.1f, root)).row();
 

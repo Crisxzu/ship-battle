@@ -46,41 +46,65 @@ public class DialogHandler implements Handler {
             "Baka ! You have already hit this case."
         ),
 
+        /**
+         * Turn start of AI dialog
+         */
         TURN_START_AI(
             5,
             "Hum, let some time to the AI to think."
         ),
 
+        /**
+         * Rader selected dialog
+         */
         RADAR_SELECTED(
             6,
             "Oh so you want to use the radar.\nAlright let's see where the enemy hides his ship."
         ),
 
+        /**
+         * Radar found nothing dialog
+         */
         RADAR_NOTHING(
             7,
             "Hahaha, too bad !\nYou miss a big opportunity."
         ),
 
+        /**
+         * Radar found ship dialog
+         */
         RADAR_FOUND(
             8,
             "You found it !\nAll you have to do is to not miss hehehe."
         ),
 
+        /**
+         * Unavailable power dialog
+         */
         UNAVAILABLE_POWER(
             9,
             "You cannot used this power for now. So now attack !"
         ),
 
+        /**
+         * Bomb selected dialog
+         */
         BOMB_SELECTED(
             10,
             "Hahaha, it's time to throw a big one on the stage !"
         ),
 
+        /**
+         * Bomb shot dialog
+         */
         BOMB_SHOT(
             11,
             "EXPLOOOOOOSION !"
         ),
 
+        /**
+         * Konami code dialog
+         */
         KONAMI_CODE(
             12,
             "You !\nLittle cheater ><. How did you know this secret ?"
@@ -112,6 +136,7 @@ public class DialogHandler implements Handler {
      * Current dialog text
      */
     private static String dialogText;
+    
     /**
      * Current dialog duration
      */

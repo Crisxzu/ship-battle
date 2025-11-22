@@ -190,14 +190,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Play a turn for the current player by attacking the opponent at the given coordinate</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playTurn(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.PowerType)" class="member-name-link">playTurn</a><wbr>(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Start the game if both players have ships placed and game is not already started</div>
+<div class="block">Play a turn for the current player using a specific power type</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#switchPlayer()" class="member-name-link">switchPlayer</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start the game if both players have ships placed and game is not already started</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#switchPlayer()" class="member-name-link">switchPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Switch the current player to the other player</div>
 </div>
 </div>
@@ -314,6 +320,35 @@ loadScripts(document, 'script');</script>
 <dd>AttackResponse response of the attack with hit/miss and ship info</dd>
 <dt>Throws:</dt>
 <dd><code><a href="exceptions/IllegalGameStateException.html" title="class in com.par_28.ship_battle.model.exceptions">IllegalGameStateException</a></code> - if game is already over</dd>
+<dd><code><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></code> - if the coordinate is invalid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="playTurn(com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.PowerType)">
+<h3>playTurn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></span>&nbsp;<span class="element-name">playTurn</span><wbr><span class="parameters">(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord,
+ <a href="enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</span>
+                        throws <span class="exceptions"><a href="exceptions/IllegalGameStateException.html" title="class in com.par_28.ship_battle.model.exceptions">IllegalGameStateException</a>,
+<a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></span></div>
+<div class="block">Play a turn for the current player using a specific power type
+
+ <p>
+ Supports NORMAL attacks, BOMB attacks (3x3 area), and RADAR scans (detection only).
+ After the attack, if the opponent has no remaining ships, the game state is updated to GAME_OVER.
+ For RADAR scans, the turn does not switch.
+ For other attacks, the turn switches to the other player.
+ The current player records the result of the attack on their tracking grid.
+ Each call to this method increments the turn counter.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coord</code> - Coordinate to attack or scan</dd>
+<dd><code>powerType</code> - Type of power to use (NORMAL, BOMB, RADAR)</dd>
+<dt>Returns:</dt>
+<dd>AttackResponse response of the attack with hit/miss and ship info</dd>
+<dt>Throws:</dt>
+<dd><code><a href="exceptions/IllegalGameStateException.html" title="class in com.par_28.ship_battle.model.exceptions">IllegalGameStateException</a></code> - if game is already over or player doesn't have required charges</dd>
 <dd><code><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></code> - if the coordinate is invalid</dd>
 </dl>
 </section>

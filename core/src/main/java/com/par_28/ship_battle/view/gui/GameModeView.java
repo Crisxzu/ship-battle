@@ -10,19 +10,20 @@ import com.par_28.ship_battle.controller.gui.SetupMenuController;
 
 
 /**
- *
+ * Menu to select game mode
  */
 public class GameModeView extends GuiView<SetupMenuController> {
     /**
-     *
+     *  Title label
      */
     private Label titleLabel;
 
 
     /**
-     *
-     *
+     * Initialize menu to select game mode
+     * 
      * @param parent screen manager
+     * @param controller setup menu controller
      */
     public GameModeView(ScreenController parent, SetupMenuController controller) {
         super(parent, controller);

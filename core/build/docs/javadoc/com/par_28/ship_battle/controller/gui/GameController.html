@@ -49,7 +49,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -86,6 +86,17 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>private <a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a></code></div>
+<div class="col-second even-row-color"><code><a href="#currentPowerType" class="member-name-link">currentPowerType</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Current power type selected by the player</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.par_28.ship_battle.controller.gui.GuiController">Fields inherited from class&nbsp;com.par_28.ship_battle.controller.gui.<a href="GuiController.html" title="class in com.par_28.ship_battle.controller.gui">GuiController</a></h3>
 <code><a href="GuiController.html#parent">parent</a>, <a href="GuiController.html#view">view</a></code></div>
@@ -118,14 +129,44 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyKonamiCode()" class="member-name-link">applyKonamiCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Apply the Konami code effect: refill all power charges for the current player.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canUsePower(com.par_28.ship_battle.model.enums.PowerType)" class="member-name-link">canUsePower</a><wbr>(<a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if the current player can use the specified power type.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#changeTurn()" class="member-name-link">changeTurn</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update the view to reflect turn change.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAIShot()" class="member-name-link">getAIShot</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the next shot coordinate chosen by the AI player.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentPlayerBombCharges()" class="member-name-link">getCurrentPlayerBombCharges</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the number of bomb charges available for the current player.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentPlayerRadarCharges()" class="member-name-link">getCurrentPlayerRadarCharges</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the number of radar charges available for the current player.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentPowerType()" class="member-name-link">getCurrentPowerType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the currently selected power type.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../model/AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playTurn(com.par_28.ship_battle.model.Coordinate)" class="member-name-link">playTurn</a><wbr>(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;attackCord)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Play a turn by attacking a coordinate.</div>
+<div class="block">Play a turn by attacking a coordinate using the currently selected power type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;dt)</code></div>
@@ -138,13 +179,18 @@ loadScripts(document, 'script');</script>
 <div class="block">Reset controller to initial state.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startTurn()" class="member-name-link">startTurn</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentPowerType(com.par_28.ship_battle.model.enums.PowerType)" class="member-name-link">setCurrentPowerType</a><wbr>(<a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Start a player's turn.</div>
+<div class="block">Set the current power type to be used in next attack.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startTurn()" class="member-name-link">startTurn</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Start a player's turn.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;dt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update menu controller.</div>
 </div>
 </div>
@@ -162,6 +208,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="currentPowerType">
+<h3>currentPowerType</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type"><a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a></span>&nbsp;<span class="element-name">currentPowerType</span></div>
+<div class="block">Current power type selected by the player</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -234,13 +295,88 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playTurn(com.par_28.ship_battle.model.Coordinate)">
 <h3>playTurn</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></span>&nbsp;<span class="element-name">playTurn</span><wbr><span class="parameters">(<a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;attackCord)</span></div>
-<div class="block">Play a turn by attacking a coordinate.</div>
+<div class="block">Play a turn by attacking a coordinate using the currently selected power type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>attackCord</code> - Coordinate to attack</dd>
 <dt>Returns:</dt>
 <dd>Attack response</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAIShot()">
+<h3>getAIShot</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a></span>&nbsp;<span class="element-name">getAIShot</span>()</div>
+<div class="block">Get the next shot coordinate chosen by the AI player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Coordinate chosen by AI</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setCurrentPowerType(com.par_28.ship_battle.model.enums.PowerType)">
+<h3>setCurrentPowerType</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCurrentPowerType</span><wbr><span class="parameters">(<a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</span></div>
+<div class="block">Set the current power type to be used in next attack.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>powerType</code> - Power type to set</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentPowerType()">
+<h3>getCurrentPowerType</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a></span>&nbsp;<span class="element-name">getCurrentPowerType</span>()</div>
+<div class="block">Get the currently selected power type.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Current power type</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentPlayerBombCharges()">
+<h3>getCurrentPlayerBombCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCurrentPlayerBombCharges</span>()</div>
+<div class="block">Get the number of bomb charges available for the current player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Number of bomb charges</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentPlayerRadarCharges()">
+<h3>getCurrentPlayerRadarCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCurrentPlayerRadarCharges</span>()</div>
+<div class="block">Get the number of radar charges available for the current player.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Number of radar charges</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canUsePower(com.par_28.ship_battle.model.enums.PowerType)">
+<h3>canUsePower</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canUsePower</span><wbr><span class="parameters">(<a href="../../model/enums/PowerType.html" title="enum class in com.par_28.ship_battle.model.enums">PowerType</a>&nbsp;powerType)</span></div>
+<div class="block">Check if the current player can use the specified power type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>powerType</code> - Power type to check</dd>
+<dt>Returns:</dt>
+<dd>true if the player has charges available for this power</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="applyKonamiCode()">
+<h3>applyKonamiCode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyKonamiCode</span>()</div>
+<div class="block">Apply the Konami code effect: refill all power charges for the current player.</div>
 </section>
 </li>
 <li>

@@ -2,19 +2,38 @@ package com.par_28.ship_battle.view.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Align;
 import com.par_28.ship_battle.controller.gui.GameController;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.model.Coordinate;
 
 import java.util.Random;
 
+/**
+ * Game menu for AI opponent
+ */
 public class AIGameView extends GameView {
 
+    /**
+     * Old position of AI snipe image
+     */
     protected Stack oldPos = null;
+
+    /**
+     * Timer to wait before AI makes a move
+     */
     protected float waitAITimer = 0f;
+
+    /**
+     * Random number generator for AI moves
+     */
     protected Random random = new Random();
 
+    /**
+     * Initializes game menu for AI opponent
+     * 
+     * @param parent screen manager
+     * @param controller game controller
+     */
     public AIGameView(ScreenController parent, GameController controller) {
         super(parent, controller);
         playDialog(
@@ -24,43 +43,7 @@ public class AIGameView extends GameView {
     }
 
     @Override
-    protected void buildUI() {
-        loadTextures();
-
-        currentPlayer = this.parent.app.game.getCurrentPlayer();
-
-        stack = new Stack();
-        stack.setFillParent(true);
-
-        root = new Table();
-        root.setFillParent(true);
-
-        HorizontalGroup statusGroup = new HorizontalGroup();
-        statusGroup.space(10f);
-
-        turnLabel = new Label(
-            String.format("Turn %d", this.parent.app.game.getNbTurns()+1),
-            skin
-        );
-
-        statusGroup.addActor(turnLabel);
-
-        nameLabel = new Label(
-            String.format("%s", currentPlayer.getName()),
-            skin
-        );
-
-        statusGroup.addActor(nameLabel);
-
-        root.add(statusGroup)
-            .colspan(2);
-
-        com.badlogic.gdx.scenes.scene2d.ui.Cell<TextButton> pauseBtn = addMenuButton(root, "Pause", this::togglePause);
-        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));
-        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));
-
-        root.row();
-
+    protected void buildPlayerGridsUI() {
         trackingTable = new Table();
         trackingTable.defaults().expand().fill();
 
@@ -72,56 +55,6 @@ public class AIGameView extends GameView {
             .expand();
 
         root.row();
-
-        HorizontalGroup dialogGroup = new HorizontalGroup();
-        dialogGroup.space(10f);
-        dialogGroup.expand().fill();
-
-        loliImage = new Image(loliAnimation.getKeyFrame(elapsed));
-        Container<Image> loliImageContainer = new Container<>(loliImage);
-
-        loliImageContainer.pad(10f);
-
-        dialogGroup.addActor(loliImageContainer);
-
-        loliMsg = new Label("Test", skin);
-        loliMsg.setAlignment(Align.left);
-        loliMsg.setFontScale(1.2f);
-
-        dialogGroup.addActor(loliMsg);
-
-        coordLabel = new Label("XX", skin);
-        coordLabel.setAlignment(Align.center);
-        coordLabel.setFontScale(1.2f);
-
-        root.add(dialogGroup)
-            .expandX()
-            .fill()
-            .height(Value.percentHeight(0.2f, root))
-            .colspan(2);
-
-        root
-            .add(coordLabel)
-            .width(Value.percentWidth(0.1f, root));
-
-        root.row();
-
-        stack.add(root);
-
-        pauseImage = new Image(pauseTexture);
-        pauseImage.setFillParent(true);
-        pauseImage.setVisible(paused);
-
-        stack.add(pauseImage);
-
-        pauseTable = new Table();
-        pauseTable.setFillParent(true);
-
-        stack.add(pauseTable);
-
-        stage.addActor(stack);
-
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -140,7 +73,7 @@ public class AIGameView extends GameView {
         if(!shoot && !paused) {
             waitAITimer += delta;
 
-            if(elapsed < 5f) {
+            if(dialogTimer < 5f) {
                 if(waitAITimer > 1f) {
                     waitAITimer = 0;
 

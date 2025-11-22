@@ -108,15 +108,35 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private final <a href="Grid.html" title="class in com.par_28.ship_battle.model">Grid</a></code></div>
-<div class="col-second even-row-color"><code><a href="#grid" class="member-name-link">grid</a></code></div>
+<div class="col-first even-row-color"><code>private int</code></div>
+<div class="col-second even-row-color"><code><a href="#bombCharges" class="member-name-link">bombCharges</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Number of bomb charges available</div>
+</div>
+<div class="col-first odd-row-color"><code>private static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#DEFAULT_BOMB_CHARGES" class="member-name-link">DEFAULT_BOMB_CHARGES</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Default number of bomb charges per player</div>
+</div>
+<div class="col-first even-row-color"><code>private static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#DEFAULT_RADAR_CHARGES" class="member-name-link">DEFAULT_RADAR_CHARGES</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Default number of radar charges per player</div>
+</div>
+<div class="col-first odd-row-color"><code>private final <a href="Grid.html" title="class in com.par_28.ship_battle.model">Grid</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#grid" class="member-name-link">grid</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Player's grid to place ships on</div>
 </div>
-<div class="col-first odd-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#name" class="member-name-link">name</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#name" class="member-name-link">name</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Player's name</div>
+</div>
+<div class="col-first odd-row-color"><code>private int</code></div>
+<div class="col-second odd-row-color"><code><a href="#radarCharges" class="member-name-link">radarCharges</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Number of radar charges available</div>
 </div>
 <div class="col-first even-row-color"><code>private final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#ships" class="member-name-link">ships</a></code></div>
@@ -144,6 +164,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Constructor to initialize player with name and grid size</div>
 </div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,int,int,int)" class="member-name-link">Player</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;gridSize,
+ int&nbsp;bombCharges,
+ int&nbsp;radarCharges)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructor to initialize player with name, grid size, and custom power charges</div>
+</div>
 </div>
 </section>
 </li>
@@ -163,15 +190,25 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Add ship to player's fleet</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Grid.html" title="class in com.par_28.ship_battle.model">Grid</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBombCharges()" class="member-name-link">getBombCharges</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the number of bomb charges available</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Grid.html" title="class in com.par_28.ship_battle.model">Grid</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get player's grid</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get player's name</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRadarCharges()" class="member-name-link">getRadarCharges</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the number of radar charges available</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShips()" class="member-name-link">getShips</a>()</code></div>
@@ -182,6 +219,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTrackingGrid()" class="member-name-link">getTrackingGrid</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get player's tracking grid</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasBombCharges()" class="member-name-link">hasBombCharges</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if player has bomb charges available</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasRadarCharges()" class="member-name-link">hasRadarCharges</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if player has radar charges available</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAI()" class="member-name-link">isAI</a>()</code></div>
@@ -210,6 +257,21 @@ loadScripts(document, 'script');</script>
  <a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a>&nbsp;response)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Record attack result on tracking grid</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#refillPowers()" class="member-name-link">refillPowers</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Refill bomb and radar charges to default values</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#useBombCharge()" class="member-name-link">useBombCharge</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Use a bomb charge</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#useRadarCharge()" class="member-name-link">useRadarCharge</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Use a radar charge</div>
 </div>
 </div>
 </div>
@@ -256,6 +318,50 @@ loadScripts(document, 'script');</script>
 <div class="block">List of player's ships</div>
 </section>
 </li>
+<li>
+<section class="detail" id="bombCharges">
+<h3>bombCharges</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">bombCharges</span></div>
+<div class="block">Number of bomb charges available</div>
+</section>
+</li>
+<li>
+<section class="detail" id="radarCharges">
+<h3>radarCharges</h3>
+<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">radarCharges</span></div>
+<div class="block">Number of radar charges available</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_BOMB_CHARGES">
+<h3>DEFAULT_BOMB_CHARGES</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_BOMB_CHARGES</span></div>
+<div class="block">Default number of bomb charges per player</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.par_28.ship_battle.model.Player.DEFAULT_BOMB_CHARGES">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DEFAULT_RADAR_CHARGES">
+<h3>DEFAULT_RADAR_CHARGES</h3>
+<div class="member-signature"><span class="modifiers">private static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">DEFAULT_RADAR_CHARGES</span></div>
+<div class="block">Default number of radar charges per player</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.par_28.ship_battle.model.Player.DEFAULT_RADAR_CHARGES">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -274,6 +380,23 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>name</code> - Player's name</dd>
 <dd><code>gridSize</code> - Size of the player's grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.String,int,int,int)">
+<h3>Player</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Player</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ int&nbsp;gridSize,
+ int&nbsp;bombCharges,
+ int&nbsp;radarCharges)</span></div>
+<div class="block">Constructor to initialize player with name, grid size, and custom power charges</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>name</code> - Player's name</dd>
+<dd><code>gridSize</code> - Size of the player's grid</dd>
+<dd><code>bombCharges</code> - Number of bomb charges</dd>
+<dd><code>radarCharges</code> - Number of radar charges</dd>
 </dl>
 </section>
 </li>
@@ -409,6 +532,79 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>returns false for normal player and true for AI</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBombCharges()">
+<h3>getBombCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getBombCharges</span>()</div>
+<div class="block">Get the number of bomb charges available</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Number of bomb charges</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRadarCharges()">
+<h3>getRadarCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRadarCharges</span>()</div>
+<div class="block">Get the number of radar charges available</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Number of radar charges</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="useBombCharge()">
+<h3>useBombCharge</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">useBombCharge</span>()</div>
+<div class="block">Use a bomb charge</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if charge was used, false if no charges available</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="useRadarCharge()">
+<h3>useRadarCharge</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">useRadarCharge</span>()</div>
+<div class="block">Use a radar charge</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if charge was used, false if no charges available</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hasBombCharges()">
+<h3>hasBombCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasBombCharges</span>()</div>
+<div class="block">Check if player has bomb charges available</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if player has at least one bomb charge</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hasRadarCharges()">
+<h3>hasRadarCharges</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasRadarCharges</span>()</div>
+<div class="block">Check if player has radar charges available</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if player has at least one radar charge</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="refillPowers()">
+<h3>refillPowers</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">refillPowers</span>()</div>
+<div class="block">Refill bomb and radar charges to default values</div>
 </section>
 </li>
 </ul>

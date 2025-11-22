@@ -1,7 +1,6 @@
 com.par_28.ship_battle
 com.par_28.ship_battle.controller.console
 com.par_28.ship_battle.controller.gui
-com.par_28.ship_battle.examples
 com.par_28.ship_battle.model
 com.par_28.ship_battle.model.ai
 com.par_28.ship_battle.model.ai.enums

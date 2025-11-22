@@ -50,9 +50,25 @@ public class SoundHandler implements Handler {
          * Already hit sound
          */
         ALREADY_HIT(5),
+
+        /**
+         * Radar found nothing sound
+         */
         RADAR_NOTHING(6),
+
+        /**
+         * Radar found ship sound
+         */
         RADAR_FOUND(7),
+
+        /**
+         * Bomb shot sound
+         */
         BOMB_SHOT(8),
+
+        /**
+         * Cheat code sound
+         */
         CHEAT_CODE(9);
 
         /**

@@ -7,7 +7,7 @@ import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
 
 
 /**
- *
+ * Menu to select AI difficulty
  */
 public class DifficultyView extends GuiView<SetupMenuController> {
     /**
@@ -17,9 +17,10 @@ public class DifficultyView extends GuiView<SetupMenuController> {
 
 
     /**
-     * Initialize main menu
+     * Initialize menu to select AI difficulty
      *
      * @param parent screen manager
+     * @param controller setup menu controller
      */
     public DifficultyView(ScreenController parent, SetupMenuController controller) {
         super(parent, controller);
@@ -64,6 +65,11 @@ public class DifficultyView extends GuiView<SetupMenuController> {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    /**
+     * Go to setup player name menu
+     * 
+     * @param difficulty selected AI difficulty
+     */
     private void gotoSetupPlayerNameMenu(AIDifficulty difficulty) {
         this.controller.setAIDifficulty(difficulty);
         this.controller.gotoSetupPlayerNameMenu();

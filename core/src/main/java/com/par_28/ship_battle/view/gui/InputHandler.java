@@ -23,8 +23,14 @@ public class InputHandler implements Handler{
         touchPos = new Vector2();
     }
 
+    /**
+     * List of last pressed keys
+     */
     static List<Integer> lastKeys = new ArrayList<>();
 
+    /**
+     * Konami code key sequence
+     */
     static int[] konamiCode = new int[]{
         Input.Keys.UP,
         Input.Keys.UP,
@@ -73,9 +79,12 @@ public class InputHandler implements Handler{
         return Gdx.input.isKeyJustPressed(keyCode);
     }
 
+    /**
+     * Save user pressed key
+     * 
+     * @param keyCode pressed key code
+     */
     public static void saveUserPressedKey(int keyCode) {
-        System.out.println("Saving user pressed key: " + keyCode);
-
         lastKeys.add(keyCode);
 
         if(lastKeys.size() > 10) {
@@ -83,8 +92,12 @@ public class InputHandler implements Handler{
         }
     }
 
+    /**
+     * Check if konami code was just pressed
+     * 
+     * @return true if konami code was just pressed, false otherwise
+     */
     public static boolean konamiCodeJustPressed() {
-
         boolean konamiCodeJustPressed = true;
 
         if(lastKeys.size() != konamiCode.length) {
@@ -105,6 +118,9 @@ public class InputHandler implements Handler{
         return konamiCodeJustPressed;
     }
 
+    /**
+     * Clear saved keys
+     */
     public static void clearSaveKeys() {
         lastKeys.clear();
     }

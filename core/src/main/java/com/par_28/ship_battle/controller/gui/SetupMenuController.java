@@ -35,6 +35,9 @@ public class SetupMenuController extends GuiController {
      */
     List<String> names = new ArrayList<>();
 
+    /**
+     * AI difficulty level if playing against AI, null otherwise.
+     */
     AIDifficulty aiDifficulty = null;
 
     /**
@@ -129,36 +132,55 @@ public class SetupMenuController extends GuiController {
 
         return true;
     }
-
+    
+    /**
+     * Get number of names entered.
+     * 
+     * @return number of names entered
+     */
     public int getNamesNumber() {
         return this.names.size();
     }
 
+    /**
+     * Check if battle will be played against ai.
+     * 
+     * @return true if ai mode is selected, false otherwise
+     */
     public boolean isAIMode() {
         return aiDifficulty != null;
     }
 
+    /**
+     * Set AI difficulty level.
+     * 
+     * @param aiDifficulty AI difficulty level to set
+     */
     public void setAIDifficulty(AIDifficulty aiDifficulty) {
         this.aiDifficulty = aiDifficulty;
     }
 
+    /**
+     * Go to difficulty selection menu.
+     */
     public void goToDifficultyMenu() {
         changeView(new DifficultyView(this.parent, this));
     }
 
+    /**
+     * Go to player name setup menu.
+     */
     public void gotoSetupPlayerNameMenu() {
         changeView(new SetupPlayerNameView(this.parent, this));
     }
 
+    /**
+     * Go to game mode selection menu.
+     */
     public void gotoGameModeMenu() {
         changeView(new GameModeView(this.parent, this));
     }
 
-    /**
-            startPlacementFlow();
-     *
-     * @param dt Delta time since last render
-     */
     @Override
     public void render(float dt){
         super.render(dt);
@@ -178,17 +200,32 @@ public class SetupMenuController extends GuiController {
         changeView(new GameModeView(this.parent, this));
     }
 
+    /**
+     * Get the player currently setting up their ships.
+     * 
+     * @return current setup player
+     */
     private Player getSetupPlayer() {
         if(this.parent == null || this.parent.app == null) {
             return null;
         }
         return getPlayerByIndex(currentSetupPlayerIndex);
-    }
+    }   
 
+    /**
+     * Get the current setup player.
+     * 
+     * @return current setup player
+     */
     public Player getCurrentSetupPlayer() {
         return getSetupPlayer();
     }
 
+    /**
+     * Get the current setup player's name.
+     * 
+     * @return current setup player's name
+     */
     public String getCurrentSetupPlayerName() {
         Player player = getSetupPlayer();
         if(player != null) {
@@ -260,6 +297,11 @@ public class SetupMenuController extends GuiController {
         return Collections.unmodifiableList(shipsToPlace);
     }
 
+    /**
+     * Get number of ships left to place.
+     * 
+     * @return number of ships left to place
+     */
     public int getShipsToPlaceCount() {
         return shipsToPlace.size();
     }
@@ -296,6 +338,12 @@ public class SetupMenuController extends GuiController {
         selectedShip = null;
     }
 
+    /**
+     * Get player by index.
+     * 
+     * @param index player index
+     * @return player at index
+     */
     private Player getPlayerByIndex(int index) {
         if(this.parent == null || this.parent.app == null) {
             return null;
@@ -307,11 +355,22 @@ public class SetupMenuController extends GuiController {
         };
     }
 
+    /**
+     * Check if player at index is human.
+     * 
+     * @param index player index
+     * @return true if human player, false otherwise
+     */
     private boolean isHumanPlayer(int index) {
         Player player = getPlayerByIndex(index);
         return player != null && !player.isAI();
     }
 
+    /**
+     * Create default fleet of ships.
+     * 
+     * @return list of ships
+     */
     private List<Ship> createDefaultFleet() {
         List<Ship> fleet = new ArrayList<>();
         fleet.add(new Carrier());
@@ -322,12 +381,18 @@ public class SetupMenuController extends GuiController {
         return fleet;
     }
 
+    /**
+     * Reset placement tracking for all players.
+     */
     private void resetPlacementTracking() {
         Arrays.fill(placementDone, false);
         currentSetupPlayerIndex = 0;
         initializeShipsToPlace();
     }
 
+    /**
+     * Start the ship placement flow.
+     */
     private void startPlacementFlow() {
         resetPlacementTracking();
         int nextIndex = findNextHumanNeedingPlacement();
@@ -342,6 +407,9 @@ public class SetupMenuController extends GuiController {
         changeView(new SetupPlayerShipView(parent, this));
     }
 
+    /**
+     * Handle completion of ship placement for the current player.
+     */
     public void handlePlacementComplete() {
         if(!shipsToPlace.isEmpty()) {
             return;
@@ -361,6 +429,9 @@ public class SetupMenuController extends GuiController {
         startGameAndTransition();
     }
 
+    /**
+     * Auto place ships for AI player if needed.
+     */
     private void autoPlaceAIShips() {
         Player player = getPlayerByIndex(1);
         if(player instanceof AIPlayer aiPlayer && aiPlayer.getShips().isEmpty()) {
@@ -368,6 +439,9 @@ public class SetupMenuController extends GuiController {
         }
     }
 
+    /**
+     * Start the game and transition to the game view.
+     */
     private void startGameAndTransition() {
         Player player1 = getPlayerByIndex(0);
         Player player2 = getPlayerByIndex(1);
@@ -389,12 +463,21 @@ public class SetupMenuController extends GuiController {
         this.parent.changeController(GuiControllerEnum.GAME);
     }
 
+    /**
+     * Mark placement as done for player at index.
+     * @param index player index
+     */
     private void markPlacementDone(int index) {
         if(index >= 0 && index < placementDone.length) {
             placementDone[index] = true;
         }
     }
 
+    /**
+     * Find the next human player needing ship placement.
+     * 
+     * @return index of next human player needing placement, -1 if none found
+     */
     private int findNextHumanNeedingPlacement() {
         for (int i = 0; i < placementDone.length; i++) {
             if(!placementDone[i] && isHumanPlayer(i)) {

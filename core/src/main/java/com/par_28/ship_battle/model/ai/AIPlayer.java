@@ -180,7 +180,11 @@ public class AIPlayer extends Player {
         return true;
     }
 
-
+    /**
+     * Generate a random AI player name from a predefined list.
+     *
+     * @return Randomly selected AI name
+     */
     static public String getRandomName() {
         String[] aiNames = {
             "Tanya",

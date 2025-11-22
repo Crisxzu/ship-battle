@@ -16,6 +16,9 @@ public class SpriteHandler implements Handler {
      */
     private static Texture[] textures;
 
+    /**
+     * Animations
+     */
     private static Animation<TextureRegion>[] animations;
 
     /**
@@ -77,8 +80,19 @@ public class SpriteHandler implements Handler {
          */
         PAUSE_BACKGROUND(10, "PauseBackground"),
 
+        /**
+         * Game logo sprite
+         */
         LOGO(11, "Logo"),
+        
+        /**
+         * Radar icon sprite
+         */
         RADAR(12, "Radar"),
+
+        /**
+         * Bomb icon sprite
+         */
         BOMB(13, "Bomb");
 
         /**
@@ -103,15 +117,40 @@ public class SpriteHandler implements Handler {
         }
     }
 
+    /**
+     * Animation identifiers.
+     */
     public enum AnimationID {
+        /**
+         * Loli talking animation
+         */
         LOLI(0, "loli_talking.gif"),
+        /**
+         * Radar found nothing animation
+         */
         RADAR_NOTHING(1, "radar_nothing.gif"),
+        
+        /**
+         * Radar found ship animation
+         */
         RADAR_FOUND(2, "radar_found.gif"),;
 
-
+        /**
+         * Index of animation
+         */
         private int value;
+
+        /**
+         * Name of animation file
+         */
         private String name;
 
+        /**
+         * Initialize animation
+         * 
+         * @param value index of animation
+         * @param name name of animation file
+         */
         AnimationID(int value, String name) {
             this.value = value;
             this.name = name;
@@ -169,6 +208,12 @@ public class SpriteHandler implements Handler {
         return null;
     }
 
+    /**
+     * Get animation by animation ID
+     * 
+     * @param animationID animation identifier
+     * @return animation
+     */
     public static Animation<TextureRegion> getAnimation(AnimationID animationID) {
         if(animations != null && animationID.value <= animations.length) {
             return animations[animationID.value];

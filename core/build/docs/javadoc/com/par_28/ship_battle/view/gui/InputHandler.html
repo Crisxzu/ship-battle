@@ -94,6 +94,16 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>(package private) static int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#konamiCode" class="member-name-link">konamiCode</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Konami code key sequence</div>
+</div>
+<div class="col-first odd-row-color"><code>(package private) static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#lastKeys" class="member-name-link">lastKeys</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">List of last pressed keys</div>
+</div>
 <div class="col-first even-row-color"><code>(package private) static com.badlogic.gdx.math.Vector2</code></div>
 <div class="col-second even-row-color"><code><a href="#touchPos" class="member-name-link">touchPos</a></code></div>
 <div class="col-last even-row-color">
@@ -128,24 +138,39 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#clearSaveKeys()" class="member-name-link">clearSaveKeys</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Clear saved keys</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Dispose resources</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.math.Vector2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTouchPos(com.badlogic.gdx.utils.viewport.Viewport)" class="member-name-link">getTouchPos</a><wbr>(com.badlogic.gdx.utils.viewport.Viewport&nbsp;viewport)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTouchPos(com.badlogic.gdx.utils.viewport.Viewport)" class="member-name-link">getTouchPos</a><wbr>(com.badlogic.gdx.utils.viewport.Viewport&nbsp;viewport)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get touch position</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isKeyJustPressed(int)" class="member-name-link">isKeyJustPressed</a><wbr>(int&nbsp;keyCode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isKeyJustPressed(int)" class="member-name-link">isKeyJustPressed</a><wbr>(int&nbsp;keyCode)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Check if a key was just pressed</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userJustTouched()" class="member-name-link">userJustTouched</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#konamiCodeJustPressed()" class="member-name-link">konamiCodeJustPressed</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Check if konami code was just pressed</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#saveUserPressedKey(int)" class="member-name-link">saveUserPressedKey</a><wbr>(int&nbsp;keyCode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Save user pressed key</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#userJustTouched()" class="member-name-link">userJustTouched</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Check if user just touched the screen</div>
 </div>
 </div>
@@ -170,6 +195,20 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <h3>touchPos</h3>
 <div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">touchPos</span></div>
 <div class="block">Touch position</div>
+</section>
+</li>
+<li>
+<section class="detail" id="lastKeys">
+<h3>lastKeys</h3>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">lastKeys</span></div>
+<div class="block">List of last pressed keys</div>
+</section>
+</li>
+<li>
+<section class="detail" id="konamiCode">
+<h3>konamiCode</h3>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type">int[]</span>&nbsp;<span class="element-name">konamiCode</span></div>
+<div class="block">Konami code key sequence</div>
 </section>
 </li>
 </ul>
@@ -230,6 +269,35 @@ implements <a href="Handler.html" title="interface in com.par_28.ship_battle.vie
 <dt>Returns:</dt>
 <dd>true if key was just pressed, false otherwise</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="saveUserPressedKey(int)">
+<h3>saveUserPressedKey</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveUserPressedKey</span><wbr><span class="parameters">(int&nbsp;keyCode)</span></div>
+<div class="block">Save user pressed key</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>keyCode</code> - pressed key code</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="konamiCodeJustPressed()">
+<h3>konamiCodeJustPressed</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">konamiCodeJustPressed</span>()</div>
+<div class="block">Check if konami code was just pressed</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if konami code was just pressed, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearSaveKeys()">
+<h3>clearSaveKeys</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearSaveKeys</span>()</div>
+<div class="block">Clear saved keys</div>
 </section>
 </li>
 <li>

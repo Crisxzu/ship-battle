@@ -209,10 +209,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Place a ship on the grid at the given start and direction.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#previewPlacement(com.par_28.ship_battle.model.Ship,com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)" class="member-name-link">previewPlacement</a><wbr>(<a href="Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship,
+ <a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;start,
+ <a href="enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Preview a ship placement without mutating the grid.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#radarScan(com.par_28.ship_battle.model.Coordinate)" class="member-name-link">radarScan</a><wbr>(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Perform a radar scan in an area around the given coordinate.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#receiveAttack(com.par_28.ship_battle.model.Coordinate)" class="member-name-link">receiveAttack</a><wbr>(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Receive an attack at the given coordinate.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#receiveBombAttack(com.par_28.ship_battle.model.Coordinate)" class="member-name-link">receiveBombAttack</a><wbr>(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Receive a bomb attack at the given coordinate.</div>
 </div>
 </div>
 </div>
@@ -386,6 +403,23 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="previewPlacement(com.par_28.ship_battle.model.Ship,com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)">
+<h3>previewPlacement</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&gt;</span>&nbsp;<span class="element-name">previewPlacement</span><wbr><span class="parameters">(<a href="Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship,
+ <a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;start,
+ <a href="enums/Direction.html" title="enum class in com.par_28.ship_battle.model.enums">Direction</a>&nbsp;direction)</span></div>
+<div class="block">Preview a ship placement without mutating the grid.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>ship</code> - ship to evaluate</dd>
+<dd><code>start</code> - starting coordinate</dd>
+<dd><code>direction</code> - direction for placement</dd>
+<dt>Returns:</dt>
+<dd>immutable list of coordinates if placement is possible, empty list otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="placeShip(com.par_28.ship_battle.model.Ship,com.par_28.ship_battle.model.Coordinate,com.par_28.ship_battle.model.enums.Direction)">
 <h3>placeShip</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">placeShip</span><wbr><span class="parameters">(<a href="Ship.html" title="class in com.par_28.ship_battle.model">Ship</a>&nbsp;ship,
@@ -427,6 +461,45 @@ loadScripts(document, 'script');</script>
 <dd><code>coord</code> - attack coordinate</dd>
 <dt>Returns:</dt>
 <dd>AttackResponse representing result (MISS, HIT, SUNK, etc.)</dd>
+<dt>Throws:</dt>
+<dd><code><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></code> - when coord is outside grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="receiveBombAttack(com.par_28.ship_battle.model.Coordinate)">
+<h3>receiveBombAttack</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></span>&nbsp;<span class="element-name">receiveBombAttack</span><wbr><span class="parameters">(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</span>
+                                 throws <span class="exceptions"><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></span></div>
+<div class="block">Receive a bomb attack at the given coordinate.
+ <p>
+ A bomb attack hits the target cell and all adjacent cells (up to 8 surrounding cells).
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coord</code> - center coordinate of the bomb</dd>
+<dt>Returns:</dt>
+<dd>AttackResponse with primary hit and additional hits in adjacent cells</dd>
+<dt>Throws:</dt>
+<dd><code><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></code> - when coord is outside grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="radarScan(com.par_28.ship_battle.model.Coordinate)">
+<h3>radarScan</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AttackResponse.html" title="class in com.par_28.ship_battle.model">AttackResponse</a></span>&nbsp;<span class="element-name">radarScan</span><wbr><span class="parameters">(<a href="Coordinate.html" title="class in com.par_28.ship_battle.model">Coordinate</a>&nbsp;coord)</span>
+                         throws <span class="exceptions"><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></span></div>
+<div class="block">Perform a radar scan in an area around the given coordinate.
+ <p>
+ The radar detects if there are any ships in the target cell and adjacent cells
+ without revealing their exact positions or attacking them.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coord</code> - center coordinate of the radar scan</dd>
+<dt>Returns:</dt>
+<dd>AttackResponse with radar detection result</dd>
 <dt>Throws:</dt>
 <dd><code><a href="exceptions/InvalidCoordinateException.html" title="class in com.par_28.ship_battle.model.exceptions">InvalidCoordinateException</a></code> - when coord is outside grid</dd>
 </dl>

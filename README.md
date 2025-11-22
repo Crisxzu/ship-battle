@@ -1,183 +1,138 @@
-# 🚢 ShipBattle - Bataille Navale
+# ShipBattle - Bataille Navale
 
-Projet de jeu de bataille navale développé en Java dans le cadre d'un projet universitaire.
+Projet de jeu de bataille navale développé en Java avec LibGDX dans le cadre d'un projet universitaire.
 
-## 📋 Description
+![Logo](assets/logo.png)
+
+## Description
 
 Implémentation complète du jeu classique de bataille navale avec :
-- Architecture orientée objet (POO)
-- **151 tests unitaires (100% de réussite)** ✅
-- Couverture de code avec JaCoCo (objectif : >80%)
-- Interface en ligne de commande
-- Mode joueur vs joueur
-- Système de coordonnées flexible (format lettre ou virgule)
+- Interface graphique 2D (LibGDX)
+- Mode Joueur vs Joueur
+- Mode Joueur vs IA (3 niveaux de difficulté)
+- Pouvoirs spéciaux (Bombe, Radar)
+- Architecture MVC
+- Tests unitaires avec JUnit 5
 
-## 🎯 Objectifs pédagogiques
+## Fonctionnalités
 
-- Respect des principes SOLID
-- Tests unitaires exhaustifs avec JUnit 5
-- Documentation technique complète
-- Gestion d'exceptions métier
-- Travail en équipe
+### Modes de jeu
+- **Joueur vs Joueur** : Deux joueurs humains s'affrontent en local
+- **Joueur vs IA** : Affrontez une intelligence artificielle avec 3 niveaux :
+  - **Facile** : Tirs aléatoires
+  - **Moyen** : Système HUNT/TARGET (cible les cases adjacentes après un tir réussi)
+  - **Difficile** : Algorithme de probabilité avec analyse d'orientation des navires
 
-## 🛠️ Technologies
+### Système d'attaque
+- **Attaque normale** : Cible une seule case
+- **Bombe** (2 charges) : Attaque en zone 3x3
+- **Radar** (3 charges) : Détecte les navires dans une zone 3x3 sans infliger de dégâts
 
-- **Java** : 17
-- **Build** : Maven 3.9+
+### Navires
+| Navire                        | Taille  | Quantité |
+|-------------------------------|---------|----------|
+| Porte-avion (Carrier)         | 5 cases | 1        |
+| Croiseur (Cruiser)            | 4 cases | 1        |
+| Contre-derailleur (Destroyer) | 3 cases | 2        |
+| Torpilleur (Torpedo)          | 2 cases | 1        |
+
+### Bonus
+- **Code Konami** : Séquence secrète pour recharger tous les pouvoirs
+- Animations de personnages inspirées des animés
+- Références à la pop culture
+
+## Technologies
+
+- **Java** : 17+
+- **Framework** : LibGDX
+- **UI** : Scene2D, VisUI
+- **Build** : Gradle
 - **Tests** : JUnit 5
-- **Couverture** : JaCoCo
-- **Documentation** : Javadoc
 
-## 📦 Installation
+## Installation
 
 ### Prérequis
 - JDK 17 ou supérieur
-- Maven 3.9+
+- Gradle (ou utiliser le wrapper inclus)
 
-### Compilation
+### Compilation et exécution
 ```bash
-mvn clean compile
+# Compiler le projet
+./gradlew build
+
+# Lancer le jeu (version desktop)
+./gradlew lwjgl3:run
+
+# Exécuter les tests
+./gradlew test
 ```
 
-### Exécution des tests
+### Création du JAR
 ```bash
-mvn test
+./gradlew lwjgl3:jar
 ```
 
-### Génération du rapport de couverture
-```bash
-mvn test jacoco:report
-```
-Le rapport sera disponible dans `target/site/jacoco/index.html`
+## Comment jouer
 
-### Génération de la Javadoc
-```bash
-mvn javadoc:javadoc
-```
-La documentation sera disponible dans `target/site/apidocs/index.html`
+1. Lancer le jeu
+2. Choisir le mode de jeu (vs IA ou vs Joueur)
+3. Sélectionner la difficulté (si mode IA)
+4. Entrer le(s) nom(s) du/des joueur(s)
+5. Placer vos navires sur la grille :
+   - Cliquer sur un navire dans la liste
+   - Cliquer sur la grille pour le placer
+   - Utiliser le bouton de rotation pour changer l'orientation
+   - Option de placement aléatoire disponible
+6. Pendant la partie :
+   - Cliquer sur la grille adverse pour attaquer
+   - Utiliser les boutons Bombe/Radar pour les pouvoirs spéciaux
+7. Le premier à couler tous les navires adverses gagne !
 
-### Création du JAR exécutable
-```bash
-mvn package
-```
+### Contrôles
+- **Souris** : Sélection et placement
+- **Clavier** : Rotation des navires, Code Konami
 
-### Exécution du jeu
-```bash
-java -jar target/battleship-game-1.0.0-jar-with-dependencies.jar
-```
-Ou simplement :
-```bash
-mvn exec:java -Dexec.mainClass="com.battleship.Main"
-```
-
-## 🎮 Comment jouer
-
-1. Lancer le programme
-2. Entrer les noms des joueurs
-3. Définir la taille de la grille (par défaut : 10x10)
-4. Placer vos navires sur la grille :
-    - **Carrier** (Porte-avions) : 5 cases
-    - **Cruiser** (Croiseur) : 4 cases
-    - **Destroyer** (Contre-torpilleur) : 3 cases
-    - **Torpedo** (Torpilleur) : 2 cases
-5. Tour par tour, choisir une coordonnée pour attaquer
-6. Le premier joueur à couler tous les navires adverses gagne !
-
-### Format des coordonnées
-
-Le jeu supporte deux formats de saisie :
-
-**Format lettre + nombre :**
-- Exemple : `A1`, `B5`, `C10`
-- Colonne en lettre (A, B, C...), ligne en nombre (1-10)
-
-**Format virgule :**
-- Exemple : `0,0`, `1,4`, `2,9`
-- Format X,Y (coordonnées zéro-indexées)
-
-## 📊 Structure du projet
+## Structure du projet
 
 ```
-src/
-├── main/java/com/par_28/ship_battle/
+ShipBattle/
+├── core/src/main/java/com/par_28/ship_battle/
 │   ├── model/
+│   │   ├── ai/                # Intelligence artificielle (Easy, Medium, Hard)
 │   │   ├── enums/             # Énumérations (GameState, Direction, AttackResult)
-│   │   ├── exceptions/        # Exceptions métier personnalisées
 │   │   ├── Cell.java          # Cellule de grille
 │   │   ├── Coordinate.java    # Système de coordonnées
 │   │   ├── Grid.java          # Grille de jeu
 │   │   ├── Ship.java          # Classe abstraite des navires
-│   │   ├── Carrier.java       # Porte-avions (5 cases)
-│   │   ├── Cruiser.java       # Croiseur (4 cases)
-│   │   ├── Destroyer.java     # Contre-torpilleur (3 cases)
-│   │   ├── Torpedo.java       # Torpilleur (2 cases)
 │   │   ├── Player.java        # Joueur
 │   │   ├── Game.java          # Logique de partie
-│   │   └── AttackResponse.java # Résultat d'attaque
-│   ├── controller/            # Contrôleurs
-│   └── view/                  # Interface CLI
-└── test/java/com/par_28/ship_battle/model/
-    ├── CoordinateTest.java    # 43 tests
-    ├── ShipTest.java          # 24 tests
-    ├── GridTest.java          # 35 tests
-    ├── PlayerTest.java        # 26 tests
-    └── GameTest.java          # 23 tests
+│   │   └── AttackResponse.java
+│   ├── controller/
+│   │   └── gui/               # Contrôleurs GUI
+│   └── view/
+│       └── gui/               # Vues LibGDX (menus, jeu, etc.)
+├── lwjgl3/                    # Module desktop (LWJGL3)
+├── assets/                    # Sprites, sons, musiques
+└── gdd-assets/                # Assets du Game Design Document
 ```
 
-## 📈 Métriques
+## Assets et crédits
 
-- **Tests unitaires** : 151 tests (100% de réussite) ✅
-- **Couverture de code** : Objectif >80% (JaCoCo)
-- **Classes du modèle** : 19 classes
-- **Exceptions métier** : 3 types (InvalidCoordinateException, ShipPlacementException, InvalidDirectionException)
+Les assets proviennent de sources open source :
+- **Navires** : [Naval Battle Assets Pack](https://opengameart.org/content/naval-battle-assets-pack)
+- **Radar** : [Animated Radar Assets](https://opengameart.org/content/animated-radar-assets)
+- **Explosions** : [Bomb Explosion](https://opengameart.org/content/bomb-explosion)
+- **Musiques** : Reprise du jeu **Crimson Skies**
 
-## ✅ Tests unitaires
+## Documentation
 
-Le projet dispose d'une couverture de tests complète avec **151 tests unitaires** :
+- **Game Design Document** : [game design document.md](game%20design%20document.md)
+- **Javadoc** : Générer avec `./gradlew javadoc`
 
-| Classe de test | Nombre de tests | Couverture                       |
-|----------------|-----------------|----------------------------------|
-| CoordinateTest | 43 tests        | Parsing, égalité, hashCode       |
-| ShipTest       | 24 tests        | Navires, dégâts, destruction     |
-| GridTest       | 35 tests        | Placement, validation, attaques  |
-| PlayerTest     | 26 tests        | Gestion joueur, flotte, attaques |
-| GameTest       | 23 tests        | Logique partie, tours, victoire  |
-
-**Résultat :** `Tests run: 151, Failures: 0, Errors: 0, Skipped: 0` ✅
-
-Pour plus d'informations, consultez le [README des tests](src/test/README.md).
-
-## 📚 Documentation
-
-La documentation technique et les tests sont disponibles :
-- **Tests unitaires** : [src/test/README.md](src/test/README.md)
-- **Javadoc** : Générer avec `mvn javadoc:javadoc`
-- **Rapport JaCoCo** : Générer avec `mvn test jacoco:report`
-
-## 🔄 Commandes Maven utiles
-```bash
-# Nettoyer le projet
-mvn clean
-
-# Compiler
-mvn compile
-
-# Exécuter les tests
-mvn test
-
-# Vérifier la couverture
-mvn verify
-
-# Générer le site complet (Javadoc + rapports)
-mvn site
-
-# Package (créer le JAR)
-mvn package
-
-# Tout en une fois
-mvn clean test package
-```
-
-## 📝 Licence
+## Auteurs
 
 Projet universitaire - 2025
+
+## Licence
+
+Projet universitaire - Usage éducatif

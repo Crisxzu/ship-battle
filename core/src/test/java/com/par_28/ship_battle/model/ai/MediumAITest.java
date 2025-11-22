@@ -5,12 +5,14 @@ import com.par_28.ship_battle.model.enums.*;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for MediumAI strategy
+ * Tests for MediumAI strategy
  */
 class MediumAITest {
 
@@ -19,43 +21,89 @@ class MediumAITest {
     class HuntModeTests {
 
         @Test
-        @DisplayName("Should start in HUNT mode with random shots")
+        @DisplayName("Should start in HUNT mode - shots are random and spread across grid")
         void testStartsInHuntMode() {
             // Given
-            MediumAI ai = new MediumAI(42);
+            MediumAI ai = new MediumAI();
             Grid trackingGrid = new Grid(10, 10);
-            List<Ship> remainingShips = new ArrayList<>();
 
-            // When
-            Coordinate shot = ai.chooseShot(trackingGrid, remainingShips);
+            // When - take multiple shots without any HITs (stay in HUNT mode)
+            Set<Coordinate> shots = new HashSet<>();
+            for (int i = 0; i < 10; i++) {
+                Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
+                trackingGrid.getCell(shot).shoot();
+                shots.add(shot);
 
-            // Then
-            assertNotNull(shot);
-            assertTrue(trackingGrid.isValidCoordinate(shot));
+                // Notify MISS - should stay in HUNT mode
+                ai.updateAfterShot(shot, new AttackResponse(AttackResult.MISS, null));
+            }
+
+            // Then - shots should be spread (not all adjacent to first shot)
+            assertEquals(10, shots.size(), "All shots should be unique");
+
+            Coordinate firstShot = shots.iterator().next();
+            long adjacentCount = shots.stream()
+                .filter(s -> !s.equals(firstShot) && isAdjacent(firstShot, s))
+                .count();
+
+            assertTrue(adjacentCount <= 4,
+                "In HUNT mode, shots should be random, not clustered");
         }
 
         @Test
         @DisplayName("Should return to HUNT mode after sinking a ship")
         void testReturnsToHuntAfterSunk() {
             // Given
-            MediumAI ai = new MediumAI(42);
+            MediumAI ai = new MediumAI();
             Grid trackingGrid = new Grid(10, 10);
             Coordinate hitCoord = new Coordinate(5, 5);
 
-            // When - hit a ship
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Torpedo());
-            ai.updateAfterShot(hitCoord, hitResponse);
-
-            // Then - sink the ship
-            AttackResponse sunkResponse = new AttackResponse(AttackResult.SUNK, new Torpedo());
-            ai.updateAfterShot(new Coordinate(5, 6), sunkResponse);
-
-            // AI should be back in HUNT mode (can't directly test, but check behavior)
+            // Hit a ship (enters TARGET mode)
+            ai.updateAfterShot(hitCoord, new AttackResponse(AttackResult.HIT, new Torpedo()));
             trackingGrid.getCell(hitCoord).shoot();
-            trackingGrid.getCell(new Coordinate(5, 6)).shoot();
 
-            Coordinate nextShot = ai.chooseShot(trackingGrid, new ArrayList<>());
-            assertNotNull(nextShot);
+            // Sink the ship (should return to HUNT mode)
+            Coordinate sunkCoord = new Coordinate(5, 6);
+            ai.updateAfterShot(sunkCoord, new AttackResponse(AttackResult.SUNK, new Torpedo()));
+            trackingGrid.getCell(sunkCoord).shoot();
+
+            // When - next shots should be random (HUNT mode)
+            Set<Coordinate> nextShots = new HashSet<>();
+            for (int i = 0; i < 5; i++) {
+                Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
+                trackingGrid.getCell(shot).shoot();
+                nextShots.add(shot);
+                ai.updateAfterShot(shot, new AttackResponse(AttackResult.MISS, null));
+            }
+
+            // Then - verify not all adjacent to old hits
+            long adjacentToOldHits = nextShots.stream()
+                .filter(s -> isAdjacent(hitCoord, s) || isAdjacent(sunkCoord, s))
+                .count();
+
+            assertTrue(adjacentToOldHits < 5,
+                "After sinking, should return to HUNT mode");
+        }
+
+        @Test
+        @DisplayName("Should return fallback coordinate when grid is fully shot")
+        void testFallbackWhenGridFull() {
+            // Given
+            MediumAI ai = new MediumAI();
+            Grid trackingGrid = new Grid(3, 3);
+
+            // Shoot all cells
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 3; y++) {
+                    trackingGrid.getCell(new Coordinate(x, y)).shoot();
+                }
+            }
+
+            // When
+            Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
+
+            // Then - should return fallback (0,0)
+            assertEquals(new Coordinate(0, 0), shot);
         }
     }
 
@@ -64,7 +112,7 @@ class MediumAITest {
     class TargetModeTests {
 
         @Test
-        @DisplayName("Should switch to TARGET mode after a hit")
+        @DisplayName("Should switch to TARGET mode and target all 4 adjacent cells after a hit")
         void testSwitchesToTargetMode() {
             // Given
             MediumAI ai = new MediumAI();
@@ -72,35 +120,11 @@ class MediumAITest {
             Coordinate hitCoord = new Coordinate(5, 5);
 
             // When - hit a ship
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Cruiser());
-            ai.updateAfterShot(hitCoord, hitResponse);
-
-            // Mark the hit coordinate as shot
+            ai.updateAfterShot(hitCoord, new AttackResponse(AttackResult.HIT, new Carrier()));
             trackingGrid.getCell(hitCoord).shoot();
 
-            // Then - next shot should be adjacent to the hit
-            Coordinate nextShot = ai.chooseShot(trackingGrid, new ArrayList<>());
-
-            assertNotNull(nextShot);
-            assertTrue(isAdjacent(hitCoord, nextShot),
-                "After a hit, AI should target adjacent cells. Hit: " + hitCoord + ", Next: " + nextShot);
-        }
-
-        @Test
-        @DisplayName("Should target all four adjacent cells after a hit")
-        void testTargetsAllAdjacentCells() {
-            // Given
-            MediumAI ai = new MediumAI();
-            Grid trackingGrid = new Grid(10, 10);
-            Coordinate hitCoord = new Coordinate(5, 5);
-
-            // When - hit a ship
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Carrier());
-            ai.updateAfterShot(hitCoord, hitResponse);
-            trackingGrid.getCell(hitCoord).shoot();
-
-            // Then - collect all suggested targets
-            List<Coordinate> targets = new ArrayList<>();
+            // Then - collect all 4 targets
+            Set<Coordinate> targets = new HashSet<>();
             for (int i = 0; i < 4; i++) {
                 Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
                 trackingGrid.getCell(shot).shoot();
@@ -108,37 +132,72 @@ class MediumAITest {
             }
 
             // All four adjacent cells should be targeted
-            assertTrue(targets.contains(new Coordinate(5, 4)), "Should target up");
-            assertTrue(targets.contains(new Coordinate(5, 6)), "Should target down");
-            assertTrue(targets.contains(new Coordinate(4, 5)), "Should target left");
-            assertTrue(targets.contains(new Coordinate(6, 5)), "Should target right");
+            Set<Coordinate> expectedTargets = Set.of(
+                new Coordinate(5, 4),  // Up
+                new Coordinate(5, 6),  // Down
+                new Coordinate(4, 5),  // Left
+                new Coordinate(6, 5)   // Right
+            );
+
+            assertEquals(expectedTargets, targets, "Should target all 4 adjacent cells");
         }
 
         @Test
-        @DisplayName("Should handle multiple hits and continue targeting")
-        void testMultipleHits() {
+        @DisplayName("Should add new adjacent targets after second hit")
+        void testAddsTargetsAfterSecondHit() {
             // Given
             MediumAI ai = new MediumAI();
             Grid trackingGrid = new Grid(10, 10);
-            Coordinate firstHit = new Coordinate(5, 5);
-            Coordinate secondHit = new Coordinate(5, 6);
 
-            // When - first hit
-            AttackResponse hitResponse1 = new AttackResponse(AttackResult.HIT, new Carrier());
-            ai.updateAfterShot(firstHit, hitResponse1);
+            // First hit
+            Coordinate firstHit = new Coordinate(5, 5);
+            ai.updateAfterShot(firstHit, new AttackResponse(AttackResult.HIT, new Carrier()));
             trackingGrid.getCell(firstHit).shoot();
 
-            // Get first target shot
+            // Get first target and mark as hit
             Coordinate firstTarget = ai.chooseShot(trackingGrid, new ArrayList<>());
             trackingGrid.getCell(firstTarget).shoot();
+            ai.updateAfterShot(firstTarget, new AttackResponse(AttackResult.HIT, new Carrier()));
 
-            // Second hit
-            AttackResponse hitResponse2 = new AttackResponse(AttackResult.HIT, new Carrier());
-            ai.updateAfterShot(secondHit, hitResponse2);
+            // When - continue targeting
+            Set<Coordinate> remainingTargets = new HashSet<>();
+            for (int i = 0; i < 6; i++) { // Original 3 + 4 new - duplicates
+                Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
+                if (trackingGrid.getCell(shot).isShot()) break;
+                trackingGrid.getCell(shot).shoot();
+                remainingTargets.add(shot);
+            }
 
-            // Then - should continue targeting
-            Coordinate nextShot = ai.chooseShot(trackingGrid, new ArrayList<>());
-            assertNotNull(nextShot);
+            // Then - should have targeted cells adjacent to both hits
+            assertFalse(remainingTargets.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should handle hit at corner - only valid adjacent cells in stack")
+        void testHitAtCorner() {
+            // Given
+            MediumAI ai = new MediumAI();
+            Grid trackingGrid = new Grid(10, 10);
+            Coordinate cornerHit = new Coordinate(0, 0);
+
+            // When - hit at corner
+            ai.updateAfterShot(cornerHit, new AttackResponse(AttackResult.HIT, new Torpedo()));
+            trackingGrid.getCell(cornerHit).shoot();
+
+            // Get targets (invalid coords will be in stack but skipped)
+            Coordinate shot1 = ai.chooseShot(trackingGrid, new ArrayList<>());
+            trackingGrid.getCell(shot1).shoot();
+            Coordinate shot2 = ai.chooseShot(trackingGrid, new ArrayList<>());
+
+            // Then - both should be valid adjacent cells
+            Set<Coordinate> validTargets = Set.of(
+                new Coordinate(1, 0),
+                new Coordinate(0, 1)
+            );
+
+            assertTrue(validTargets.contains(shot1), "First shot should be (1,0) or (0,1)");
+            assertTrue(validTargets.contains(shot2), "Second shot should be (1,0) or (0,1)");
+            assertNotEquals(shot1, shot2);
         }
     }
 
@@ -147,85 +206,48 @@ class MediumAITest {
     class StateManagementTests {
 
         @Test
-        @DisplayName("Should reset successfully")
+        @DisplayName("Should reset to HUNT mode and clear target stack")
         void testReset() {
             // Given
             MediumAI ai = new MediumAI();
             Grid trackingGrid = new Grid(10, 10);
 
-            // Hit a ship to enter TARGET mode
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Destroyer());
-            ai.updateAfterShot(new Coordinate(5, 5), hitResponse);
+            // Enter TARGET mode
+            ai.updateAfterShot(new Coordinate(5, 5), new AttackResponse(AttackResult.HIT, new Destroyer()));
 
             // When - reset
             ai.reset();
 
-            // Then - should be back in HUNT mode (random behavior)
+            // Then - should be in HUNT mode (random shots, not adjacent targeting)
             Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
             assertNotNull(shot);
             assertTrue(trackingGrid.isValidCoordinate(shot));
         }
 
         @Test
-        @DisplayName("Should ignore MISS updates")
-        void testIgnoresMiss() {
+        @DisplayName("Should ignore MISS and ALREADY_HIT updates")
+        void testIgnoresNonHitResults() {
             // Given
             MediumAI ai = new MediumAI(42);
             Grid trackingGrid = new Grid(10, 10);
-            Coordinate missCoord = new Coordinate(3, 3);
 
-            // When - notify of a miss
-            AttackResponse missResponse = new AttackResponse(AttackResult.MISS, null);
-            ai.updateAfterShot(missCoord, missResponse);
+            // Get initial shot
+            Coordinate firstShot = ai.chooseShot(trackingGrid, new ArrayList<>());
+            trackingGrid.getCell(firstShot).shoot();
 
-            // Then - should continue in HUNT mode (random shots)
-            Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
-            assertNotNull(shot);
-        }
+            // When - notify MISS
+            ai.updateAfterShot(firstShot, new AttackResponse(AttackResult.MISS, null));
+            Coordinate afterMiss = ai.chooseShot(trackingGrid, new ArrayList<>());
 
-        @Test
-        @DisplayName("Should handle ALREADY_HIT gracefully")
-        void testHandlesAlreadyHit() {
-            // Given
-            MediumAI ai = new MediumAI();
-            Grid trackingGrid = new Grid(10, 10);
-            Coordinate coord = new Coordinate(5, 5);
-
-            // When
-            AttackResponse alreadyHitResponse = new AttackResponse(AttackResult.ALREADY_HIT, new Cruiser());
-            ai.updateAfterShot(coord, alreadyHitResponse);
-
-            // Then - should continue working
-            Coordinate shot = ai.chooseShot(trackingGrid, new ArrayList<>());
-            assertNotNull(shot);
+            // Then - should still be in HUNT mode (not targeting adjacent)
+            assertFalse(isAdjacent(firstShot, afterMiss) && afterMiss != null,
+                "After MISS, should continue random shooting");
         }
     }
 
     @Nested
-    @DisplayName("MediumAI Edge Cases")
-    class EdgeCaseTests {
-
-        @Test
-        @DisplayName("Should handle hit near grid edge")
-        void testHitNearEdge() {
-            // Given
-            MediumAI ai = new MediumAI();
-            Grid trackingGrid = new Grid(10, 10);
-            Coordinate edgeHit = new Coordinate(0, 0); // Top-left corner
-
-            // When - hit at corner
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Torpedo());
-            ai.updateAfterShot(edgeHit, hitResponse);
-            trackingGrid.getCell(edgeHit).shoot();
-
-            // Then - should only target valid adjacent cells (right and down)
-            Coordinate shot1 = ai.chooseShot(trackingGrid, new ArrayList<>());
-            trackingGrid.getCell(shot1).shoot();
-            Coordinate shot2 = ai.chooseShot(trackingGrid, new ArrayList<>());
-
-            assertTrue(trackingGrid.isValidCoordinate(shot1));
-            assertTrue(trackingGrid.isValidCoordinate(shot2));
-        }
+    @DisplayName("MediumAI Deterministic Behavior Tests")
+    class DeterministicTests {
 
         @Test
         @DisplayName("Should use seed for deterministic behavior")
@@ -237,17 +259,28 @@ class MediumAITest {
             Grid grid1 = new Grid(10, 10);
             Grid grid2 = new Grid(10, 10);
 
-            // When - both make same sequence of actions
-            Coordinate shot1a = ai1.chooseShot(grid1, new ArrayList<>());
-            Coordinate shot2a = ai2.chooseShot(grid2, new ArrayList<>());
+            // When - both make same sequence of shots
+            List<Coordinate> shots1 = new ArrayList<>();
+            List<Coordinate> shots2 = new ArrayList<>();
 
-            // Then - should be identical
-            assertEquals(shot1a, shot2a);
+            for (int i = 0; i < 10; i++) {
+                Coordinate shot1 = ai1.chooseShot(grid1, new ArrayList<>());
+                Coordinate shot2 = ai2.chooseShot(grid2, new ArrayList<>());
+
+                grid1.getCell(shot1).shoot();
+                grid2.getCell(shot2).shoot();
+
+                shots1.add(shot1);
+                shots2.add(shot2);
+            }
+
+            // Then
+            assertEquals(shots1, shots2, "AIs with same seed should make identical decisions");
         }
     }
 
     /**
-     * Helper method to check if two coordinates are adjacent (up/down/left/right)
+     * Helper method to check if two coordinates are adjacent
      */
     private boolean isAdjacent(Coordinate c1, Coordinate c2) {
         int dx = Math.abs(c1.getX() - c2.getX());

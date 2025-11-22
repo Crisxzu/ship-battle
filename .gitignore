@@ -169,3 +169,4 @@ android/build
 core/build
 lwjgl3/build
 .history/
+.claude/

@@ -64,14 +64,14 @@ public class MediumAI extends AI {
     @Override
     public Coordinate chooseShot(Grid trackingGrid, List<Ship> remainingOpponentShips) {
         if (currentMode == Mode.TARGET && !targetStack.isEmpty()) {
-            Coordinate targetCoord = targetStack.pop();
+            while (!targetStack.isEmpty()) {
+                Coordinate targetCoord = targetStack.pop();
 
-            // Check because it possible to have invalid coordinate
-            while(!trackingGrid.isValidCoordinate(targetCoord)) {
-                targetCoord = targetStack.pop();
+                if (trackingGrid.isValidCoordinate(targetCoord)
+                        && !trackingGrid.getCell(targetCoord).isShot()) {
+                    return targetCoord;
+                }
             }
-
-            return targetCoord;
         }
 
         return huntModeShot(trackingGrid);

@@ -7,6 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -516,6 +519,307 @@ class PlayerTest {
 
             // Then
             assertTrue(player.isDead(), "Player should be dead when all ships destroyed");
+        }
+    }
+
+    @Nested
+    @DisplayName("Reset Fleet Tests")
+    class ResetFleetTests {
+
+        @BeforeEach
+        void setUp() {
+            player = new Player("TestPlayer", 10);
+        }
+
+        @Test
+        @DisplayName("Should clear all ships when resetting fleet")
+        void shouldClearAllShipsWhenResettingFleet() {
+            // Given
+            player.addShip(new Carrier());
+            player.addShip(new Cruiser());
+            player.addShip(new Destroyer());
+            assertEquals(3, player.getShips().size());
+
+            // When
+            player.resetFleet();
+
+            // Then
+            assertTrue(player.getShips().isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should clear grid when resetting fleet")
+        void shouldClearGridWhenResettingFleet() throws InvalidCoordinateException, ShipPlacementException {
+            // Given
+            Ship ship = new Destroyer();
+            player.addShip(ship);
+            Coordinate coord = new Coordinate(2, 3);
+            player.placeShipOnGrid(ship, coord, Direction.HORIZONTAL);
+
+            // Verify ship is on grid
+            assertTrue(player.getGrid().getCell(coord).hasShip());
+
+            // When
+            player.resetFleet();
+
+            // Then
+            assertFalse(player.getGrid().getCell(coord).hasShip());
+        }
+
+        @Test
+        @DisplayName("Should allow placing new ships after reset")
+        void shouldAllowPlacingNewShipsAfterReset() throws InvalidCoordinateException, ShipPlacementException {
+            // Given
+            Ship ship1 = new Carrier();
+            player.addShip(ship1);
+            player.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            player.resetFleet();
+
+            // When
+            Ship ship2 = new Cruiser();
+            player.addShip(ship2);
+            player.placeShipOnGrid(ship2, new Coordinate(0, 0), Direction.HORIZONTAL);
+
+            // Then
+            assertEquals(1, player.getShips().size());
+            assertTrue(player.getShips().contains(ship2));
+            assertEquals(ship2, player.getGrid().getCell(new Coordinate(0, 0)).getShip());
+        }
+
+        @Test
+        @DisplayName("Should handle reset on empty fleet")
+        void shouldHandleResetOnEmptyFleet() {
+            // Given - Empty fleet
+            assertTrue(player.getShips().isEmpty());
+
+            // When
+            player.resetFleet();
+
+            // Then - Should not throw and remain empty
+            assertTrue(player.getShips().isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("Random Ship Placement Tests")
+    class RandomPlacementTests {
+
+        @BeforeEach
+        void setUp() {
+            player = new Player("TestPlayer", 10);
+        }
+
+        @Test
+        @DisplayName("Should place single ship randomly")
+        void shouldPlaceSingleShipRandomly() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Torpedo());
+
+            // When
+            boolean result = player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(result);
+            assertEquals(1, player.getShips().size());
+            assertNotNull(player.getShips().get(0).getPositions());
+            assertEquals(2, player.getShips().get(0).getPositions().size());
+        }
+
+        @Test
+        @DisplayName("Should place multiple ships randomly")
+        void shouldPlaceMultipleShipsRandomly() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Carrier());
+            fleet.add(new Cruiser());
+            fleet.add(new Destroyer());
+            fleet.add(new Torpedo());
+
+            // When
+            boolean result = player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(result);
+            assertEquals(4, player.getShips().size());
+            for (Ship ship : player.getShips()) {
+                assertNotNull(ship.getPositions());
+                assertNotNull(ship.getDirection());
+            }
+        }
+
+        @Test
+        @DisplayName("Should place full fleet randomly")
+        void shouldPlaceFullFleetRandomly() {
+            // Given - Standard fleet
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Carrier());
+            fleet.add(new Cruiser());
+            fleet.add(new Cruiser());
+            fleet.add(new Destroyer());
+            fleet.add(new Destroyer());
+            fleet.add(new Destroyer());
+            fleet.add(new Torpedo());
+            fleet.add(new Torpedo());
+            fleet.add(new Torpedo());
+            fleet.add(new Torpedo());
+
+            // When
+            boolean result = player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(result);
+            assertEquals(10, player.getShips().size());
+        }
+
+        @Test
+        @DisplayName("Should place ships deterministically with seed")
+        void shouldPlaceShipsDeterministicallyWithSeed() {
+            // Given
+            List<Ship> fleet1 = new ArrayList<>();
+            fleet1.add(new Destroyer());
+            fleet1.add(new Torpedo());
+
+            List<Ship> fleet2 = new ArrayList<>();
+            fleet2.add(new Destroyer());
+            fleet2.add(new Torpedo());
+
+            Player player2 = new Player("TestPlayer2", 10);
+            long seed = 12345L;
+
+            // When
+            player.placeShipsRandomly(fleet1, seed);
+            player2.placeShipsRandomly(fleet2, seed);
+
+            // Then - Same seed should produce same positions
+            assertEquals(
+                player.getShips().get(0).getPositions(),
+                player2.getShips().get(0).getPositions()
+            );
+            assertEquals(
+                player.getShips().get(1).getPositions(),
+                player2.getShips().get(1).getPositions()
+            );
+        }
+
+        @Test
+        @DisplayName("Should not overlap ships when placing randomly")
+        void shouldNotOverlapShipsWhenPlacingRandomly() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Carrier());
+            fleet.add(new Cruiser());
+            fleet.add(new Destroyer());
+
+            // When
+            boolean result = player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(result);
+
+            // Verify no overlap by checking all positions are unique
+            List<Coordinate> allPositions = new ArrayList<>();
+            for (Ship ship : player.getShips()) {
+                for (Coordinate pos : ship.getPositions()) {
+                    assertFalse(allPositions.contains(pos),
+                        "Ships should not overlap at " + pos);
+                    allPositions.add(pos);
+                }
+            }
+        }
+
+        @Test
+        @DisplayName("Should place ships within grid bounds")
+        void shouldPlaceShipsWithinGridBounds() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Carrier());
+            fleet.add(new Cruiser());
+
+            // When
+            boolean result = player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(result);
+            int gridWidth = player.getGrid().getWidth();
+            int gridHeight = player.getGrid().getHeight();
+
+            for (Ship ship : player.getShips()) {
+                for (Coordinate pos : ship.getPositions()) {
+                    assertTrue(pos.getX() >= 0 && pos.getX() < gridWidth,
+                        "X coordinate should be within bounds");
+                    assertTrue(pos.getY() >= 0 && pos.getY() < gridHeight,
+                        "Y coordinate should be within bounds");
+                }
+            }
+        }
+
+        @Test
+        @DisplayName("Should handle empty fleet list")
+        void shouldHandleEmptyFleetList() {
+            // Given
+            List<Ship> emptyFleet = new ArrayList<>();
+
+            // When
+            boolean result = player.placeShipsRandomly(emptyFleet);
+
+            // Then
+            assertTrue(result);
+            assertTrue(player.getShips().isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should return false when grid is too small for ships")
+        void shouldReturnFalseWhenGridTooSmall() {
+            // Given - Very small grid
+            Player smallGridPlayer = new Player("SmallGrid", 2);
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Carrier()); // Length 5, won't fit in 2x2 grid
+
+            // When
+            boolean result = smallGridPlayer.placeShipsRandomly(fleet);
+
+            // Then
+            assertFalse(result);
+        }
+
+        @Test
+        @DisplayName("Should set direction for all placed ships")
+        void shouldSetDirectionForAllPlacedShips() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            fleet.add(new Destroyer());
+            fleet.add(new Torpedo());
+
+            // When
+            player.placeShipsRandomly(fleet);
+
+            // Then
+            for (Ship ship : player.getShips()) {
+                assertNotNull(ship.getDirection());
+                assertTrue(
+                    ship.getDirection() == Direction.HORIZONTAL ||
+                    ship.getDirection() == Direction.VERTICAL
+                );
+            }
+        }
+
+        @Test
+        @DisplayName("Should add ships to player's fleet when placing randomly")
+        void shouldAddShipsToPlayerFleet() {
+            // Given
+            List<Ship> fleet = new ArrayList<>();
+            Ship carrier = new Carrier();
+            Ship cruiser = new Cruiser();
+            fleet.add(carrier);
+            fleet.add(cruiser);
+
+            // When
+            player.placeShipsRandomly(fleet);
+
+            // Then
+            assertTrue(player.getShips().contains(carrier));
+            assertTrue(player.getShips().contains(cruiser));
         }
     }
 }

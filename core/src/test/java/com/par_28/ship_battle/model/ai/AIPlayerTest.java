@@ -6,12 +6,14 @@ import com.par_28.ship_battle.model.enums.*;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for AIPlayer class
+ * Tests for AIPlayer class
  */
 class AIPlayerTest {
 
@@ -20,43 +22,47 @@ class AIPlayerTest {
     class CreationTests {
 
         @Test
-        @DisplayName("Should create AIPlayer with EASY difficulty")
-        void testCreateEasyAI() {
-            // When
-            AIPlayer player = new AIPlayer("Easy AI", 10, AIDifficulty.EASY);
+        @DisplayName("Should create AIPlayer with correct strategy based on difficulty")
+        void testCreateWithDifficulty() {
+            // Given/When
+            AIPlayer easy = new AIPlayer("Easy AI", 10, AIDifficulty.EASY);
+            AIPlayer medium = new AIPlayer("Medium AI", 10, AIDifficulty.MEDIUM);
+            AIPlayer hard = new AIPlayer("Hard AI", 10, AIDifficulty.HARD);
 
             // Then
-            assertNotNull(player);
-            assertEquals("Easy AI", player.getName());
-            assertEquals(AIDifficulty.EASY, player.getDifficulty());
-            assertInstanceOf(EasyAI.class, player.getStrategy());
-            assertTrue(player.isAI());
+            assertEquals("Easy AI", easy.getName());
+            assertEquals(AIDifficulty.EASY, easy.getDifficulty());
+            assertInstanceOf(EasyAI.class, easy.getStrategy());
+            assertTrue(easy.isAI());
+
+            assertEquals(AIDifficulty.MEDIUM, medium.getDifficulty());
+            assertInstanceOf(MediumAI.class, medium.getStrategy());
+
+            assertEquals(AIDifficulty.HARD, hard.getDifficulty());
+            assertInstanceOf(HardAI.class, hard.getStrategy());
+
+            // Strategies should be different classes
+            assertNotEquals(easy.getStrategy().getClass(), medium.getStrategy().getClass());
+            assertNotEquals(medium.getStrategy().getClass(), hard.getStrategy().getClass());
         }
 
         @Test
-        @DisplayName("Should create AIPlayer with MEDIUM difficulty")
-        void testCreateMediumAI() {
+        @DisplayName("Should inherit Player functionality")
+        void testPlayerInheritance() {
+            // Given
+            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.EASY);
+            Ship carrier = new Carrier();
+
             // When
-            AIPlayer player = new AIPlayer("Medium AI", 10, AIDifficulty.MEDIUM);
+            ai.addShip(carrier);
+            ai.placeShipOnGrid(carrier, new Coordinate(0, 0), Direction.HORIZONTAL);
 
-            // Then
-            assertNotNull(player);
-            assertEquals(AIDifficulty.MEDIUM, player.getDifficulty());
-            assertInstanceOf(MediumAI.class, player.getStrategy());
-            assertTrue(player.isAI());
-        }
-
-        @Test
-        @DisplayName("Should create AIPlayer with HARD difficulty")
-        void testCreateHardAI() {
-            // When
-            AIPlayer player = new AIPlayer("Hard AI", 10, AIDifficulty.HARD);
-
-            // Then
-            assertNotNull(player);
-            assertEquals(AIDifficulty.HARD, player.getDifficulty());
-            assertInstanceOf(HardAI.class, player.getStrategy());
-            assertTrue(player.isAI());
+            // Then - should have Player methods and state
+            assertNotNull(ai.getGrid());
+            assertNotNull(ai.getTrackingGrid());
+            assertEquals(1, ai.getShips().size());
+            assertTrue(ai.getGrid().getCell(new Coordinate(0, 0)).hasShip());
+            assertFalse(ai.isDead()); // Has a ship now
         }
     }
 
@@ -65,125 +71,73 @@ class AIPlayerTest {
     class ShotSelectionTests {
 
         @Test
-        @DisplayName("Should choose valid shot coordinates")
-        void testChoosesValidShot() {
+        @DisplayName("Should choose unique valid shots")
+        void testChoosesUniqueValidShots() {
             // Given
             AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.EASY);
             List<Ship> opponentShips = createTestShips();
+            Set<Coordinate> shots = new HashSet<>();
 
-            // When
-            Coordinate shot = ai.chooseShot(opponentShips);
+            // When - choose 20 shots
+            for (int i = 0; i < 20; i++) {
+                Coordinate shot = ai.chooseShot(opponentShips);
 
-            // Then
-            assertNotNull(shot);
-            assertTrue(ai.getTrackingGrid().isValidCoordinate(shot));
-        }
+                // Then
+                assertNotNull(shot);
+                assertTrue(ai.getTrackingGrid().isValidCoordinate(shot));
+                assertFalse(shots.contains(shot), "Should not choose same coordinate twice");
 
-        @Test
-        @DisplayName("Should choose different shots each time")
-        void testChoosesDifferentShots() {
-            // Given
-            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.EASY);
-            List<Ship> opponentShips = createTestShips();
+                ai.getTrackingGrid().getCell(shot).shoot();
+                shots.add(shot);
+            }
 
-            // When - choose 10 shots and record them
-            Coordinate shot1 = ai.chooseShot(opponentShips);
-            ai.getTrackingGrid().getCell(shot1).shoot();
-
-            Coordinate shot2 = ai.chooseShot(opponentShips);
-            ai.getTrackingGrid().getCell(shot2).shoot();
-
-            Coordinate shot3 = ai.chooseShot(opponentShips);
-
-            // Then
-            assertNotEquals(shot1, shot2);
-            assertNotEquals(shot2, shot3);
-            assertNotEquals(shot1, shot3);
+            assertEquals(20, shots.size());
         }
     }
 
     @Nested
-    @DisplayName("AIPlayer Attack Result Notification Tests")
-    class AttackResultTests {
+    @DisplayName("AIPlayer Strategy Notification Tests")
+    class StrategyNotificationTests {
 
         @Test
-        @DisplayName("Should update strategy after hit notification")
-        void testNotifyHit() {
-            // Given
+        @DisplayName("Should notify strategy of attack results and affect next shot")
+        void testNotifyAffectsNextShot() {
+            // Given - use MEDIUM AI which changes behavior after HIT
             AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.MEDIUM);
-            Coordinate shot = new Coordinate(5, 5);
-            AttackResponse response = new AttackResponse(AttackResult.HIT, new Cruiser());
+            Coordinate hitCoord = new Coordinate(5, 5);
 
-            // When
-            ai.notifyAttackResult(shot, response);
+            // When - notify of a HIT
+            ai.notifyAttackResult(hitCoord, new AttackResponse(AttackResult.HIT, new Cruiser()));
+            ai.getTrackingGrid().getCell(hitCoord).shoot();
 
-            // Then - strategy should have been notified (can't directly test internal state)
-            // But we can verify the AI still works
+            // Then - next shot should be adjacent (MEDIUM AI targets adjacent after hit)
             Coordinate nextShot = ai.chooseShot(createTestShips());
-            assertNotNull(nextShot);
+            assertTrue(isAdjacent(hitCoord, nextShot),
+                "After HIT notification, MEDIUM AI should target adjacent cells");
         }
 
         @Test
-        @DisplayName("Should update strategy after sunk notification")
-        void testNotifySunk() {
-            // Given
-            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.MEDIUM);
-            Coordinate shot = new Coordinate(3, 3);
-            Ship destroyedShip = new Destroyer();
-            destroyedShip.receiveDamage();
-            destroyedShip.receiveDamage();
-            destroyedShip.receiveDamage();
-            AttackResponse response = new AttackResponse(AttackResult.SUNK, destroyedShip);
-
-            // When
-            ai.notifyAttackResult(shot, response);
-
-            // Then
-            Coordinate nextShot = ai.chooseShot(createTestShips());
-            assertNotNull(nextShot);
-        }
-
-        @Test
-        @DisplayName("Should update strategy after miss notification")
-        void testNotifyMiss() {
-            // Given
-            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.HARD);
-            Coordinate shot = new Coordinate(7, 7);
-            AttackResponse response = new AttackResponse(AttackResult.MISS, null);
-
-            // When
-            ai.notifyAttackResult(shot, response);
-
-            // Then
-            Coordinate nextShot = ai.chooseShot(createTestShips());
-            assertNotNull(nextShot);
-        }
-    }
-
-    @Nested
-    @DisplayName("AIPlayer Strategy Reset Tests")
-    class ResetTests {
-
-        @Test
-        @DisplayName("Should reset strategy successfully")
+        @DisplayName("Should reset strategy state")
         void testResetStrategy() {
-            // Given
+            // Given - MEDIUM AI in TARGET mode
             AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.MEDIUM);
+            Coordinate hitCoord = new Coordinate(5, 5);
 
-            // Make some moves
-            Coordinate shot1 = ai.chooseShot(createTestShips());
-            ai.getTrackingGrid().getCell(shot1).shoot();
+            ai.notifyAttackResult(hitCoord, new AttackResponse(AttackResult.HIT, new Carrier()));
+            ai.getTrackingGrid().getCell(hitCoord).shoot();
 
-            AttackResponse hitResponse = new AttackResponse(AttackResult.HIT, new Carrier());
-            ai.notifyAttackResult(shot1, hitResponse);
+            // Verify it's in TARGET mode
+            Coordinate beforeReset = ai.chooseShot(createTestShips());
+            assertTrue(isAdjacent(hitCoord, beforeReset));
+            ai.getTrackingGrid().getCell(beforeReset).shoot();
 
             // When - reset
             ai.resetStrategy();
 
-            // Then - should work normally after reset
-            Coordinate shotAfterReset = ai.chooseShot(createTestShips());
-            assertNotNull(shotAfterReset);
-            assertTrue(ai.getTrackingGrid().isValidCoordinate(shotAfterReset));
+            // Then - should work normally (back to HUNT mode behavior)
+            Coordinate afterReset = ai.chooseShot(createTestShips());
+            assertNotNull(afterReset);
+            assertTrue(ai.getTrackingGrid().isValidCoordinate(afterReset));
         }
     }
 
@@ -192,202 +146,45 @@ class AIPlayerTest {
     class IntegrationTests {
 
         @Test
-        @DisplayName("Should play a complete sequence of turns")
+        @DisplayName("Should play a complete sequence of turns without errors")
         void testCompleteGameSequence() {
             // Given
             AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.MEDIUM);
             List<Ship> opponentShips = createTestShips();
 
-            // When - play 20 turns
-            for (int i = 0; i < 20; i++) {
+            // When - play 30 turns with mixed results
+            for (int i = 0; i < 30; i++) {
                 Coordinate shot = ai.chooseShot(opponentShips);
                 ai.getTrackingGrid().getCell(shot).shoot();
 
-                // Simulate random response
-                AttackResult result = (i % 5 == 0) ? AttackResult.HIT : AttackResult.MISS;
-                Ship ship = (result == AttackResult.HIT) ? new Torpedo() : null;
-                AttackResponse response = new AttackResponse(result, ship);
+                // Simulate varied responses
+                AttackResult result;
+                if (i % 10 == 0) {
+                    result = AttackResult.SUNK;
+                } else if (i % 5 == 0) {
+                    result = AttackResult.HIT;
+                } else {
+                    result = AttackResult.MISS;
+                }
 
-                ai.notifyAttackResult(shot, response);
+                Ship ship = (result != AttackResult.MISS) ? new Torpedo() : null;
+                ai.notifyAttackResult(shot, new AttackResponse(result, ship));
             }
 
             // Then - should still be functional
             Coordinate finalShot = ai.chooseShot(opponentShips);
             assertNotNull(finalShot);
+            assertFalse(ai.getTrackingGrid().getCell(finalShot).isShot());
         }
 
         @Test
-        @DisplayName("Should inherit Player functionality")
-        void testPlayerInheritance() {
-            // Given
-            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.EASY);
-
-            // Then - should have Player methods
-            assertNotNull(ai.getName());
-            assertNotNull(ai.getGrid());
-            assertNotNull(ai.getTrackingGrid());
-            assertNotNull(ai.getShips());
-            assertTrue(ai.isDead()); // No ships added yet, so player is "dead"
-        }
-
-        @Test
-        @DisplayName("Should work with ship placement")
-        void testWithShipPlacement() throws Exception {
-            // Given
-            AIPlayer ai = new AIPlayer("Test AI", 10, AIDifficulty.HARD);
-            Ship carrier = new Carrier();
-
-            // When - add and place a ship
-            ai.addShip(carrier);
-            ai.placeShipOnGrid(carrier, new Coordinate(0, 0), Direction.HORIZONTAL);
-
-            // Then
-            assertEquals(1, ai.getShips().size());
-            assertTrue(ai.getGrid().getCell(new Coordinate(0, 0)).hasShip());
-        }
-    }
-
-    @Nested
-    @DisplayName("AIPlayer Difficulty Behavior Tests")
-    class DifficultyBehaviorTests {
-
-        @Test
-        @DisplayName("Different difficulties should use different strategies")
-        void testDifferentStrategies() {
-            // Given
-            AIPlayer easy = new AIPlayer("Easy", 10, AIDifficulty.EASY);
-            AIPlayer medium = new AIPlayer("Medium", 10, AIDifficulty.MEDIUM);
-            AIPlayer hard = new AIPlayer("Hard", 10, AIDifficulty.HARD);
-
-            // Then
-            assertNotEquals(easy.getStrategy().getClass(), medium.getStrategy().getClass());
-            assertNotEquals(medium.getStrategy().getClass(), hard.getStrategy().getClass());
-            assertNotEquals(easy.getStrategy().getClass(), hard.getStrategy().getClass());
-        }
-    }
-
-    @Nested
-    @DisplayName("AIPlayer Random Ship Placement Tests")
-    class RandomPlacementTests {
-
-        @Test
-        @DisplayName("Should place multiple ships randomly without overlap")
-        void testPlaceMultipleShipsRandomly() {
-            // Given
-            AIPlayer ai = new AIPlayer("AI", 10, AIDifficulty.MEDIUM);
-            List<Ship> ships = createTestShips();
-
-            // When
-            boolean allPlaced = ai.placeShipsRandomly(ships);
-
-            // Then
-            assertTrue(allPlaced, "All ships should be placed successfully");
-            assertEquals(4, ai.getShips().size(), "AI should have 4 ships");
-
-            // Verify each ship is placed
-            for (Ship ship : ai.getShips()) {
-                assertNotNull(ship.getPositions());
-                assertFalse(ship.getPositions().isEmpty());
-            }
-        }
-
-        @Test
-        @DisplayName("Should place ships deterministically with seed")
-        void testDeterministicPlacementWithSeed() {
-            // Given
-            long seed = 12345L;
-            AIPlayer ai1 = new AIPlayer("AI1", 10, AIDifficulty.EASY);
-            AIPlayer ai2 = new AIPlayer("AI2", 10, AIDifficulty.EASY);
-
-            List<Ship> ships1 = createTestShips();
-            List<Ship> ships2 = createTestShips();
-
-            // When
-            ai1.placeShipsRandomly(ships1, seed);
-            ai2.placeShipsRandomly(ships2, seed);
-
-            // Then - both should have identical placements
-            assertEquals(ai1.getShips().size(), ai2.getShips().size());
-
-            for (int i = 0; i < ai1.getShips().size(); i++) {
-                Ship ship1 = ai1.getShips().get(i);
-                Ship ship2 = ai2.getShips().get(i);
-
-                assertEquals(ship1.getPositions(), ship2.getPositions(),
-                    "Ships with same seed should have identical positions");
-                assertEquals(ship1.getDirection(), ship2.getDirection(),
-                    "Ships with same seed should have identical directions");
-            }
-        }
-
-        @Test
-        @DisplayName("Should respect grid boundaries when placing ships")
-        void testRespectGridBoundaries() {
-            // Given
-            AIPlayer ai = new AIPlayer("AI", 10, AIDifficulty.HARD);
-            List<Ship> ships = createTestShips();
-
-            // When
-            boolean placed = ai.placeShipsRandomly(ships);
-
-            // Then
-            assertTrue(placed);
-
-            for (Ship ship : ai.getShips()) {
-                for (Coordinate pos : ship.getPositions()) {
-                    assertTrue(pos.getX() >= 0 && pos.getX() < 10,
-                        "X coordinate should be within grid bounds");
-                    assertTrue(pos.getY() >= 0 && pos.getY() < 10,
-                        "Y coordinate should be within grid bounds");
-                }
-            }
-        }
-
-        @Test
-        @DisplayName("Should not place overlapping ships")
-        void testNoOverlappingShips() {
-            // Given
-            AIPlayer ai = new AIPlayer("AI", 10, AIDifficulty.MEDIUM);
-            List<Ship> ships = createTestShips();
-
-            // When
-            ai.placeShipsRandomly(ships);
-
-            // Then - collect all occupied coordinates
-            List<Coordinate> allPositions = new ArrayList<>();
-            for (Ship ship : ai.getShips()) {
-                for (Coordinate pos : ship.getPositions()) {
-                    assertFalse(allPositions.contains(pos),
-                        "Coordinate " + pos + " is occupied by multiple ships");
-                    allPositions.add(pos);
-                }
-            }
-        }
-
-        @Test
-        @DisplayName("Should handle small grid gracefully")
-        void testSmallGrid() {
-            // Given - 5x5 grid with 2 small ships
-            AIPlayer ai = new AIPlayer("AI", 5, AIDifficulty.EASY);
-            List<Ship> ships = new ArrayList<>();
-            ships.add(new Torpedo());  // 2 cells
-            ships.add(new Destroyer()); // 3 cells
-
-            // When
-            boolean placed = ai.placeShipsRandomly(ships);
-
-            // Then
-            assertTrue(placed, "Should be able to place ships on small grid");
-        }
-
-        @Test
-        @DisplayName("Should work after placement in full game scenario")
-        void testFullGameScenario() throws Exception {
+        @DisplayName("Should work in full game scenario with ship placement")
+        void testFullGameScenario() {
             // Given
             Player human = new Player("Human", 10);
             AIPlayer ai = new AIPlayer("AI", 10, AIDifficulty.MEDIUM);
 
-            // Place human ships manually
+            // Place human ships
             Ship humanCarrier = new Carrier();
             human.addShip(humanCarrier);
             human.placeShipOnGrid(humanCarrier, new Coordinate(0, 0), Direction.HORIZONTAL);
@@ -406,6 +203,123 @@ class AIPlayerTest {
             game.start();
             assertNotNull(game.getCurrentPlayer());
         }
+    }
+
+    @Nested
+    @DisplayName("AIPlayer Random Ship Placement Tests")
+    class RandomPlacementTests {
+
+        @Test
+        @DisplayName("Should place ships without overlap and within bounds")
+        void testPlaceShipsCorrectly() {
+            // Given
+            AIPlayer ai = new AIPlayer("AI", 10, AIDifficulty.MEDIUM);
+            List<Ship> ships = createTestShips();
+
+            // When
+            boolean placed = ai.placeShipsRandomly(ships);
+
+            // Then
+            assertTrue(placed);
+            assertEquals(4, ai.getShips().size());
+
+            // Verify no overlaps and within bounds
+            Set<Coordinate> allPositions = new HashSet<>();
+            for (Ship ship : ai.getShips()) {
+                assertNotNull(ship.getPositions());
+                assertFalse(ship.getPositions().isEmpty());
+
+                for (Coordinate pos : ship.getPositions()) {
+                    // Check bounds
+                    assertTrue(pos.getX() >= 0 && pos.getX() < 10);
+                    assertTrue(pos.getY() >= 0 && pos.getY() < 10);
+
+                    // Check no overlap
+                    assertFalse(allPositions.contains(pos),
+                        "Coordinate " + pos + " is occupied by multiple ships");
+                    allPositions.add(pos);
+                }
+            }
+        }
+
+        @Test
+        @DisplayName("Should place ships deterministically with seed")
+        void testDeterministicPlacement() {
+            // Given
+            long seed = 12345L;
+            AIPlayer ai1 = new AIPlayer("AI1", 10, AIDifficulty.EASY);
+            AIPlayer ai2 = new AIPlayer("AI2", 10, AIDifficulty.EASY);
+
+            // When
+            ai1.placeShipsRandomly(createTestShips(), seed);
+            ai2.placeShipsRandomly(createTestShips(), seed);
+
+            // Then - identical placements
+            assertEquals(ai1.getShips().size(), ai2.getShips().size());
+
+            for (int i = 0; i < ai1.getShips().size(); i++) {
+                Ship ship1 = ai1.getShips().get(i);
+                Ship ship2 = ai2.getShips().get(i);
+
+                assertEquals(ship1.getPositions(), ship2.getPositions());
+                assertEquals(ship1.getDirection(), ship2.getDirection());
+            }
+        }
+
+        @Test
+        @DisplayName("Should handle small grid")
+        void testSmallGrid() {
+            // Given - 5x5 grid with small ships
+            AIPlayer ai = new AIPlayer("AI", 5, AIDifficulty.EASY);
+            List<Ship> ships = new ArrayList<>();
+            ships.add(new Torpedo());   // 2 cells
+            ships.add(new Destroyer()); // 3 cells
+
+            // When
+            boolean placed = ai.placeShipsRandomly(ships);
+
+            // Then
+            assertTrue(placed);
+            assertEquals(2, ai.getShips().size());
+        }
+    }
+
+    @Nested
+    @DisplayName("AIPlayer Random Name Tests")
+    class RandomNameTests {
+
+        @Test
+        @DisplayName("Should return a name from the predefined list")
+        void testGetRandomName() {
+            // Given
+            Set<String> validNames = Set.of(
+                "Tanya", "Erza", "Azusa", "Rika", "Kanna", "Konata"
+            );
+
+            // When - get 20 random names
+            Set<String> generatedNames = new HashSet<>();
+            for (int i = 0; i < 20; i++) {
+                String name = AIPlayer.getRandomName();
+                generatedNames.add(name);
+
+                // Then - each name should be from the valid list
+                assertTrue(validNames.contains(name),
+                    "Generated name '" + name + "' should be from predefined list");
+            }
+
+            // Should have generated at least a few different names (probabilistic)
+            assertTrue(generatedNames.size() > 1,
+                "Should generate different names over multiple calls");
+        }
+    }
+
+    /**
+     * Helper method to check if two coordinates are adjacent
+     */
+    private boolean isAdjacent(Coordinate c1, Coordinate c2) {
+        int dx = Math.abs(c1.getX() - c2.getX());
+        int dy = Math.abs(c1.getY() - c2.getY());
+        return (dx == 1 && dy == 0) || (dx == 0 && dy == 1);
     }
 
     /**

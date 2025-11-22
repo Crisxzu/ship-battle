@@ -50,7 +50,6 @@ public class AIPlayer extends Player {
             case EASY -> new EasyAI();
             case MEDIUM -> new MediumAI();
             case HARD -> new HardAI();
-            default -> new EasyAI();
         };
     }
 

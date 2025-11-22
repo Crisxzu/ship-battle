@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.par_28.ship_battle.controller.gui.GuiController;
-import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 
 /**
@@ -90,7 +89,7 @@ public abstract class GuiView<T extends GuiController> implements Screen {
      * Load necessary textures
      */
     protected void loadTextures() {
-        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.BACKGROUND);
+        backgroundTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.BACKGROUND);
     }
 
     /**
@@ -139,7 +138,7 @@ public abstract class GuiView<T extends GuiController> implements Screen {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
         base = Math.min(width, height);
-        float buttonScale = base / 600f;
+        float buttonScale = base / 400f;
         if(menuButtons != null) {
             for (TextButton button : menuButtons) {
                 button.getLabel().setFontScale(buttonScale);

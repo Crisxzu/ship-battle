@@ -20,4 +20,6 @@ public enum AttackResult {
      * The coordinate was already hit before.
      */
     ALREADY_HIT,
+
+    RADAR_USED
 }

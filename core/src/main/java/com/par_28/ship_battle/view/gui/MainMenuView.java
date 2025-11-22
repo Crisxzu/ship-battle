@@ -40,7 +40,7 @@ public class MainMenuView extends GuiView<MainMenuController> {
     @Override
     protected void loadTextures() {
         super.loadTextures();
-        Texture logoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.LOGO);
+        Texture logoTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.LOGO);
         this.logoTexture = new TextureRegionDrawable(new TextureRegion(logoTexture));
     }
 
@@ -82,6 +82,8 @@ public class MainMenuView extends GuiView<MainMenuController> {
         root.add(versionLabel).expand().height(Value.percentHeight(0.1f)).row();
 
         stage.addActor(root);
+
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override

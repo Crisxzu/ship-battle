@@ -49,7 +49,11 @@ public class SoundHandler implements Handler {
         /**
          * Already hit sound
          */
-        ALREADY_HIT(5);
+        ALREADY_HIT(5),
+        RADAR_NOTHING(6),
+        RADAR_FOUND(7),
+        BOMB_SHOT(8),
+        CHEAT_CODE(9);
 
         /**
          * Index of sound
@@ -117,6 +121,10 @@ public class SoundHandler implements Handler {
             Gdx.audio.newSound(Gdx.files.internal("sounds/miss.mp3")),
             Gdx.audio.newSound(Gdx.files.internal("sounds/sunk.mp3")),
             Gdx.audio.newSound(Gdx.files.internal("sounds/already_hit.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/radar_nothing.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/radar_found.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/bomb_shot.mp3")),
+            Gdx.audio.newSound(Gdx.files.internal("sounds/cheat_code.mp3")),
         };
         tracks = new Music[] {
             Gdx.audio.newMusic(Gdx.files.internal("musics/theme_menu.mp3")),

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
@@ -149,10 +150,20 @@ public class GameView extends GuiView<GameController> {
      */
     protected TextureRegionDrawable pauseTexture;
 
+    protected TextureRegionDrawable radarTexture;
+    protected TextureRegionDrawable bombTexture;
+
+
     /**
      * Loli talking animation
      */
     protected Animation<TextureRegion> loliAnimation;
+
+    protected Animation<TextureRegion> radarFoundAnimation;
+    protected Animation<TextureRegion> radarNothingAnimation;
+
+    protected TextureRegionDrawable radarAnimTexture;
+    protected Image radarAnimImage;
 
 
     /**
@@ -185,12 +196,25 @@ public class GameView extends GuiView<GameController> {
      */
     protected float elapsed = 0f;
 
+    protected float radarTimer = 0f;
+
     /**
      * Paused flag
      */
     protected boolean paused = false;
 
-    protected Stack[][] trackingTableStack;
+    protected Stack[][] trackingTableChildStacks;
+
+    protected Stack trackingTableStack;
+
+    protected Stack radarStack;
+    protected Stack bombStack;
+
+    protected boolean launchRadarAnimation = false;
+    protected float currentRadarX = 0;
+    protected float currentRadarY = 0;
+    protected int radarGridX = 0;
+    protected int radarGridY = 0;
 
     /**
      * Initialize game menu
@@ -210,42 +234,52 @@ public class GameView extends GuiView<GameController> {
     @Override
     protected void loadTextures() {
         super.loadTextures();
-        Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
+        Texture gridCaseTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.GRID_CASE);
         this.gridCaseTexture = new TextureRegionDrawable(new TextureRegion(gridCaseTexture));
 
-        Texture snipeTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SNIPE);
+        Texture snipeTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.SNIPE);
         this.snipeTexture = new TextureRegionDrawable(new TextureRegion(snipeTexture));
 
-        Texture carrierTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER);
+        Texture carrierTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.CARRIER);
         this.carrierTexture = new TextureRegionDrawable(new TextureRegion(carrierTexture));
 
-        Texture cruiserTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.CRUISER);
+        Texture cruiserTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.CRUISER);
         this.cruiserTexture = new TextureRegionDrawable(new TextureRegion(cruiserTexture));
 
-        Texture destroyerTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.DESTROYER);
+        Texture destroyerTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.DESTROYER);
         this.destroyerTexture = new TextureRegionDrawable(new TextureRegion(destroyerTexture));
 
-        Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO);
+        Texture torpedoTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.TORPEDO);
         this.torpedoTexture = new TextureRegionDrawable(new TextureRegion(torpedoTexture));
 
-        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.MISS);
+        Texture missTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.MISS);
         this.missTexture = new TextureRegionDrawable(new TextureRegion(missTexture));
 
-        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.HIT);
+        Texture hitTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.HIT);
         this.hitTexture = new TextureRegionDrawable(new TextureRegion(hitTexture));
 
-        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.SUNK);
+        Texture sunkTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.SUNK);
         this.sunkTexture = new TextureRegionDrawable(new TextureRegion(sunkTexture));
 
-        Texture pauseTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.PAUSE_BACKGROUND);
+        Texture pauseTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.PAUSE_BACKGROUND);
         this.pauseTexture = new TextureRegionDrawable(new TextureRegion(pauseTexture));
 
-        loliAnimation = GifDecoder.loadGIFAnimation(
-            Animation.PlayMode.LOOP,
-            Gdx.files.internal("loli_talking.gif").read()
-        );
+        Texture radarTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.RADAR);
+        this.radarTexture = new TextureRegionDrawable(new TextureRegion(radarTexture));
+
+        Texture bombTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.BOMB);
+        this.bombTexture = new TextureRegionDrawable(new TextureRegion(bombTexture));
+
+        loliAnimation = SpriteHandler.getAnimation(SpriteHandler.AnimationID.LOLI);
+        loliAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
         loliTexture = new TextureRegionDrawable(new TextureRegion(loliAnimation.getKeyFrame(elapsed)));
+
+        radarNothingAnimation = SpriteHandler.getAnimation(SpriteHandler.AnimationID.RADAR_NOTHING);
+
+        radarFoundAnimation = SpriteHandler.getAnimation(SpriteHandler.AnimationID.RADAR_FOUND);
+
+        radarAnimTexture = new TextureRegionDrawable(new TextureRegion(radarNothingAnimation.getKeyFrame(radarTimer)));
     }
 
     @Override
@@ -277,6 +311,86 @@ public class GameView extends GuiView<GameController> {
 
         statusGroup.addActor(nameLabel);
 
+        HorizontalGroup powerGroup = new HorizontalGroup();
+        powerGroup.space(10f);
+        powerGroup.padLeft(2f);
+
+        powerGroup.debug();
+
+        final GameController gameController = this.controller;
+
+        Stack snipeStack = getPowerStack(
+            snipeTexture,
+            -1
+        );
+
+        snipeStack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameController.setCurrentPowerType(PowerType.NORMAL);
+                playDialog(
+                    DialogHandler.DialogID.TURN_START,
+                    (float) (loliAnimation.getAnimationDuration() * 0.60)
+                );
+            }
+        });
+
+        powerGroup.addActor(snipeStack);
+
+        radarStack = getPowerStack(
+            radarTexture,
+            controller.getCurrentPlayerRadarCharges()
+        );
+
+        radarStack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(gameController.getCurrentPlayerRadarCharges() > 0) {
+                    gameController.setCurrentPowerType(PowerType.RADAR);
+                    playDialog(
+                        DialogHandler.DialogID.RADAR_SELECTED,
+                        (float) (loliAnimation.getAnimationDuration() * 0.60)
+                    );
+                }
+                else {
+                    playDialog(
+                        DialogHandler.DialogID.UNAVAILABLE_POWER,
+                        (float) (loliAnimation.getAnimationDuration() * 0.60)
+                    );
+                }
+            }
+        });
+
+        powerGroup.addActor(radarStack);
+
+        bombStack = getPowerStack(
+            bombTexture,
+            controller.getCurrentPlayerBombCharges()
+        );
+
+        bombStack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(gameController.getCurrentPlayerBombCharges() > 0) {
+                    gameController.setCurrentPowerType(PowerType.BOMB);
+                    playDialog(
+                        DialogHandler.DialogID.BOMB_SELECTED,
+                        (float) (loliAnimation.getAnimationDuration() * 0.60)
+                    );
+                }
+                else {
+                    playDialog(
+                        DialogHandler.DialogID.UNAVAILABLE_POWER,
+                        (float) (loliAnimation.getAnimationDuration() * 0.60)
+                    );
+                }
+            }
+        });
+
+        powerGroup.addActor(bombStack);
+
+        statusGroup.addActor(powerGroup);
+
         root.add(statusGroup)
             .colspan(2);
 
@@ -294,11 +408,22 @@ public class GameView extends GuiView<GameController> {
 
         updatePlayerTables();
 
+        trackingTableStack = new Stack();
+        trackingTable.setFillParent(true);
+
+        radarAnimImage = new Image(radarAnimTexture);
+        radarAnimImage.setScale(0.27f);
+        radarAnimImage.setVisible(false);
+        radarAnimImage.setOrigin(Align.center);
+
+        trackingTableStack.add(trackingTable);
+        trackingTableStack.add(radarAnimImage);
+
         root.add(shipTable)
             .width(Value.percentWidth(0.3f, root))
             .height(Value.percentHeight(0.5f, root))
             .expand();
-        root.add(trackingTable)
+        root.add(trackingTableStack)
             .width(Value.percentWidth(0.5f, root))
             .height(Value.percentHeight(0.7f, root))
             .expand();
@@ -312,7 +437,7 @@ public class GameView extends GuiView<GameController> {
         loliImage = new Image(loliAnimation.getKeyFrame(elapsed));
         Container<Image> loliImageContainer = new Container<>(loliImage);
 
-        loliImageContainer.pad(10f);
+        loliImageContainer.pad(15f);
 
         dialogGroup.addActor(loliImageContainer);
 
@@ -354,6 +479,55 @@ public class GameView extends GuiView<GameController> {
         stage.addActor(stack);
 
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyUp(InputEvent event, int keycode) {
+                InputHandler.saveUserPressedKey(keycode);
+
+                return true;
+            }
+        });
+    }
+
+    protected Stack getPowerStack(TextureRegionDrawable texture, int nb) {
+        Stack stack = new Stack();
+        Image image = new Image(texture);
+        Container<Image> container = new Container<>(image);
+
+        container.padTop(10f);
+
+        stack.add(container);
+
+        if(nb >= 0) {
+            container.padRight(5f);
+
+            Label label = new Label(String.format("%d", nb), skin);
+            label.setFontScale(2f);
+
+            label.setAlignment(Align.bottomRight);
+            stack.add(label);
+        }
+
+        stack.addListener(new ClickListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Color imageColor = image.getColor();
+                imageColor.set(imageColor.r, imageColor.g, imageColor.b, 0.4f);
+                image.setColor(imageColor);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                Color imageColor = image.getColor();
+                imageColor.set(imageColor.r, imageColor.g, imageColor.b, 1f);
+                image.setColor(imageColor);
+            }
+        });
+
+        stack.debug();
+
+        return stack;
     }
 
     /**
@@ -471,6 +645,7 @@ public class GameView extends GuiView<GameController> {
                     stack.add(snipeImage);
 
                     final Image finalSnipeImage = snipeImage;
+                    final GameController gameController = this.controller;
 
                     stack.addListener(new ClickListener() {
                         @Override
@@ -497,6 +672,21 @@ public class GameView extends GuiView<GameController> {
                                 Coordinate coord = new Coordinate(finalI, finalJ);
 
                                 response = controller.playTurn(coord);
+
+                                if(response.getResult() == AttackResult.RADAR_USED) {
+                                    // Store grid coordinates instead of pixel coordinates
+                                    radarGridX = finalI;
+                                    radarGridY = finalJ;
+                                    launchRadarAnimation = true;
+                                    radarTimer = 0f;
+
+                                    updatePowerLabels();
+
+                                    finalSnipeImage.setVisible(false);
+                                }
+                                else if(response.isBombAttack()) {
+                                    updatePowerLabels();
+                                }
                             }
                         }
                     });
@@ -540,7 +730,7 @@ public class GameView extends GuiView<GameController> {
                                     stacks[i + 1][j].add(shipPartImage);
                                 }
                             } else {
-                                // Verticul cut of texture
+                                // Vertical cut of texture
                                 int partHeight = textureHeight / shipLength;
                                 int yOffset = partIdx * partHeight;
                                 partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);
@@ -556,6 +746,16 @@ public class GameView extends GuiView<GameController> {
         }
 
         return stacks;
+    }
+
+    private void updatePowerLabels() {
+        Label radarNbLabel = (Label) radarStack.getChild(1);
+
+        radarNbLabel.setText(String.format("%d", currentPlayer.getRadarCharges()));
+
+        Label bombNbLabel = (Label) bombStack.getChild(1);
+
+        bombNbLabel.setText(String.format("%d", currentPlayer.getBombCharges()));
     }
 
     /**
@@ -588,6 +788,85 @@ public class GameView extends GuiView<GameController> {
 
         super.update(delta);
 
+
+        if(InputHandler.konamiCodeJustPressed()) {
+            controller.applyKonamiCode();
+            updatePowerLabels();
+
+            playDialog(
+                DialogHandler.DialogID.KONAMI_CODE,
+                loliAnimation.getAnimationDuration()
+            );
+
+            SoundHandler.playSound(
+                SoundHandler.SoundID.CHEAT_CODE,
+                0.1f * this.parent.app.settingsHandler.getSoundVolume()
+            );
+
+            InputHandler.clearSaveKeys();
+        }
+
+        if(launchRadarAnimation) {
+            radarTimer += delta;
+
+            // Recalculate position every frame for responsiveness
+            if(trackingTableChildStacks != null && radarGridX < trackingTableChildStacks.length && radarGridY < trackingTableChildStacks[0].length) {
+                Stack cellStack = trackingTableChildStacks[radarGridX][radarGridY];
+
+                // Get the center position of the target cell
+                Vector2 cellCenter = cellStack.localToStageCoordinates(new Vector2(cellStack.getWidth() / 8f, cellStack.getHeight() / 5f));
+                Vector2 localPos = trackingTableStack.stageToLocalCoordinates(cellCenter);
+
+                // Get the actual texture size
+                TextureRegion region = radarAnimTexture.getRegion();
+                float textureWidth = region.getRegionWidth();
+                float textureHeight = region.getRegionHeight();
+
+                // Set origin to center for proper scaling
+                radarAnimImage.setOrigin(textureWidth / 2, textureHeight / 2);
+
+                // Position so that the origin (center) of the image is at the cell center
+                // We position the bottom-left corner, accounting for the origin offset
+                radarAnimImage.setPosition(
+                    localPos.x - textureWidth / 2,
+                    localPos.y - textureHeight / 2
+                );
+            }
+
+            if(!radarAnimImage.isVisible()) {
+                // Start with scale 0
+                radarAnimImage.setScale(0f);
+                radarAnimImage.setVisible(true);
+            }
+
+            if(response.isRadarDetection()) {
+                radarAnimTexture.setRegion(new TextureRegion(radarFoundAnimation.getKeyFrame(radarTimer)));
+            }
+            else {
+                radarAnimTexture.setRegion(new TextureRegion(radarNothingAnimation.getKeyFrame(radarTimer)));
+            }
+            radarAnimImage.setDrawable(radarAnimTexture);
+
+
+            if(radarTimer <= 2.5f) {
+                float scale = (radarTimer / 2.5f) * 0.27f;
+                radarAnimImage.setScale(scale);
+            } else if (radarTimer <= 4f) {
+                // Hold at max scale
+                radarAnimImage.setScale(0.27f);
+            } else if(radarTimer <= 5f) {
+                float shrinkProgress = (radarTimer - 4f);
+                float scale = 0.27f * (1f - shrinkProgress);
+                radarAnimImage.setScale(scale);
+            }
+            else {
+                radarAnimImage.setVisible(false);
+                launchRadarAnimation = false;
+                radarTimer = 0f;
+            }
+        }
+
+
         elapsed += delta;
 
         if(elapsed <= DialogHandler.getDialogDuration()) {
@@ -611,57 +890,80 @@ public class GameView extends GuiView<GameController> {
 
         if(shoot && !turnPlayed) {
             waitTimer += delta;
-            if(waitTimer > 1.5f) {
-                AttackResult result = response.getResult();
-                if(response.isHit()) {
-                    if(result == AttackResult.SUNK) {
-                        SoundHandler.playSound(
-                            SoundHandler.SoundID.SUNK,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
-                        );
+
+            if(response.getResult() == AttackResult.RADAR_USED) {
+                if(waitTimer > 3f) {
+                    if(response.isRadarDetection()) {
                         playDialog(
-                            DialogHandler.DialogID.SUNK,
+                            DialogHandler.DialogID.RADAR_FOUND,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)
                         );
                     }
                     else {
-                        SoundHandler.playSound(
-                            SoundHandler.SoundID.HIT,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
-                        );
                         playDialog(
-                            DialogHandler.DialogID.HIT,
+                            DialogHandler.DialogID.RADAR_NOTHING,
                             (float) (loliAnimation.getAnimationDuration() * 0.60)
                         );
                     }
+                    shoot = false;
+                    waitTimer = 0;
                 }
-                else {
-                    if(response.getResult() == AttackResult.ALREADY_HIT) {
-                        SoundHandler.playSound(
-                            SoundHandler.SoundID.ALREADY_HIT,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
-                        );
-                        playDialog(
-                            DialogHandler.DialogID.ALREADY_HIT,
-                            (float) (loliAnimation.getAnimationDuration() * 0.60)
-                        );
-                    }
-                    else {
-                        SoundHandler.playSound(
-                            SoundHandler.SoundID.MISS,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
-                        );
-                        playDialog(
-                            DialogHandler.DialogID.MISS,
-                            (float) (loliAnimation.getAnimationDuration() * 0.60)
-                        );
-                    }
-                }
-                updatePlayerTables();
-                resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                turnPlayed = true;
-                waitTimer = 0;
+
             }
+            else {
+                if(waitTimer > 1.5f) {
+                    AttackResult result = response.getResult();
+                    if(response.isHit()) {
+                        if(result == AttackResult.SUNK) {
+                            SoundHandler.playSound(
+                                SoundHandler.SoundID.SUNK,
+                                0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            );
+                            playDialog(
+                                DialogHandler.DialogID.SUNK,
+                                (float) (loliAnimation.getAnimationDuration() * 0.60)
+                            );
+                        }
+                        else {
+                            SoundHandler.playSound(
+                                SoundHandler.SoundID.HIT,
+                                0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            );
+                            playDialog(
+                                DialogHandler.DialogID.HIT,
+                                (float) (loliAnimation.getAnimationDuration() * 0.60)
+                            );
+                        }
+                    }
+                    else {
+                        if(result == AttackResult.ALREADY_HIT) {
+                            SoundHandler.playSound(
+                                SoundHandler.SoundID.ALREADY_HIT,
+                                0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            );
+                            playDialog(
+                                DialogHandler.DialogID.ALREADY_HIT,
+                                (float) (loliAnimation.getAnimationDuration() * 0.60)
+                            );
+                        }
+                        else {
+                            SoundHandler.playSound(
+                                SoundHandler.SoundID.MISS,
+                                0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            );
+                            playDialog(
+                                DialogHandler.DialogID.MISS,
+                                (float) (loliAnimation.getAnimationDuration() * 0.60)
+                            );
+                        }
+                    }
+                    updatePlayerTables();
+                    resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                    turnPlayed = true;
+                    waitTimer = 0;
+                }
+            }
+
         }
 
         if(turnPlayed) {
@@ -749,7 +1051,7 @@ public class GameView extends GuiView<GameController> {
             true
         );
 
-        trackingTableStack = updateTableWithModel(
+        trackingTableChildStacks = updateTableWithModel(
             trackingTable,
             currentPlayer.getTrackingGrid(),
             true,
@@ -782,7 +1084,7 @@ public class GameView extends GuiView<GameController> {
 
             addMenuButton(pauseTable, "Continue", this::togglePause);
             addMenuButton(pauseTable,  "Return to Title", () -> this.parent.changeController(GuiControllerEnum.MAIN_MENU));
-
+            resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
         else {
             pauseTable.clear();

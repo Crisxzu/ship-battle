@@ -38,16 +38,50 @@ public class Player {
     private final List<Ship> ships;
 
     /**
+     * Number of bomb charges available
+     */
+    private int bombCharges;
+
+    /**
+     * Number of radar charges available
+     */
+    private int radarCharges;
+
+    /**
+     * Default number of bomb charges per player
+     */
+    private static final int DEFAULT_BOMB_CHARGES = 2;
+
+    /**
+     * Default number of radar charges per player
+     */
+    private static final int DEFAULT_RADAR_CHARGES = 3;
+
+    /**
      * Constructor to initialize player with name and grid size
      *
      * @param name Player's name
      * @param gridSize Size of the player's grid
      */
     public Player(String name, int gridSize) {
+        this(name, gridSize, DEFAULT_BOMB_CHARGES, DEFAULT_RADAR_CHARGES);
+    }
+
+    /**
+     * Constructor to initialize player with name, grid size, and custom power charges
+     *
+     * @param name Player's name
+     * @param gridSize Size of the player's grid
+     * @param bombCharges Number of bomb charges
+     * @param radarCharges Number of radar charges
+     */
+    public Player(String name, int gridSize, int bombCharges, int radarCharges) {
         this.name = name;
         this.grid = new Grid(gridSize, gridSize);
         this.trackingGrid = new Grid(gridSize, gridSize);
         this.ships = new ArrayList<Ship>();
+        this.bombCharges = bombCharges;
+        this.radarCharges = radarCharges;
     }
 
     /**
@@ -161,5 +195,72 @@ public class Player {
      */
     public boolean isAI() {
         return false;
+    }
+
+    /**
+     * Get the number of bomb charges available
+     *
+     * @return Number of bomb charges
+     */
+    public int getBombCharges() {
+        return bombCharges;
+    }
+
+    /**
+     * Get the number of radar charges available
+     *
+     * @return Number of radar charges
+     */
+    public int getRadarCharges() {
+        return radarCharges;
+    }
+
+    /**
+     * Use a bomb charge
+     *
+     * @return true if charge was used, false if no charges available
+     */
+    public boolean useBombCharge() {
+        if (bombCharges > 0) {
+            bombCharges--;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Use a radar charge
+     *
+     * @return true if charge was used, false if no charges available
+     */
+    public boolean useRadarCharge() {
+        if (radarCharges > 0) {
+            radarCharges--;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if player has bomb charges available
+     *
+     * @return true if player has at least one bomb charge
+     */
+    public boolean hasBombCharges() {
+        return bombCharges > 0;
+    }
+
+    /**
+     * Check if player has radar charges available
+     *
+     * @return true if player has at least one radar charge
+     */
+    public boolean hasRadarCharges() {
+        return radarCharges > 0;
+    }
+
+    public void refillPowers() {
+        radarCharges = DEFAULT_RADAR_CHARGES;
+        bombCharges = DEFAULT_BOMB_CHARGES;
     }
 }

@@ -279,23 +279,115 @@ public class Grid {
         Cell target = getCell(coord);
 
         if (target.isShot()) {
-            return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip());
+            return new AttackResponse(AttackResult.ALREADY_HIT, target.getShip(), coord);
         }
 
         target.shoot();
 
         if (!target.hasShip()) {
-            return new AttackResponse(AttackResult.MISS, null);
+            return new AttackResponse(AttackResult.MISS, null, coord);
         }
         else {
             Ship s = target.getShip();
 
             if (s.isDestroyed()) {
-                return new AttackResponse(AttackResult.SUNK, s);
+                return new AttackResponse(AttackResult.SUNK, s, coord);
             } else {
-                return new AttackResponse(AttackResult.HIT, s);
+                return new AttackResponse(AttackResult.HIT, s, coord);
             }
         }
+    }
+
+    /**
+     * Receive a bomb attack at the given coordinate.
+     * <p>
+     * A bomb attack hits the target cell and all adjacent cells (up to 8 surrounding cells).
+     * </p>
+     *
+     * @param coord center coordinate of the bomb
+     * @return AttackResponse with primary hit and additional hits in adjacent cells
+     * @throws InvalidCoordinateException when coord is outside grid
+     */
+    public AttackResponse receiveBombAttack(Coordinate coord) throws InvalidCoordinateException {
+        if (!isValidCoordinate(coord)) {
+            throw new InvalidCoordinateException(coord);
+        }
+
+        AttackResult result = null;
+        Ship ship = null;
+
+        // Primary attack on the center
+        AttackResponse primaryHit = receiveAttack(coord);
+
+        // Additional attacks on adjacent cells
+        List<AttackResponse> additionalHits = new ArrayList<>();
+        List<Cell> adjacentCells = getAdjacentCells(coord);
+
+        for (Cell adjacentCell : adjacentCells) {
+            Coordinate adjacentCoord = adjacentCell.getCoordinate();
+            AttackResponse adjacentHit = receiveAttack(adjacentCoord);
+            additionalHits.add(adjacentHit);
+        }
+
+        if(primaryHit.isHit()) {
+            result = primaryHit.getResult();
+            ship = primaryHit.getShip();
+        }
+        else {
+            for(AttackResponse response : additionalHits) {
+                if(response.isHit()) {
+                    result = response.getResult();
+                    ship = response.getShip();
+                    break;
+                }
+            }
+
+            if(result == null) {
+                result = AttackResult.MISS;
+            }
+        }
+
+        // Return combined response
+        return new AttackResponse(
+            result,
+            ship,
+            coord,
+            additionalHits
+        );
+    }
+
+    /**
+     * Perform a radar scan in an area around the given coordinate.
+     * <p>
+     * The radar detects if there are any ships in the target cell and adjacent cells
+     * without revealing their exact positions or attacking them.
+     * </p>
+     *
+     * @param coord center coordinate of the radar scan
+     * @return AttackResponse with radar detection result
+     * @throws InvalidCoordinateException when coord is outside grid
+     */
+    public AttackResponse radarScan(Coordinate coord) throws InvalidCoordinateException {
+        if (!isValidCoordinate(coord)) {
+            throw new InvalidCoordinateException(coord);
+        }
+
+        // Check center cell
+        Cell centerCell = getCell(coord);
+        boolean shipDetected = centerCell.hasShip();
+
+        // Check adjacent cells if center doesn't have a ship
+        if (!shipDetected) {
+            List<Cell> adjacentCells = getAdjacentCells(coord);
+            for (Cell adjacentCell : adjacentCells) {
+                if (adjacentCell.hasShip()) {
+                    shipDetected = true;
+                    break;
+                }
+            }
+        }
+
+        return new AttackResponse(coord, shipDetected);
     }
 
     /**

@@ -72,6 +72,7 @@ public class SetupPlayerNameView extends GuiView<SetupMenuController> {
         root.add().expand().row();
 
         stage.addActor(root);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     /**

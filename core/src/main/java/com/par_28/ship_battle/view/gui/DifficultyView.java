@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.par_28.ship_battle.controller.gui.*;
 import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
@@ -60,6 +61,7 @@ public class DifficultyView extends GuiView<SetupMenuController> {
         root.add(buttons).expand().fill().center().row();
 
         stage.addActor(root);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     private void gotoSetupPlayerNameMenu(AIDifficulty difficulty) {

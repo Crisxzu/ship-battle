@@ -26,6 +26,10 @@ dependencies {
 
   // VisUi
   api "com.kotcrab.vis:vis-ui:$visuiVersion"
+
+  if(enableGraalNative == 'true') {
+    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+  }
 }
 
 // Configuration des tests (comme Surefire)
@@ -39,7 +43,7 @@ test {
   }
 
   // Générer le rapport JaCoCo après les tests
-  finalizedBy jacocoTestReport
+finalizedBy jacocoTestReport
 }
 
 // Configuration JaCoCo (comme dans votre Maven)

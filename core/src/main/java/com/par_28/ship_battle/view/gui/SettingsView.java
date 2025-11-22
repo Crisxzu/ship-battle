@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.kotcrab.vis.ui.widget.VisSlider;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.controller.gui.SettingsController;
@@ -30,12 +32,12 @@ public class SettingsView extends GuiView<SettingsController> {
     /**
      * Sound volume slider
      */
-    private Slider soundVolumeSlider;
+    private VisSlider soundVolumeSlider;
 
     /**
      * Music volume slider
      */
-    private Slider musicVolumeSlider;
+    private VisSlider musicVolumeSlider;
 
     /**
      * Settings data
@@ -76,11 +78,19 @@ public class SettingsView extends GuiView<SettingsController> {
 
         VerticalGroup soundVolumeGroup = new VerticalGroup();
 
+        soundVolumeGroup
+            .expand()
+            .fill()
+            .padLeft(50f)
+            .padRight(50f);
+
+
         soundVolumeLabel = new Label("", skin);
+        soundVolumeLabel.setAlignment(Align.center);
         soundVolumeLabel.setText(String.format("Sound volume: %.0f%%", data.getSoundVolume() * 100));
         soundVolumeGroup.addActor(soundVolumeLabel);
 
-        soundVolumeSlider = new Slider(0, 100, 10, false, skin);
+        soundVolumeSlider = new VisSlider(0, 100, 10, false);
         soundVolumeSlider.setValue(data.getSoundVolume() * 100);
         soundVolumeSlider.addListener(new ChangeListener() {
             @Override
@@ -98,11 +108,18 @@ public class SettingsView extends GuiView<SettingsController> {
 
         VerticalGroup musicVolumeGroup = new VerticalGroup();
 
+        musicVolumeGroup
+            .expand()
+            .fill()
+            .padLeft(50f)
+            .padRight(50f);
+
         musicVolumeLabel = new Label("", skin);
+        musicVolumeLabel.setAlignment(Align.center);
         musicVolumeLabel.setText(String.format("Music volume : %.0f%%", data.getMusicVolume() * 100));
         musicVolumeGroup.addActor(musicVolumeLabel);
 
-        musicVolumeSlider = new Slider(0, 100, 10, false, skin);
+        musicVolumeSlider = new VisSlider(0, 100, 10, false);
         musicVolumeSlider.setValue(data.getMusicVolume() * 100);
         musicVolumeSlider.addListener(new ChangeListener() {
             @Override
@@ -127,11 +144,15 @@ public class SettingsView extends GuiView<SettingsController> {
         });
         addMenuButton(buttons, "Return to title", () -> this.parent.changeController(GuiControllerEnum.MAIN_MENU));
 
+        buttons.debug();
+
         root.add(buttons)
             .expand()
             .fill()
             .center()
             .row();
+
+        root.debug();
 
         stage.addActor(root);
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

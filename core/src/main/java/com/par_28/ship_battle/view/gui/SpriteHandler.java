@@ -1,6 +1,9 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Objects;
 
@@ -13,10 +16,12 @@ public class SpriteHandler implements Handler {
      */
     private static Texture[] textures;
 
+    private static Animation<TextureRegion>[] animations;
+
     /**
      * Sprite identifiers.
      */
-    public enum SpriteID {
+    public enum TextureID {
         /**
          * Background sprite
          */
@@ -72,7 +77,9 @@ public class SpriteHandler implements Handler {
          */
         PAUSE_BACKGROUND(10, "PauseBackground"),
 
-        LOGO(11, "Logo"),;
+        LOGO(11, "Logo"),
+        RADAR(12, "Radar"),
+        BOMB(13, "Bomb");
 
         /**
          * Name of sprite
@@ -90,7 +97,22 @@ public class SpriteHandler implements Handler {
          * @param value index of sprite
          * @param name name of sprite
          */
-        SpriteID(int value, String name) {
+        TextureID(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+    }
+
+    public enum AnimationID {
+        LOLI(0, "loli_talking.gif"),
+        RADAR_NOTHING(1, "radar_nothing.gif"),
+        RADAR_FOUND(2, "radar_found.gif"),;
+
+
+        private int value;
+        private String name;
+
+        AnimationID(int value, String name) {
             this.value = value;
             this.name = name;
         }
@@ -120,18 +142,36 @@ public class SpriteHandler implements Handler {
             new Texture("sunk.png"),
             new Texture("pause_background.png"),
             new Texture("logo.png"),
+            new Texture("radar.png"),
+            new Texture("bomb.png"),
         };
+
+        animations = new Animation[AnimationID.values().length];
+
+        for (int i = 0; i < AnimationID.values().length; i++) {
+            animations[i] = GifDecoder.loadGIFAnimation(
+                Animation.PlayMode.NORMAL,
+                Gdx.files.internal(AnimationID.values()[i].name).read()
+            );
+        }
     }
 
     /**
      * Get texture by sprite ID
      *
-     * @param spriteID sprite identifier
+     * @param textureID sprite identifier
      * @return texture
      */
-    public static Texture getTexture(SpriteID spriteID) {
-        if(textures != null && spriteID.value <= textures.length) {
-            return textures[spriteID.value];
+    public static Texture getTexture(TextureID textureID) {
+        if(textures != null && textureID.value <= textures.length) {
+            return textures[textureID.value];
+        }
+        return null;
+    }
+
+    public static Animation<TextureRegion> getAnimation(AnimationID animationID) {
+        if(animations != null && animationID.value <= animations.length) {
+            return animations[animationID.value];
         }
         return null;
     }
@@ -143,9 +183,9 @@ public class SpriteHandler implements Handler {
      * @return texture
      */
     public static Texture getShipByName(String shipName) {
-        for (SpriteID spriteID : SpriteID.values()) {
-            if (Objects.equals(spriteID.name, shipName)) {
-                return textures[spriteID.value];
+        for (TextureID textureID : TextureID.values()) {
+            if (Objects.equals(textureID.name, shipName)) {
+                return textures[textureID.value];
             }
         }
 

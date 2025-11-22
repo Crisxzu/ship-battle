@@ -126,7 +126,7 @@ public class AIGameView extends GameView {
 
     @Override
     protected void updatePlayerTables() {
-        trackingTableStack = updateTableWithModel(
+        trackingTableChildStacks = updateTableWithModel(
             trackingTable,
             currentPlayer.getTrackingGrid(),
             true,
@@ -153,7 +153,7 @@ public class AIGameView extends GameView {
                         snipeImage.setVisible(false);
                     }
 
-                    Stack stack = trackingTableStack[x][y];
+                    Stack stack = trackingTableChildStacks[x][y];
                     Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);
 
                     snipeImage.setVisible(true);
@@ -174,7 +174,7 @@ public class AIGameView extends GameView {
                         snipeImage.setVisible(false);
                     }
 
-                    Stack stack = trackingTableStack[attackCord.getX()][attackCord.getY()];
+                    Stack stack = trackingTableChildStacks[attackCord.getX()][attackCord.getY()];
                     Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);
 
                     snipeImage.setVisible(true);

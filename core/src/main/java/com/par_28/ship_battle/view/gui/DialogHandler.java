@@ -49,6 +49,41 @@ public class DialogHandler implements Handler {
         TURN_START_AI(
             5,
             "Hum, let some time to the AI to think."
+        ),
+
+        RADAR_SELECTED(
+            6,
+            "Oh so you want to use the radar.\nAlright let's see where the enemy hides his ship."
+        ),
+
+        RADAR_NOTHING(
+            7,
+            "Hahaha, too bad !\nYou miss a big opportunity."
+        ),
+
+        RADAR_FOUND(
+            8,
+            "You found it !\nAll you have to do is to not miss hehehe."
+        ),
+
+        UNAVAILABLE_POWER(
+            9,
+            "You cannot used this power for now. So now attack !"
+        ),
+
+        BOMB_SELECTED(
+            10,
+            "Hahaha, it's time to throw a big one on the stage !"
+        ),
+
+        BOMB_SHOT(
+            11,
+            "EXPLOOOOOOSION !"
+        ),
+
+        KONAMI_CODE(
+            12,
+            "You !\nLittle cheater ><. How did you know this secret ?"
         );
 
         /**

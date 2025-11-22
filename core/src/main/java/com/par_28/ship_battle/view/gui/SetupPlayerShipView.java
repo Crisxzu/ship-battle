@@ -78,20 +78,20 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
     @Override
     protected void loadTextures() {
         super.loadTextures();
-        Texture gridTexture = SpriteHandler.getTexture(SpriteHandler.SpriteID.GRID_CASE);
+        Texture gridTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.GRID_CASE);
         gridCaseDrawable = new TextureRegionDrawable(new TextureRegion(gridTexture));
 
         carrierTexture = new TextureRegionDrawable(new TextureRegion(
-            SpriteHandler.getTexture(SpriteHandler.SpriteID.CARRIER)
+            SpriteHandler.getTexture(SpriteHandler.TextureID.CARRIER)
         ));
         cruiserTexture = new TextureRegionDrawable(new TextureRegion(
-            SpriteHandler.getTexture(SpriteHandler.SpriteID.CRUISER)
+            SpriteHandler.getTexture(SpriteHandler.TextureID.CRUISER)
         ));
         destroyerTexture = new TextureRegionDrawable(new TextureRegion(
-            SpriteHandler.getTexture(SpriteHandler.SpriteID.DESTROYER)
+            SpriteHandler.getTexture(SpriteHandler.TextureID.DESTROYER)
         ));
         torpedoTexture = new TextureRegionDrawable(new TextureRegion(
-            SpriteHandler.getTexture(SpriteHandler.SpriteID.TORPEDO)
+            SpriteHandler.getTexture(SpriteHandler.TextureID.TORPEDO)
         ));
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -145,6 +145,8 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
 
         refreshShipList();
         refreshPlacedShips();
+
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     private void buildGrid() {

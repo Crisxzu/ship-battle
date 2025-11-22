@@ -43,14 +43,14 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        configuration.setWindowedMode(800, 500);
+        configuration.setWindowedMode(900, 600);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("loli_iconx128.png", "loli_iconx64.png", "loli_iconx32.png", "loli_iconx16.png");
 
         configuration.setWindowSizeLimits(
-            800,
-            500,
+            900,
+            600,
             9999,
             9999
         );

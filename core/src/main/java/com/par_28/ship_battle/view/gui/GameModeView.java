@@ -1,5 +1,6 @@
 package com.par_28.ship_battle.view.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
@@ -59,6 +60,7 @@ public class GameModeView extends GuiView<SetupMenuController> {
         root.add(buttons).expand().fill().center().row();
 
         stage.addActor(root);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override

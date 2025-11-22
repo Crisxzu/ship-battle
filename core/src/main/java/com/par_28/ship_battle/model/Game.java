@@ -2,6 +2,7 @@ package com.par_28.ship_battle.model;
 
 
 import com.par_28.ship_battle.model.enums.GameState;
+import com.par_28.ship_battle.model.enums.PowerType;
 import com.par_28.ship_battle.model.exceptions.*;
 
 /**
@@ -83,14 +84,65 @@ public class Game {
      * @throws InvalidCoordinateException if the coordinate is invalid
      */
     public AttackResponse playTurn(Coordinate coord) throws IllegalGameStateException, InvalidCoordinateException {
+        return playTurn(coord, PowerType.NORMAL);
+    }
+
+    /**
+     * Play a turn for the current player using a specific power type
+     *
+     * <p>
+     * Supports NORMAL attacks, BOMB attacks (3x3 area), and RADAR scans (detection only).
+     * After the attack, if the opponent has no remaining ships, the game state is updated to GAME_OVER.
+     * For RADAR scans, the turn does not switch.
+     * For other attacks, the turn switches to the other player.
+     * The current player records the result of the attack on their tracking grid.
+     * Each call to this method increments the turn counter.
+     * </p>
+     *
+     * @param coord Coordinate to attack or scan
+     * @param powerType Type of power to use (NORMAL, BOMB, RADAR)
+     * @return AttackResponse response of the attack with hit/miss and ship info
+     * @throws IllegalGameStateException if game is already over or player doesn't have required charges
+     * @throws InvalidCoordinateException if the coordinate is invalid
+     */
+    public AttackResponse playTurn(Coordinate coord, PowerType powerType) throws IllegalGameStateException, InvalidCoordinateException {
         if(gameState == GameState.GAME_OVER) {
             throw new IllegalGameStateException("Game is already over");
         }
 
         Player opponent = getOpponent();
+        AttackResponse response;
 
-        AttackResponse response = opponent.receiveAttack(coord);
-        currentPlayer.recordAttack(coord, response);
+        switch (powerType) {
+            case BOMB:
+                if (!currentPlayer.hasBombCharges()) {
+                    throw new IllegalGameStateException("No bomb charges available");
+                }
+                currentPlayer.useBombCharge();
+                response = opponent.getGrid().receiveBombAttack(coord);
+
+                // Record primary hit and additional hits on tracking grid
+                currentPlayer.recordAttack(coord, response);
+                for (AttackResponse additionalHit : response.getAdditionalHits()) {
+                    currentPlayer.recordAttack(additionalHit.getCoordinate(), additionalHit);
+                }
+                break;
+
+            case RADAR:
+                if (!currentPlayer.hasRadarCharges()) {
+                    throw new IllegalGameStateException("No radar charges available");
+                }
+                currentPlayer.useRadarCharge();
+                response = opponent.getGrid().radarScan(coord);
+                // Radar scan doesn't switch turn, doesn't increment turn counter
+                return response;
+
+            case NORMAL:
+            default:
+                response = opponent.receiveAttack(coord);
+                currentPlayer.recordAttack(coord, response);
+                break;
+        }
 
         if(opponent.isDead()) {
             gameState = GameState.GAME_OVER;

@@ -3,11 +3,6 @@ package com.par_28.ship_battle.controller.gui;
 import java.util.*;
 
 import com.par_28.ship_battle.ShipBattleApplication;
-import com.par_28.ship_battle.model.*;
-import com.par_28.ship_battle.model.ai.*;
-import com.par_28.ship_battle.model.ai.enums.*;
-import com.par_28.ship_battle.model.enums.*;
-import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Manager of screens and controllers.

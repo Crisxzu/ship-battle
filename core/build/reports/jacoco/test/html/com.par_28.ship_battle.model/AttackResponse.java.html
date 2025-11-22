@@ -49,7 +49,7 @@ public class AttackResponse {
      * @return the targeted ship
      */
     public Ship getShip() {
-<span class="nc" id="L52">        return ship;</span>
+<span class="fc" id="L52">        return ship;</span>
     }
     
     /**
@@ -58,7 +58,7 @@ public class AttackResponse {
      * @return true if the attack hit a ship, false otherwise
      */
     public boolean isHit() {
-<span class="nc bnc" id="L61" title="All 4 branches missed.">        return result == AttackResult.HIT || result == AttackResult.SUNK;</span>
+<span class="fc bfc" id="L61" title="All 4 branches covered.">        return result == AttackResult.HIT || result == AttackResult.SUNK;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

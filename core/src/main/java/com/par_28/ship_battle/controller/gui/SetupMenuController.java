@@ -132,10 +132,10 @@ public class SetupMenuController extends GuiController {
 
         return true;
     }
-    
+
     /**
      * Get number of names entered.
-     * 
+     *
      * @return number of names entered
      */
     public int getNamesNumber() {
@@ -144,7 +144,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Check if battle will be played against ai.
-     * 
+     *
      * @return true if ai mode is selected, false otherwise
      */
     public boolean isAIMode() {
@@ -153,7 +153,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Set AI difficulty level.
-     * 
+     *
      * @param aiDifficulty AI difficulty level to set
      */
     public void setAIDifficulty(AIDifficulty aiDifficulty) {
@@ -181,6 +181,11 @@ public class SetupMenuController extends GuiController {
         changeView(new GameModeView(this.parent, this));
     }
 
+    /**
+            startPlacementFlow();
+     *
+     * @param dt Delta time since last render
+     */
     @Override
     public void render(float dt){
         super.render(dt);
@@ -202,7 +207,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Get the player currently setting up their ships.
-     * 
+     *
      * @return current setup player
      */
     private Player getSetupPlayer() {
@@ -210,11 +215,11 @@ public class SetupMenuController extends GuiController {
             return null;
         }
         return getPlayerByIndex(currentSetupPlayerIndex);
-    }   
+    }
 
     /**
      * Get the current setup player.
-     * 
+     *
      * @return current setup player
      */
     public Player getCurrentSetupPlayer() {
@@ -223,7 +228,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Get the current setup player's name.
-     * 
+     *
      * @return current setup player's name
      */
     public String getCurrentSetupPlayerName() {
@@ -299,7 +304,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Get number of ships left to place.
-     * 
+     *
      * @return number of ships left to place
      */
     public int getShipsToPlaceCount() {
@@ -330,6 +335,13 @@ public class SetupMenuController extends GuiController {
     }
 
     /**
+     * Cancel the current selection so the player can choose another ship later.
+     */
+    public void cancelSelection() {
+        selectedShip = null;
+    }
+
+    /**
      * Reset available ships and clear the current selection.
      */
     private void initializeShipsToPlace() {
@@ -339,8 +351,30 @@ public class SetupMenuController extends GuiController {
     }
 
     /**
+     * Remove every ship placed by the active player and restart their placement list.
+     */
+    public void resetCurrentPlacement() {
+        Player player = getSetupPlayer();
+        if(player == null) {
+            return;
+        }
+        player.resetFleet();
+        initializeShipsToPlace();
+    }
+
+    /**
+     * Check if the active player has placed at least one ship on the grid.
+     *
+     * @return true when at least one ship is already on the board
+     */
+    public boolean hasPlacedShips() {
+        Player player = getSetupPlayer();
+        return player != null && !player.getShips().isEmpty();
+    }
+
+    /**
      * Get player by index.
-     * 
+     *
      * @param index player index
      * @return player at index
      */
@@ -357,7 +391,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Check if player at index is human.
-     * 
+     *
      * @param index player index
      * @return true if human player, false otherwise
      */
@@ -368,7 +402,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Create default fleet of ships.
-     * 
+     *
      * @return list of ships
      */
     private List<Ship> createDefaultFleet() {
@@ -475,7 +509,7 @@ public class SetupMenuController extends GuiController {
 
     /**
      * Find the next human player needing ship placement.
-     * 
+     *
      * @return index of next human player needing placement, -1 if none found
      */
     private int findNextHumanNeedingPlacement() {

@@ -106,77 +106,53 @@ public class AIPlayer extends Player {
 
     /**
      * Randomly place a single ship on the AI's grid.
-     * &lt;p&gt;
-     * Attempts to place the ship at random positions and orientations
-     * until a valid placement is found.
-     * &lt;/p&gt;
      *
      * @param ship Ship to place
-     * @param random Random number generator (for deterministic testing)
+     * @param random Random number generator
      * @param maxAttempts Maximum number of placement attempts before giving up
      * @return true if ship was successfully placed, false otherwise
      */
     public boolean placeShipRandomly(Ship ship, Random random, int maxAttempts) {
-<span class="fc" id="L120">        int gridSize = getGrid().getWidth();</span>
-<span class="fc" id="L121">        int attempts = 0;</span>
+<span class="fc" id="L116">        int gridSize = getGrid().getWidth();</span>
+<span class="fc" id="L117">        int attempts = 0;</span>
 
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        while (attempts &lt; maxAttempts) {</span>
-            // Random position
-<span class="fc" id="L125">            int x = random.nextInt(gridSize);</span>
-<span class="fc" id="L126">            int y = random.nextInt(gridSize);</span>
-<span class="fc" id="L127">            Coordinate coord = new Coordinate(x, y);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        while (attempts &lt; maxAttempts) {</span>
+<span class="fc" id="L120">            int x = random.nextInt(gridSize);</span>
+<span class="fc" id="L121">            int y = random.nextInt(gridSize);</span>
+<span class="fc" id="L122">            Coordinate coord = new Coordinate(x, y);</span>
 
-            // Random direction
-<span class="fc bfc" id="L130" title="All 2 branches covered.">            Direction direction = random.nextBoolean() ? Direction.HORIZONTAL : Direction.VERTICAL;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">            Direction direction = random.nextBoolean() ? Direction.HORIZONTAL : Direction.VERTICAL;</span>
 
             try {
-                // Try to place the ship
-<span class="fc" id="L134">                placeShipOnGrid(ship, coord, direction);</span>
-<span class="fc" id="L135">                return true; // Success!</span>
-<span class="fc" id="L136">            } catch (InvalidCoordinateException | ShipPlacementException e) {</span>
-                // Failed, try again
-<span class="fc" id="L138">                attempts++;</span>
+<span class="fc" id="L127">                placeShipOnGrid(ship, coord, direction);</span>
+<span class="fc" id="L128">                return true;</span>
+<span class="fc" id="L129">            } catch (InvalidCoordinateException | ShipPlacementException e) {</span>
+<span class="fc" id="L130">                attempts++;</span>
             }
-<span class="fc" id="L140">        }</span>
+<span class="fc" id="L132">        }</span>
 
-<span class="nc" id="L142">        return false; // Failed to place after max attempts</span>
-    }
-
-    /**
-     * Randomly place a single ship on the AI's grid with default parameters.
-     *
-     * @param ship Ship to place
-     * @return true if ship was successfully placed, false otherwise
-     */
-    public boolean placeShipRandomly(Ship ship) {
-<span class="fc" id="L152">        return placeShipRandomly(ship, new Random(), 1000);</span>
+<span class="nc" id="L134">        return false;</span>
     }
 
     /**
      * Automatically place all ships from a list randomly on the AI's grid.
-     * &lt;p&gt;
-     * This method will:
-     * 1. Add each ship to the AI's fleet
-     * 2. Place each ship randomly on the grid
-     * 3. Stop if any ship cannot be placed
-     * &lt;/p&gt;
      *
      * @param ships List of ships to add and place
      * @return true if all ships were successfully placed, false otherwise
      */
     public boolean placeShipsRandomly(List&lt;Ship&gt; ships) {
-<span class="fc" id="L168">        Random random = new Random();</span>
+<span class="fc" id="L144">        Random random = new Random();</span>
 
-<span class="fc bfc" id="L170" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
-<span class="fc" id="L171">            addShip(ship);</span>
-<span class="fc" id="L172">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
+<span class="fc" id="L147">            addShip(ship);</span>
+<span class="fc" id="L148">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
 
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">            if (!placed) {</span>
-<span class="nc" id="L175">                return false; // Failed to place this ship</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">            if (!placed) {</span>
+<span class="nc" id="L151">                return false;</span>
             }
-<span class="fc" id="L177">        }</span>
+<span class="fc" id="L153">        }</span>
 
-<span class="fc" id="L179">        return true; // All ships placed successfully</span>
+<span class="fc" id="L155">        return true;</span>
     }
 
     /**
@@ -190,18 +166,35 @@ public class AIPlayer extends Player {
      * @return true if all ships were successfully placed, false otherwise
      */
     public boolean placeShipsRandomly(List&lt;Ship&gt; ships, long seed) {
-<span class="fc" id="L193">        Random random = new Random(seed);</span>
+<span class="fc" id="L169">        Random random = new Random(seed);</span>
 
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
-<span class="fc" id="L196">            addShip(ship);</span>
-<span class="fc" id="L197">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        for (Ship ship : ships) {</span>
+<span class="fc" id="L172">            addShip(ship);</span>
+<span class="fc" id="L173">            boolean placed = placeShipRandomly(ship, random, 1000);</span>
 
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            if (!placed) {</span>
-<span class="nc" id="L200">                return false;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">            if (!placed) {</span>
+<span class="nc" id="L176">                return false;</span>
             }
-<span class="fc" id="L202">        }</span>
+<span class="fc" id="L178">        }</span>
 
-<span class="fc" id="L204">        return true;</span>
+<span class="fc" id="L180">        return true;</span>
+    }
+
+
+    static public String getRandomName() {
+<span class="nc" id="L185">        String[] aiNames = {</span>
+            &quot;Tanya&quot;,
+            &quot;Erza&quot;,
+            &quot;Azusa&quot;,
+            &quot;Rika&quot;,
+            &quot;Kanna&quot;,
+            &quot;Konata&quot;
+        };
+
+<span class="nc" id="L194">        Random random = new Random();</span>
+<span class="nc" id="L195">        int i = random.nextInt(aiNames.length);</span>
+
+<span class="nc" id="L197">        return aiNames[i];</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

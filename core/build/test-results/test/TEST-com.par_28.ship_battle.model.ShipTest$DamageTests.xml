@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Damage and Destruction Tests" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.393Z" hostname="OHBADBOY" time="0.004">
+  <properties/>
+  <testcase name="Should reduce life when receiving damage" classname="com.par_28.ship_battle.model.ShipTest$DamageTests" time="0.001"/>
+  <testcase name="Should handle multiple damage calls correctly" classname="com.par_28.ship_battle.model.ShipTest$DamageTests" time="0.0"/>
+  <testcase name="Should not reduce life below zero" classname="com.par_28.ship_battle.model.ShipTest$DamageTests" time="0.0"/>
+  <testcase name="Should be destroyed when life reaches zero" classname="com.par_28.ship_battle.model.ShipTest$DamageTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

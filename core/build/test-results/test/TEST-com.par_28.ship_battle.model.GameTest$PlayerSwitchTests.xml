@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Player Switch Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.221Z" hostname="OHBADBOY" time="0.006">
+  <properties/>
+  <testcase name="Should alternate players correctly over multiple turns" classname="com.par_28.ship_battle.model.GameTest$PlayerSwitchTests" time="0.002"/>
+  <testcase name="Should switch from player2 to player1" classname="com.par_28.ship_battle.model.GameTest$PlayerSwitchTests" time="0.001"/>
+  <testcase name="Should switch from player1 to player2" classname="com.par_28.ship_battle.model.GameTest$PlayerSwitchTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

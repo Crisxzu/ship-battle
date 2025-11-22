@@ -39,7 +39,7 @@ public class Cell {
      * @return Coordinate of cell
      */
     public Coordinate getCoordinate() {
-<span class="nc" id="L42">        return coordinate;</span>
+<span class="fc" id="L42">        return coordinate;</span>
     }
 
     /**
@@ -48,7 +48,7 @@ public class Cell {
      * @return Ship or null
      */
     public Ship getShip() {
-<span class="nc" id="L51">        return ship;</span>
+<span class="fc" id="L51">        return ship;</span>
     }
 
     /**
@@ -69,10 +69,10 @@ public class Cell {
      * &lt;/p&gt;
      */
     public void shoot() {
-<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!shot) {</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (!shot) {</span>
 <span class="fc" id="L73">            shot = true;</span>
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">            if (ship != null) {</span>
-<span class="nc" id="L75">                ship.receiveDamage();</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (ship != null) {</span>
+<span class="fc" id="L75">                ship.receiveDamage();</span>
             }
         }
 <span class="fc" id="L78">    }</span>
@@ -94,5 +94,13 @@ public class Cell {
     public boolean hasShip() {
 <span class="fc bfc" id="L95" title="All 2 branches covered.">        return ship != null;</span>
     }
+
+    /**
+     * Reset the cell to its initial state (no ship, not shot).
+     */
+    public void reset() {
+<span class="nc" id="L102">        ship = null;</span>
+<span class="nc" id="L103">        shot = false;</span>
+<span class="nc" id="L104">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

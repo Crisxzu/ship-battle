@@ -2,6 +2,8 @@
 
 import com.par_28.ship_battle.model.AttackResponse;
 import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.view.gui.*;
 
 /**
@@ -14,8 +16,8 @@ public class GameController extends GuiController {
      * @param parent Reference to the parent screen controller
      */
     public GameController(ScreenController parent) {
-<span class="nc" id="L17">        super(parent);</span>
-<span class="nc" id="L18">    }</span>
+<span class="nc" id="L19">        super(parent);</span>
+<span class="nc" id="L20">    }</span>
 
     /**
      * Update menu controller.
@@ -24,7 +26,7 @@ public class GameController extends GuiController {
      */
     public void update(float dt){
 
-<span class="nc" id="L27">    }</span>
+<span class="nc" id="L29">    }</span>
 
     /**
      * Render menu view.
@@ -33,18 +35,25 @@ public class GameController extends GuiController {
      */
     @Override
     public void render(float dt){
-<span class="nc" id="L36">        super.render(dt);</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">        if(view != null) {</span>
-<span class="nc" id="L38">            view.render(dt);</span>
+<span class="nc" id="L38">        super.render(dt);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if(view != null) {</span>
+<span class="nc" id="L40">            view.render(dt);</span>
         }
-<span class="nc" id="L40">    }</span>
+<span class="nc" id="L42">    }</span>
 
     /**
      * Start a player's turn.
      */
     public void startTurn() {
-<span class="nc" id="L46">        changeView(new GameView(parent, this));</span>
-<span class="nc" id="L47">    }</span>
+<span class="nc" id="L48">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(current.isAI()) {</span>
+<span class="nc" id="L51">            changeView(new AIGameView(parent, this));</span>
+        }
+        else {
+<span class="nc" id="L54">            changeView(new GameView(parent, this));</span>
+        }
+<span class="nc" id="L56">    }</span>
 
     /**
      * Update the view to reflect turn change.
@@ -54,18 +63,18 @@ public class GameController extends GuiController {
      * &lt;/p&gt;
      */
     public void changeTurn() {
-<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(this.parent.app.game.isGameOver()) {</span>
-<span class="nc" id="L58">            SoundHandler.playTrack(</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if(this.parent.app.game.isGameOver()) {</span>
+<span class="nc" id="L67">            SoundHandler.playTrack(</span>
                 SoundHandler.TrackID.MENU_THEME,
-<span class="nc" id="L60">                0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
+<span class="nc" id="L69">                0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
                 true
             );
-<span class="nc" id="L63">            changeView(new GameOverView(parent, this));</span>
+<span class="nc" id="L72">            changeView(new GameOverView(parent, this));</span>
         }
         else {
-<span class="nc" id="L66">            changeView(new GameTurnDisplayView(parent, this));</span>
+<span class="nc" id="L75">            changeView(new GameTurnDisplayView(parent, this));</span>
         }
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L77">    }</span>
 
     /**
      * Play a turn by attacking a coordinate.
@@ -74,14 +83,30 @@ public class GameController extends GuiController {
      * @return Attack response
      */
     public AttackResponse playTurn(Coordinate attackCord) {
-<span class="nc" id="L77">        AttackResponse response = this.parent.app.game.playTurn(attackCord);</span>
+<span class="nc" id="L86">        Player current = this.parent.app.game.getCurrentPlayer();</span>
 
-<span class="nc" id="L79">        SoundHandler.playSound(</span>
+<span class="nc" id="L88">        AttackResponse response = this.parent.app.game.playTurn(attackCord);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(current instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L91">            aiPlayer.notifyAttackResult(attackCord, response);</span>
+        }
+
+<span class="nc" id="L94">        SoundHandler.playSound(</span>
             SoundHandler.SoundID.CANNON_SHOT,
-<span class="nc" id="L81">            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
+<span class="nc" id="L96">            0.05f * this.parent.app.settingsHandler.getSoundVolume()</span>
         );
 
-<span class="nc" id="L84">        return response;</span>
+<span class="nc" id="L99">        return response;</span>
+    }
+
+    public Coordinate getAIShot() {
+<span class="nc" id="L103">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if(current instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L106">            return aiPlayer.chooseShot(this.parent.app.game.getOpponent().getShips());</span>
+        }
+
+<span class="nc" id="L109">        return null;</span>
     }
 
     /**
@@ -89,15 +114,15 @@ public class GameController extends GuiController {
      */
     @Override
     public void reset() {
-<span class="nc" id="L92">        super.reset();</span>
-<span class="nc" id="L93">        changeView(new GameTurnDisplayView(parent, this));</span>
-<span class="nc" id="L94">        System.out.println(this.parent.app.player1);</span>
-<span class="nc" id="L95">        System.out.println(this.parent.app.player2);</span>
-<span class="nc" id="L96">        SoundHandler.playTrack(</span>
+<span class="nc" id="L117">        super.reset();</span>
+<span class="nc" id="L118">        changeView(new GameTurnDisplayView(parent, this));</span>
+<span class="nc" id="L119">        System.out.println(this.parent.app.player1);</span>
+<span class="nc" id="L120">        System.out.println(this.parent.app.player2);</span>
+<span class="nc" id="L121">        SoundHandler.playTrack(</span>
             SoundHandler.TrackID.GAME_THEME,
-<span class="nc" id="L98">            0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
+<span class="nc" id="L123">            0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
             true
         );
-<span class="nc" id="L101">    }</span>
+<span class="nc" id="L126">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

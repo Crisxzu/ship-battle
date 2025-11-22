@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIGameView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">AIGameView.java</span></div><h1>AIGameView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
+import com.par_28.ship_battle.controller.gui.GameController;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.model.Coordinate;
+
+import java.util.Random;
+
+public class AIGameView extends GameView {
+
+<span class="nc" id="L14">    protected Stack oldPos = null;</span>
+<span class="nc" id="L15">    protected float waitAITimer = 0f;</span>
+<span class="nc" id="L16">    protected Random random = new Random();</span>
+
+    public AIGameView(ScreenController parent, GameController controller) {
+<span class="nc" id="L19">        super(parent, controller);</span>
+<span class="nc" id="L20">        playDialog(</span>
+            DialogHandler.DialogID.TURN_START_AI,
+<span class="nc" id="L22">            (float) (loliAnimation.getAnimationDuration() * 1.25)</span>
+        );
+<span class="nc" id="L24">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L28">        loadTextures();</span>
+
+<span class="nc" id="L30">        currentPlayer = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc" id="L32">        stack = new Stack();</span>
+<span class="nc" id="L33">        stack.setFillParent(true);</span>
+
+<span class="nc" id="L35">        root = new Table();</span>
+<span class="nc" id="L36">        root.setFillParent(true);</span>
+
+<span class="nc" id="L38">        HorizontalGroup statusGroup = new HorizontalGroup();</span>
+<span class="nc" id="L39">        statusGroup.space(10f);</span>
+
+<span class="nc" id="L41">        turnLabel = new Label(</span>
+<span class="nc" id="L42">            String.format(&quot;Turn %d&quot;, this.parent.app.game.getNbTurns()+1),</span>
+            skin
+        );
+
+<span class="nc" id="L46">        statusGroup.addActor(turnLabel);</span>
+
+<span class="nc" id="L48">        nameLabel = new Label(</span>
+<span class="nc" id="L49">            String.format(&quot;%s&quot;, currentPlayer.getName()),</span>
+            skin
+        );
+
+<span class="nc" id="L53">        statusGroup.addActor(nameLabel);</span>
+
+<span class="nc" id="L55">        root.add(statusGroup)</span>
+<span class="nc" id="L56">            .colspan(2);</span>
+
+<span class="nc" id="L58">        com.badlogic.gdx.scenes.scene2d.ui.Cell&lt;TextButton&gt; pauseBtn = addMenuButton(root, &quot;Pause&quot;, this::togglePause);</span>
+<span class="nc" id="L59">        pauseBtn.getActor().pad(Value.percentHeight(0.02f, root));</span>
+<span class="nc" id="L60">        pauseBtn.expandY().top().padTop(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L62">        root.row();</span>
+
+<span class="nc" id="L64">        trackingTable = new Table();</span>
+<span class="nc" id="L65">        trackingTable.defaults().expand().fill();</span>
+
+<span class="nc" id="L67">        updatePlayerTables();</span>
+
+<span class="nc" id="L69">        root.add(trackingTable)</span>
+<span class="nc" id="L70">            .width(Value.percentWidth(0.8f, root))</span>
+<span class="nc" id="L71">            .height(Value.percentHeight(0.7f, root))</span>
+<span class="nc" id="L72">            .expand();</span>
+
+<span class="nc" id="L74">        root.row();</span>
+
+<span class="nc" id="L76">        HorizontalGroup dialogGroup = new HorizontalGroup();</span>
+<span class="nc" id="L77">        dialogGroup.space(10f);</span>
+<span class="nc" id="L78">        dialogGroup.expand().fill();</span>
+
+<span class="nc" id="L80">        loliImage = new Image(loliAnimation.getKeyFrame(elapsed));</span>
+<span class="nc" id="L81">        Container&lt;Image&gt; loliImageContainer = new Container&lt;&gt;(loliImage);</span>
+
+<span class="nc" id="L83">        loliImageContainer.pad(10f);</span>
+
+<span class="nc" id="L85">        dialogGroup.addActor(loliImageContainer);</span>
+
+<span class="nc" id="L87">        loliMsg = new Label(&quot;Test&quot;, skin);</span>
+<span class="nc" id="L88">        loliMsg.setAlignment(Align.left);</span>
+<span class="nc" id="L89">        loliMsg.setFontScale(1.2f);</span>
+
+<span class="nc" id="L91">        dialogGroup.addActor(loliMsg);</span>
+
+<span class="nc" id="L93">        coordLabel = new Label(&quot;XX&quot;, skin);</span>
+<span class="nc" id="L94">        coordLabel.setAlignment(Align.center);</span>
+<span class="nc" id="L95">        coordLabel.setFontScale(1.2f);</span>
+
+<span class="nc" id="L97">        root.add(dialogGroup)</span>
+<span class="nc" id="L98">            .expandX()</span>
+<span class="nc" id="L99">            .fill()</span>
+<span class="nc" id="L100">            .height(Value.percentHeight(0.2f, root))</span>
+<span class="nc" id="L101">            .colspan(2);</span>
+
+<span class="nc" id="L103">        root</span>
+<span class="nc" id="L104">            .add(coordLabel)</span>
+<span class="nc" id="L105">            .width(Value.percentWidth(0.1f, root));</span>
+
+<span class="nc" id="L107">        root.row();</span>
+
+<span class="nc" id="L109">        stack.add(root);</span>
+
+<span class="nc" id="L111">        pauseImage = new Image(pauseTexture);</span>
+<span class="nc" id="L112">        pauseImage.setFillParent(true);</span>
+<span class="nc" id="L113">        pauseImage.setVisible(paused);</span>
+
+<span class="nc" id="L115">        stack.add(pauseImage);</span>
+
+<span class="nc" id="L117">        pauseTable = new Table();</span>
+<span class="nc" id="L118">        pauseTable.setFillParent(true);</span>
+
+<span class="nc" id="L120">        stack.add(pauseTable);</span>
+
+<span class="nc" id="L122">        stage.addActor(stack);</span>
+
+<span class="nc" id="L124">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L125">    }</span>
+
+    @Override
+    protected void updatePlayerTables() {
+<span class="nc" id="L129">        trackingTableStack = updateTableWithModel(</span>
+            trackingTable,
+<span class="nc" id="L131">            currentPlayer.getTrackingGrid(),</span>
+            true,
+            false
+        );
+<span class="nc" id="L135">    }</span>
+
+    @Override
+    public void update(float delta) {
+<span class="nc" id="L139">        super.update(delta);</span>
+<span class="nc bnc" id="L140" title="All 4 branches missed.">        if(!shoot &amp;&amp; !paused) {</span>
+<span class="nc" id="L141">            waitAITimer += delta;</span>
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if(elapsed &lt; 5f) {</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if(waitAITimer &gt; 1f) {</span>
+<span class="nc" id="L145">                    waitAITimer = 0;</span>
+
+<span class="nc" id="L147">                    int x = random.nextInt(this.parent.app.gridSize);</span>
+<span class="nc" id="L148">                    int y = random.nextInt(this.parent.app.gridSize);</span>
+
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                    if(oldPos != null) {</span>
+<span class="nc" id="L151">                        Image snipeImage = (Image) oldPos.getChild(oldPos.getChildren().size-1);</span>
+
+<span class="nc" id="L153">                        snipeImage.setVisible(false);</span>
+                    }
+
+<span class="nc" id="L156">                    Stack stack = trackingTableStack[x][y];</span>
+<span class="nc" id="L157">                    Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);</span>
+
+<span class="nc" id="L159">                    snipeImage.setVisible(true);</span>
+<span class="nc" id="L160">                    oldPos = stack;</span>
+
+<span class="nc" id="L162">                    coordLabel.setText(new Coordinate(x, y).toLetterFormat());</span>
+<span class="nc" id="L163">                }</span>
+            }
+            else {
+<span class="nc" id="L166">                shoot = true;</span>
+
+<span class="nc" id="L168">                Coordinate attackCord = this.controller.getAIShot();</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                if(attackCord != null) {</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                    if(oldPos != null) {</span>
+<span class="nc" id="L172">                        Image snipeImage = (Image) oldPos.getChild(oldPos.getChildren().size-1);</span>
+
+<span class="nc" id="L174">                        snipeImage.setVisible(false);</span>
+                    }
+
+<span class="nc" id="L177">                    Stack stack = trackingTableStack[attackCord.getX()][attackCord.getY()];</span>
+<span class="nc" id="L178">                    Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);</span>
+
+<span class="nc" id="L180">                    snipeImage.setVisible(true);</span>
+<span class="nc" id="L181">                    oldPos = stack;</span>
+
+<span class="nc" id="L183">                    coordLabel.setText(new Coordinate(attackCord.getX(), attackCord.getY()).toLetterFormat());</span>
+
+<span class="nc" id="L185">                    response = controller.playTurn(attackCord);</span>
+<span class="nc" id="L186">                }</span>
+                else {
+<span class="nc" id="L188">                    System.out.println(&quot;Unexpected error Oo, ai tries to attack but nothing was chosen ! Seems that player was not AI&quot;);</span>
+<span class="nc" id="L189">                    Gdx.app.exit();</span>
+                }
+            }
+        }
+<span class="nc" id="L193">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

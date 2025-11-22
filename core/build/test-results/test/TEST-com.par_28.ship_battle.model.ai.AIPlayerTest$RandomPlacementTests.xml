@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AIPlayer Random Ship Placement Tests" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.180Z" hostname="MacBook-Pro.local" time="0.03">
+<testsuite name="AIPlayer Random Ship Placement Tests" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.407Z" hostname="OHBADBOY" time="0.033">
   <properties/>
-  <testcase name="Should work after placement in full game scenario" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.019"/>
-  <testcase name="Should respect grid boundaries when placing ships" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.002"/>
-  <testcase name="Should place ships deterministically with seed" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.002"/>
+  <testcase name="Should work after placement in full game scenario" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.011"/>
+  <testcase name="Should respect grid boundaries when placing ships" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.006"/>
+  <testcase name="Should place ships deterministically with seed" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.004"/>
   <testcase name="Should place multiple ships randomly without overlap" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.001"/>
-  <testcase name="Should handle small grid gracefully" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.0"/>
-  <testcase name="Should not place overlapping ships" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.002"/>
-  <testcase name="Should place a single ship randomly" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.0"/>
+  <testcase name="Should handle small grid gracefully" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.001"/>
+  <testcase name="Should not place overlapping ships" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$RandomPlacementTests" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

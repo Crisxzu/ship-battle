@@ -47,40 +47,40 @@ public class Coordinate {
      * @throws InvalidCoordinateException if input invalid
      */
     public static Coordinate fromString(String coord) throws InvalidCoordinateException {
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (coord == null) {</span>
-<span class="nc" id="L51">            throw new InvalidCoordinateException(coord);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (coord == null) {</span>
+<span class="fc" id="L51">            throw new InvalidCoordinateException(coord);</span>
         }
 
-<span class="nc" id="L54">        String s = coord.trim().toUpperCase();</span>
+<span class="fc" id="L54">        String s = coord.trim().toUpperCase();</span>
 
         try {
-<span class="nc bnc" id="L57" title="All 2 branches missed.">            if (s.contains(&quot;,&quot;)) {</span>
-<span class="nc" id="L58">                String[] parts = s.split(&quot;,&quot;);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (s.contains(&quot;,&quot;)) {</span>
+<span class="fc" id="L58">                String[] parts = s.split(&quot;,&quot;);</span>
 
-<span class="nc bnc" id="L60" title="All 2 branches missed.">                if (parts.length != 2)</span>
-<span class="nc" id="L61">                    throw new InvalidCoordinateException(coord);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">                if (parts.length != 2)</span>
+<span class="fc" id="L61">                    throw new InvalidCoordinateException(coord);</span>
 
-<span class="nc" id="L63">                int x = Integer.parseInt(parts[0].trim());</span>
-<span class="nc" id="L64">                int y = Integer.parseInt(parts[1].trim());</span>
+<span class="fc" id="L63">                int x = Integer.parseInt(parts[0].trim());</span>
+<span class="fc" id="L64">                int y = Integer.parseInt(parts[1].trim());</span>
 
-<span class="nc" id="L66">                return new Coordinate(x, y);</span>
+<span class="fc" id="L66">                return new Coordinate(x, y);</span>
             }
             else {
                 // Letters then digits: &quot;A1&quot;, &quot;BC12&quot;
-<span class="nc" id="L70">                int i = 0;</span>
+<span class="fc" id="L70">                int i = 0;</span>
 
                 // Get letters length
-<span class="nc bnc" id="L73" title="All 4 branches missed.">                while (i &lt; s.length() &amp;&amp; Character.isLetter(s.charAt(i)))</span>
-<span class="nc" id="L74">                    i++;</span>
+<span class="fc bfc" id="L73" title="All 4 branches covered.">                while (i &lt; s.length() &amp;&amp; Character.isLetter(s.charAt(i)))</span>
+<span class="fc" id="L74">                    i++;</span>
 
                 // if no letters or no digits found
-<span class="nc bnc" id="L77" title="All 4 branches missed.">                if (i == 0 || i == s.length())</span>
-<span class="nc" id="L78">                    throw new InvalidCoordinateException(coord);</span>
+<span class="fc bfc" id="L77" title="All 4 branches covered.">                if (i == 0 || i == s.length())</span>
+<span class="fc" id="L78">                    throw new InvalidCoordinateException(coord);</span>
 
-<span class="nc" id="L80">                String letters = s.substring(0, i);</span>
-<span class="nc" id="L81">                String numbers = s.substring(i);</span>
+<span class="fc" id="L80">                String letters = s.substring(0, i);</span>
+<span class="fc" id="L81">                String numbers = s.substring(i);</span>
 
-<span class="nc" id="L83">                int x = 0;</span>
+<span class="fc" id="L83">                int x = 0;</span>
 
                 // Here it is a bit technical, we found it on the web actually...
                 // To do arithmetic operation on char, each char are converted to int using its ASCII value
@@ -90,16 +90,16 @@ public class Coordinate {
                 // And if we support multiple letters like &quot;AA&quot; for 26, &quot;AB&quot; for 27, ..., &quot;AZ&quot; for 51, &quot;BA&quot; for 52, ...
                 // At each new letter we have to multiply the previous result by 26 (number of letters in the alphabet)
                 // So with that we can calculate the column index
-<span class="nc bnc" id="L93" title="All 2 branches missed.">                for (char c : letters.toCharArray()) {</span>
-<span class="nc" id="L94">                    x = x * 26 + (c - 'A' + 1);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                for (char c : letters.toCharArray()) {</span>
+<span class="fc" id="L94">                    x = x * 26 + (c - 'A' + 1);</span>
                 }
 
-<span class="nc" id="L97">                x = x - 1; // zero-based</span>
-<span class="nc" id="L98">                int y = Integer.parseInt(numbers) - 1; // &quot;1&quot; -&gt; 0</span>
-<span class="nc" id="L99">                return new Coordinate(x, y);</span>
+<span class="fc" id="L97">                x = x - 1; // zero-based</span>
+<span class="fc" id="L98">                int y = Integer.parseInt(numbers) - 1; // &quot;1&quot; -&gt; 0</span>
+<span class="fc" id="L99">                return new Coordinate(x, y);</span>
             }
-<span class="nc" id="L101">        } catch (Exception e) {</span>
-<span class="nc" id="L102">            throw new InvalidCoordinateException(coord);</span>
+<span class="fc" id="L101">        } catch (Exception e) {</span>
+<span class="fc" id="L102">            throw new InvalidCoordinateException(coord);</span>
         }
     }
 
@@ -160,11 +160,11 @@ public class Coordinate {
      */
     @Override
     public boolean equals(Object o) {
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (this == o) {</span>
-<span class="nc" id="L164">            return true;</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L164">            return true;</span>
         }
-<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (!(o instanceof Coordinate)) {</span>
-<span class="nc" id="L167">            return false;</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (!(o instanceof Coordinate)) {</span>
+<span class="fc" id="L167">            return false;</span>
         }
 <span class="fc" id="L169">        Coordinate that = (Coordinate) o;</span>
 <span class="fc bfc" id="L170" title="All 4 branches covered.">        return x == that.x &amp;&amp; y == that.y;</span>

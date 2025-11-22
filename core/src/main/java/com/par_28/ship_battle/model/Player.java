@@ -189,6 +189,15 @@ public class Player {
 
 
     /**
+     * Remove every placed ship from this player and reset their grid references.
+     */
+    public void resetFleet() {
+        ships.clear();
+        grid.clearShips();
+    }
+
+
+    /**
      * Check if this player is an AI.
      *
      * @return returns false for normal player and true for AI

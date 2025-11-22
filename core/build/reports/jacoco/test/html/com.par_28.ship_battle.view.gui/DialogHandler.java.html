@@ -44,6 +44,11 @@
 <span class="nc" id="L44">        ALREADY_HIT(</span>
             4,
             &quot;Baka ! You have already hit this case.&quot;
+        ),
+
+<span class="nc" id="L49">        TURN_START_AI(</span>
+            5,
+            &quot;Hum, let some time to the AI to think.&quot;
         );
 
         /**
@@ -61,10 +66,10 @@
          * @param value dialog index
          * @param text dialog text
          */
-<span class="nc" id="L64">        DialogID(int value, String text) {</span>
-<span class="nc" id="L65">            this.value = value;</span>
-<span class="nc" id="L66">            this.text = text;</span>
-<span class="nc" id="L67">        }</span>
+<span class="nc" id="L69">        DialogID(int value, String text) {</span>
+<span class="nc" id="L70">            this.value = value;</span>
+<span class="nc" id="L71">            this.text = text;</span>
+<span class="nc" id="L72">        }</span>
 
     }
 
@@ -75,18 +80,18 @@
     /**
      * Current dialog duration
      */
-<span class="nc" id="L78">    private static float dialogDuration = 0;</span>
+<span class="nc" id="L83">    private static float dialogDuration = 0;</span>
 
     /**
-     * Play a dialog 
-     * 
+     * Play a dialog
+     *
      * @param dialogID specified dialog
      * @param duration duration to display dialog
      */
     public static void playDialog(DialogID dialogID, float duration) {
-<span class="nc" id="L87">        dialogText = dialogID.text;</span>
-<span class="nc" id="L88">        dialogDuration = duration;</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L92">        dialogText = dialogID.text;</span>
+<span class="nc" id="L93">        dialogDuration = duration;</span>
+<span class="nc" id="L94">    }</span>
 
     /**
      * Get the number of characters to display this frame
@@ -94,25 +99,25 @@
      * @return number of characters to display
      */
     public static int getCharCountThisFrame(float elapsed) {
-<span class="nc" id="L97">        return (int) ((elapsed / dialogDuration) * dialogText.length());</span>
+<span class="nc" id="L102">        return (int) ((elapsed / dialogDuration) * dialogText.length());</span>
     }
 
     /**
      * Get dialog duration
-     * 
+     *
      * @return dialog duration
      */
     public static float getDialogDuration() {
-<span class="nc" id="L106">        return dialogDuration;</span>
+<span class="nc" id="L111">        return dialogDuration;</span>
     }
 
     /**
      * Get dialog text
-     * 
+     *
      * @return dialog text
      */
     public static String getDialogText() {
-<span class="nc" id="L115">        return dialogText;</span>
+<span class="nc" id="L120">        return dialogText;</span>
     }
 
     /**
@@ -120,6 +125,6 @@
      */
     public void dispose() {
 
-<span class="nc" id="L123">    }</span>
+<span class="nc" id="L128">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

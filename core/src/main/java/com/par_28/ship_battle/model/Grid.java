@@ -416,4 +416,15 @@ public class Grid {
     public Cell[][] getCells() {
         return cells;
     }
+
+    /**
+     * Clear every ship reference from the grid and reset cell shot states.
+     */
+    public void clearShips() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                cells[x][y].reset();
+            }
+        }
+    }
 }

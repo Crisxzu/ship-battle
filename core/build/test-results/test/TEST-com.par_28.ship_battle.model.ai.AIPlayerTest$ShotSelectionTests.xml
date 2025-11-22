@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AIPlayer Shot Selection Tests" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-18T09:09:53.222Z" hostname="MacBook-Pro.local" time="0.002">
+<testsuite name="AIPlayer Shot Selection Tests" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-11-19T18:33:44.456Z" hostname="OHBADBOY" time="0.011">
   <properties/>
-  <testcase name="Should choose valid shot coordinates" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$ShotSelectionTests" time="0.001"/>
+  <testcase name="Should choose valid shot coordinates" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$ShotSelectionTests" time="0.009"/>
   <testcase name="Should choose different shots each time" classname="com.par_28.ship_battle.model.ai.AIPlayerTest$ShotSelectionTests" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
+  <system-out><![CDATA[randomIndex: 22
+randomIndex: 39
+randomIndex: 17
+randomIndex: 81
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

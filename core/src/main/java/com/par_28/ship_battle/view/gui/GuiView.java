@@ -5,7 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -144,6 +147,15 @@ public abstract class GuiView<T extends GuiController> implements Screen {
                 button.getLabel().setFontScale(buttonScale);
             }
         }
+    }
+
+    /**
+     * Provides the latest base length used for responsive calculations.
+     *
+     * @return base side length derived from the viewport, 0 when unknown
+     */
+    protected float getBaseSize() {
+        return base;
     }
 
     /**

@@ -1,23 +1,13 @@
 package com.par_28.ship_battle.controller.gui;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.par_28.ship_battle.ShipBattleApplication;
-import com.par_28.ship_battle.model.Carrier;
-import com.par_28.ship_battle.model.Coordinate;
-import com.par_28.ship_battle.model.Cruiser;
-import com.par_28.ship_battle.model.Destroyer;
-import com.par_28.ship_battle.model.Game;
-import com.par_28.ship_battle.model.Player;
-import com.par_28.ship_battle.model.Ship;
-import com.par_28.ship_battle.model.Torpedo;
-import com.par_28.ship_battle.model.ai.AIPlayer;
-import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
-import com.par_28.ship_battle.model.enums.Direction;
-import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
-import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.*;
+import com.par_28.ship_battle.model.ai.enums.*;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
 
 /**
  * Manager of screens and controllers.
@@ -84,7 +74,6 @@ public class ScreenController extends GuiController {
      */
     public void changeController(GuiControllerEnum controller){
         currentController = controllers.get(controller);
-        System.out.println(currentController);
         currentController.reset();
         currentController.view.show();
     }

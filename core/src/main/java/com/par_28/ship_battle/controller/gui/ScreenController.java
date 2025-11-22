@@ -3,6 +3,18 @@ package com.par_28.ship_battle.controller.gui;
 import java.util.*;
 
 import com.par_28.ship_battle.ShipBattleApplication;
+import com.par_28.ship_battle.model.Carrier;
+import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Cruiser;
+import com.par_28.ship_battle.model.Destroyer;
+import com.par_28.ship_battle.model.Game;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.Ship;
+import com.par_28.ship_battle.model.Torpedo;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
+import com.par_28.ship_battle.model.enums.PowerType;
+import com.par_28.ship_battle.view.gui.GameOverView;
 
 /**
  * Manager of screens and controllers.
@@ -40,6 +52,15 @@ public class ScreenController extends GuiController {
         controllers.put(GuiControllerEnum.SETTINGS, new SettingsController(this));
 
         changeController(GuiControllerEnum.MAIN_MENU);
+    }
+
+    /**
+     * Get the currently active GUI controller.
+     * 
+     * @return the current controller
+     */
+    public GuiController getCurrentController() {
+        return currentController;
     }
 
     /**

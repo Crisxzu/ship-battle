@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.par_28.ship_battle.controller.gui.GameController;
 import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
@@ -18,8 +19,8 @@ import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.Cell;
 import com.par_28.ship_battle.model.enums.*;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -405,7 +406,7 @@ public class GameView extends GuiView<GameController> {
 
         HorizontalGroup powerGroup = new HorizontalGroup();
         powerGroup.space(10f);
-        powerGroup.padLeft(2f);
+        powerGroup.padLeft(10f);
 
         buildPowerGroup(powerGroup);
 
@@ -535,16 +536,20 @@ public class GameView extends GuiView<GameController> {
         stack.addListener(new ClickListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Color imageColor = image.getColor();
-                imageColor.set(imageColor.r, imageColor.g, imageColor.b, 0.4f);
-                image.setColor(imageColor);
+                if(!currentPlayer.isAI()) {
+                    Color imageColor = image.getColor();
+                    imageColor.set(imageColor.r, imageColor.g, imageColor.b, 0.4f);
+                    image.setColor(imageColor);
+                }
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                Color imageColor = image.getColor();
-                imageColor.set(imageColor.r, imageColor.g, imageColor.b, 1f);
-                image.setColor(imageColor);
+                if(!currentPlayer.isAI()) {
+                    Color imageColor = image.getColor();
+                    imageColor.set(imageColor.r, imageColor.g, imageColor.b, 1f);
+                    image.setColor(imageColor);
+                }
             }
         });
 
@@ -698,8 +703,8 @@ public class GameView extends GuiView<GameController> {
             rowLabels.add(rowLabel);
             table.add(rowLabel).center().expandY().fillY().width(30f);
 
-            // Activate defaults
-            table.defaults().expand().fill();
+            // Activate defaults - pad(0) keeps cells touching, uniform ensures equal sizes
+            table.defaults().pad(0f);
 
             for (int i = 0; i < width; i++) {
                 Cell cell = cells[i][j];
@@ -744,7 +749,6 @@ public class GameView extends GuiView<GameController> {
                     stack.addListener(new ClickListener() {
                         @Override
                         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                            System.out.printf("Enter Case %d, %d\n", finalI, finalJ);
                             if(!shoot && !paused && !currentPlayer.isAI()) {
                                 finalSnipeImage.setVisible(true);
                                 coordLabel.setText(new Coordinate(finalI, finalJ).toLetterFormat());
@@ -753,7 +757,6 @@ public class GameView extends GuiView<GameController> {
 
                         @Override
                         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                            System.out.printf("Exit Case %d, %d\n", finalI, finalJ);
                             if(!shoot && !currentPlayer.isAI()) {
                                 finalSnipeImage.setVisible(false);
                             }
@@ -785,7 +788,7 @@ public class GameView extends GuiView<GameController> {
                     });
                 }
 
-                table.add(stack);
+                table.add(stack).grow().uniform();
             }
             table.row();
         }
@@ -808,30 +811,21 @@ public class GameView extends GuiView<GameController> {
 
                             TextureRegion partRegion;
 
+                            // Vertical cut of texture
+                            int partHeight = textureHeight / shipLength;
+                            int yOffset = partIdx * partHeight;
+                            partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);
+
+                            Image shipPartImage = new Image(new TextureRegionDrawable(partRegion));
+                            shipPartImage.setFillParent(true);
+                            shipPartImage.setOrigin(com.badlogic.gdx.utils.Align.center);
+                            shipPartImage.setScaling(Scaling.fit);
+
                             if (ship.getDirection() == Direction.HORIZONTAL) {
-                                // Verticul cut of texture
-                                int partHeight = textureHeight / shipLength;
-                                int yOffset = partIdx * partHeight;
-                                partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);
-
-                                // Add image with an offset because of rotation (not for last case)
-                                if (i + 1 < width) {
-                                    Image shipPartImage = new Image(new TextureRegionDrawable(partRegion));
-                                    shipPartImage.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-                                    shipPartImage.setRotation(90);
-                                    shipPartImage.setFillParent(true);
-                                    stacks[i + 1][j].add(shipPartImage);
-                                }
-                            } else {
-                                // Vertical cut of texture
-                                int partHeight = textureHeight / shipLength;
-                                int yOffset = partIdx * partHeight;
-                                partRegion = new TextureRegion(shipTexture, 0, yOffset, textureWidth, partHeight);
-
-                                Image shipPartImage = new Image(new TextureRegionDrawable(partRegion));
-                                shipPartImage.setFillParent(true);
-                                stacks[i][j].add(shipPartImage);
+                                shipPartImage.setRotation(90f);
                             }
+
+                            stacks[i][j].add(shipPartImage);
                         }
                     }
                 }
@@ -1023,11 +1017,26 @@ public class GameView extends GuiView<GameController> {
         else {
             if(waitTimer > 1.5f) {
                 AttackResult result = response.getResult();
-                if(response.isHit()) {
+                List<AttackResponse> additionalHits = response.getAdditionalHits();
+
+                if(!additionalHits.isEmpty()) {
+                    for(AttackResponse  additionalHit : additionalHits) {
+                        AttackResult attackResult = additionalHit.getResult();
+                        if(attackResult == AttackResult.SUNK) {
+                            result = attackResult;
+                            break;
+                        } else if (attackResult == AttackResult.HIT && result != AttackResult.HIT) {
+                            result = attackResult;
+                            break;
+                        }
+                    }
+                }
+
+                if(result == AttackResult.HIT || result == AttackResult.SUNK) {
                     if(result == AttackResult.SUNK) {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.SUNK,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.SUNK,
@@ -1037,7 +1046,7 @@ public class GameView extends GuiView<GameController> {
                     else {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.HIT,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.HIT,
@@ -1049,7 +1058,7 @@ public class GameView extends GuiView<GameController> {
                     if(result == AttackResult.ALREADY_HIT) {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.ALREADY_HIT,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.ALREADY_HIT,
@@ -1059,7 +1068,7 @@ public class GameView extends GuiView<GameController> {
                     else {
                         SoundHandler.playSound(
                             SoundHandler.SoundID.MISS,
-                            0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                            0.2f * this.parent.app.settingsHandler.getSoundVolume()
                         );
                         playDialog(
                             DialogHandler.DialogID.MISS,
@@ -1144,20 +1153,16 @@ public class GameView extends GuiView<GameController> {
      * @return drawable of ship
      */
     protected TextureRegionDrawable getShipDrawable(String shipName) {
-        if (shipName == null) return null;
-
-        switch (shipName) {
-            case "Carrier":
-                return carrierTexture;
-            case "Cruiser":
-                return cruiserTexture;
-            case "Destroyer":
-                return destroyerTexture;
-            case "Torpedo":
-                return torpedoTexture;
-            default:
-                return null;
+        if (shipName == null) {
+            return null;
         }
+        return switch (shipName) {
+            case "Carrier" -> carrierTexture;
+            case "Cruiser" -> cruiserTexture;
+            case "Destroyer" -> destroyerTexture;
+            case "Torpedo" -> torpedoTexture;
+            default -> null;
+        };
     }
 
     /**

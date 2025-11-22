@@ -63,6 +63,8 @@ public class SetupPlayerNameView extends GuiView<SetupMenuController> {
         nameField = new TextField("", skin);
         nameField.setMessageText("Enter your name");
 
+        stage.setKeyboardFocus(nameField);
+
         updateUI();
 
         root.add(nameField).row();

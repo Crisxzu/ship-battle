@@ -21,7 +21,7 @@ public class GameModeView extends GuiView<SetupMenuController> {
 
     /**
      * Initialize menu to select game mode
-     * 
+     *
      * @param parent screen manager
      * @param controller setup menu controller
      */
@@ -40,6 +40,7 @@ public class GameModeView extends GuiView<SetupMenuController> {
         titleLabel.setFontScale(2.5f);
 
         root.add(titleLabel)
+            .expand()
             .height(Value.percentHeight(0.2f, root))
             .row();
 

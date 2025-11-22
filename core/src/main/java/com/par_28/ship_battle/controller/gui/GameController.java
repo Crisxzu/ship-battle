@@ -1,10 +1,10 @@
 package com.par_28.ship_battle.controller.gui;
 
-import com.par_28.ship_battle.model.AttackResponse;
-import com.par_28.ship_battle.model.Coordinate;
-import com.par_28.ship_battle.model.Player;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.par_28.ship_battle.model.*;
 import com.par_28.ship_battle.model.ai.AIPlayer;
 import com.par_28.ship_battle.model.enums.PowerType;
+import com.par_28.ship_battle.model.exceptions.IllegalGameStateException;
 import com.par_28.ship_battle.view.gui.*;
 
 /**
@@ -103,20 +103,20 @@ public class GameController extends GuiController {
             case BOMB:
                 SoundHandler.playSound(
                     SoundHandler.SoundID.BOMB_SHOT,
-                    0.3f * this.parent.app.settingsHandler.getSoundVolume()
+                    0.5f * this.parent.app.settingsHandler.getSoundVolume()
                 );
                 break;
             case RADAR:
                 if(response.isRadarDetection()) {
                     SoundHandler.playSound(
                         SoundHandler.SoundID.RADAR_FOUND,
-                        0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                        0.2f * this.parent.app.settingsHandler.getSoundVolume()
                     );
                 }
                 else {
                     SoundHandler.playSound(
                         SoundHandler.SoundID.RADAR_NOTHING,
-                        0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                        0.2f * this.parent.app.settingsHandler.getSoundVolume()
                     );
                 }
                 break;
@@ -124,7 +124,7 @@ public class GameController extends GuiController {
             default:
                 SoundHandler.playSound(
                     SoundHandler.SoundID.CANNON_SHOT,
-                    0.05f * this.parent.app.settingsHandler.getSoundVolume()
+                    0.2f * this.parent.app.settingsHandler.getSoundVolume()
                 );
                 break;
         }
@@ -139,7 +139,7 @@ public class GameController extends GuiController {
 
     /**
      * Get the next shot coordinate chosen by the AI player.
-     * 
+     *
      * @return Coordinate chosen by AI
      */
     public Coordinate getAIShot() {
@@ -216,6 +216,72 @@ public class GameController extends GuiController {
         Player current = this.parent.app.game.getCurrentPlayer();
 
         current.refillPowers();
+    }
+
+    /**
+     * Reset the game to its initial state with the same ship placements.
+     */
+    public void resetGame() {
+        Player player1 = new Player(this.parent.app.player1.getName(), this.parent.app.gridSize);
+        Player player2;
+
+        if(this.parent.app.player2 instanceof AIPlayer aiPlayer) {
+            player2 = new AIPlayer(aiPlayer.getName(), this.parent.app.gridSize, aiPlayer.getDifficulty());
+        }
+        else {
+            player2 = new Player(this.parent.app.player2.getName(), this.parent.app.gridSize);
+        }
+
+        for(Ship ship : this.parent.app.player1.getShips()) {
+            ship.refillLife();
+
+            player1.placeShipOnGrid(ship, ship.getPositions().get(0), ship.getDirection());
+            player1.addShip(ship);
+        }
+
+        for(Ship ship : this.parent.app.player2.getShips()) {
+            ship.refillLife();
+
+            player2.placeShipOnGrid(ship, ship.getPositions().get(0), ship.getDirection());
+            player2.addShip(ship);
+        }
+
+        this.parent.app.player1 = player1;
+        this.parent.app.player2 = player2;
+
+        this.parent.app.game = new Game(player1, player2);
+        try {
+            this.parent.app.game.start();
+        }
+        catch (IllegalGameStateException e) {
+            Dialogs.showErrorDialog(view.stage, "Unable to start game: " + e.getMessage());
+            return;
+        }
+
+        startTurn();
+    }
+
+    /**
+     * Reset the game to initial state without preserving ship placements.
+     */
+    public void resetGameWithoutSamePlacement() {
+        this.parent.changeController(GuiControllerEnum.SETUP_MENU);
+        GuiController currentController = this.parent.getCurrentController();
+
+        if(currentController instanceof SetupMenuController setupMenuController) {
+            if(this.parent.app.player2 instanceof AIPlayer aiPlayer) {
+                setupMenuController.setAIDifficulty(aiPlayer.getDifficulty());
+            }
+
+            setupMenuController.addName(this.parent.app.player1.getName());
+
+            if(!setupMenuController.isAIMode()) {
+                setupMenuController.addName(this.parent.app.player2.getName());
+            }
+        }
+        else {
+            Dialogs.showErrorDialog(view.stage, "Unable to retry without same placement");
+        }
     }
 
     /**

@@ -64,7 +64,7 @@ public abstract class Ship {
     public void receiveDamage() {
         if (!isDestroyed()) {
             this.life -= 1;
-        } 
+        }
     }
 
     /**
@@ -137,6 +137,13 @@ public abstract class Ship {
      */
     public List<Coordinate> getPositions() {
         return positions;
+    }
+
+    /**
+     * Refill the ship's life to its maximum length.
+     */
+    public void refillLife() {
+        this.life = this.length;
     }
 
     /**

@@ -143,7 +143,7 @@ public class SetupMenuController extends GuiController {
     }
 
     /**
-     * Check if battle will be played against ai.
+     * Check if battle will be played against AI.
      *
      * @return true if ai mode is selected, false otherwise
      */
@@ -227,19 +227,6 @@ public class SetupMenuController extends GuiController {
     }
 
     /**
-     * Get the current setup player's name.
-     *
-     * @return current setup player's name
-     */
-    public String getCurrentSetupPlayerName() {
-        Player player = getSetupPlayer();
-        if(player != null) {
-            return player.getName();
-        }
-        return String.format("Player %d", currentSetupPlayerIndex + 1);
-    }
-
-    /**
      * Check if the currently selected ship can be placed at the given coordinate.
      *
      * @param coord starting coordinate on the grid
@@ -280,18 +267,6 @@ public class SetupMenuController extends GuiController {
         }
     }
 
-    /**
-     * Get ships already placed on the grid.
-     *
-     * @return immutable list of placed ships
-     */
-    public List<Ship> getPlacedShips() {
-        Player player = getSetupPlayer();
-        if(player == null) {
-            return Collections.emptyList();
-        }
-        return Collections.unmodifiableList(player.getShips());
-    }
 
     /**
      * Get an immutable view of ships waiting for placement.
@@ -360,6 +335,26 @@ public class SetupMenuController extends GuiController {
         }
         player.resetFleet();
         initializeShipsToPlace();
+    }
+
+    /**
+     * Place all remaining ships randomly for the current player.
+     *
+     * @return true if placement was successful, false otherwise
+     */
+    public boolean placeShipsRandomly() {
+        Player player = getSetupPlayer();
+        if(player == null) {
+            return false;
+        }
+
+        player.resetFleet();
+        boolean success = player.placeShipsRandomly(createDefaultFleet());
+        if(success) {
+            shipsToPlace.clear();
+            selectedShip = null;
+        }
+        return success;
     }
 
     /**

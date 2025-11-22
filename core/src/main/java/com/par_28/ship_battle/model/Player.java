@@ -275,4 +275,80 @@ public class Player {
         radarCharges = DEFAULT_RADAR_CHARGES;
         bombCharges = DEFAULT_BOMB_CHARGES;
     }
+
+    /**
+     * Randomly place a single ship on the grid.
+     *
+     * @param ship Ship to place
+     * @param random Random number generator
+     * @param maxAttempts Maximum number of placement attempts before giving up
+     * @return true if ship was successfully placed, false otherwise
+     */
+    public boolean placeShipRandomly(Ship ship, Random random, int maxAttempts) {
+        int gridSize = getGrid().getWidth();
+        int attempts = 0;
+
+        while (attempts < maxAttempts) {
+            int x = random.nextInt(gridSize);
+            int y = random.nextInt(gridSize);
+            Coordinate coord = new Coordinate(x, y);
+
+            Direction direction = random.nextBoolean() ? Direction.HORIZONTAL : Direction.VERTICAL;
+
+            try {
+                placeShipOnGrid(ship, coord, direction);
+                return true;
+            } catch (InvalidCoordinateException | ShipPlacementException e) {
+                attempts++;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Automatically place all ships from a list randomly on the grid
+     *
+     * @param ships List of ships to add and place
+     * @return true if all ships were successfully placed, false otherwise
+     */
+    public boolean placeShipsRandomly(List<Ship> ships) {
+        Random random = new Random();
+
+        for (Ship ship : ships) {
+            addShip(ship);
+            boolean placed = placeShipRandomly(ship, random, 1000);
+
+            if (!placed) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Automatically place all ships from a list with a custom seed.
+     * <p>
+     * Useful for deterministic placement in tests.
+     * </p>
+     *
+     * @param ships List of ships to add and place
+     * @param seed Random seed for deterministic placement
+     * @return true if all ships were successfully placed, false otherwise
+     */
+    public boolean placeShipsRandomly(List<Ship> ships, long seed) {
+        Random random = new Random(seed);
+
+        for (Ship ship : ships) {
+            addShip(ship);
+            boolean placed = placeShipRandomly(ship, random, 1000);
+
+            if (!placed) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

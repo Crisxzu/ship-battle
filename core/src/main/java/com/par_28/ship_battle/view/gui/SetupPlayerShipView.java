@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
 import com.par_28.ship_battle.controller.gui.ScreenController;
 import com.par_28.ship_battle.controller.gui.SetupMenuController;
 import com.par_28.ship_battle.model.Cell;
@@ -41,57 +42,222 @@ import com.par_28.ship_battle.model.Player;
 import com.par_28.ship_battle.model.Ship;
 import com.par_28.ship_battle.model.enums.Direction;
 
+/**
+ * Setup player ship placement menu
+ */
 public class SetupPlayerShipView extends GuiView<SetupMenuController> {
 
+    /**
+     * Base size for ship icons
+     */
     private static final float BASE_SHIP_ICON_SIZE = 48f;
 
+    /**
+     * Color for valid placement highlight
+     */
     private static final Color VALID_COLOR = new Color(0f, 1f, 0f, 0.35f);
+
+    /**
+     * Color for invalid placement highlight
+     */
     private static final Color INVALID_COLOR = new Color(1f, 0f, 0f, 0.35f);
 
+    /**
+     * Main layout table
+     */
     private Table root;
+
+    /**
+     * Left panel container
+     */
     private Table leftPanel;
+
+    /**
+     * Ship list container
+     */
     private VerticalGroup shipListGroup;
+
+    /**
+     * Ship list scroll pane
+     */
     private ScrollPane shipListScroll;
+
+    /**
+     * Ship list scroll container
+     */
     private Container<ScrollPane> shipListContainer;
+
+    /**
+     * Grid container
+     */
     private Table gridContainer;
+
+    /**
+     * Grid table
+     */
     private Table gridTable;
+
+    /**
+     * Left panel cell in the root table
+     */
     private com.badlogic.gdx.scenes.scene2d.ui.Cell<Table> leftPanelCell;
+
+    /**
+     * Grid cell in the root table
+     */
     private com.badlogic.gdx.scenes.scene2d.ui.Cell<Table> gridCell;
+
+    /**
+     * Header labels for grid columns
+     */
     private final List<Label> headerLabels = new ArrayList<>();
+
+    /**
+     * Row labels for grid rows
+     */
     private final List<Label> rowLabels = new ArrayList<>();
+
+    /**
+     * Wrappers for ship icons
+     */
     private final List<Container<Image>> shipIconWrappers = new ArrayList<>();
+
+    /**
+     * Rows of ship selection
+     */
     private final List<HorizontalGroup> shipRows = new ArrayList<>();
+
+    /**
+     * Mapping of ships to their selection buttons
+     */
     private final Map<Ship, TextButton> shipButtons = new HashMap<>();
+
+    /**
+     * Currently active highlight images
+     */
     private final List<Image> activeHighlights = new ArrayList<>();
+
+    /**
+     * Currently placed ship images
+     */
     private final List<Image> placedShipImages = new ArrayList<>();
 
+    /**
+     * Grid cell stacks
+     */
     private Stack[][] cellStacks;
+
+    /**
+     * Grid cell highlight layers
+     */
     private Image[][] highlightLayers;
 
+    /**
+     * Current size of each grid cell in pixels
+     */
     private float cellPixelSize = 64f;
 
+    /**
+     * Title label
+     */
     private Label titleLabel;
+
+    /**
+     * Instruction label
+     */
     private Label instructionLabel;
+
+    /**
+     * Direction label
+     */
     private Label directionLabel;
+
+    /**
+     * Helper label
+     */
     private Label helperLabel;
+
+    /**
+     * Ready button
+     */
     private TextButton readyButton;
+
+    /**
+     * Reset button
+     */
     private TextButton resetButton;
+
+    /**
+     * Cancel selection button
+     */
     private TextButton cancelSelectionButton;
 
+    /**
+     * Random placement button
+     */
+    private TextButton randomButton;
+
+    /**
+     * Current placement direction
+     */
     private Direction placementDirection = Direction.HORIZONTAL;
+
+    /**
+     * Last hovered cell coordinate
+     */
     private Coordinate lastHoveredCell = null;
+
+    /**
+     * Currently active ship selection button
+     */
     private TextButton activeShipButton;
 
+    /**
+     * Grid case texture drawable
+     */
     private TextureRegionDrawable gridCaseDrawable;
+    
+    /**
+     * Carrier texture drawable
+     */
     private TextureRegionDrawable carrierTexture;
+
+    /**
+     * Cruiser texture drawable
+     */
     private TextureRegionDrawable cruiserTexture;
+
+    /**
+     * Destroyer texture drawable
+     */
     private TextureRegionDrawable destroyerTexture;
+
+    /**
+     * Torpedo texture drawable
+     */
     private TextureRegionDrawable torpedoTexture;
+
+    /**
+     * Highlight texture
+     */
     private Texture highlightTexture;
 
+    /**
+     * Custom cursor for ship placement
+     */
     private Cursor customCursor;
+
+    /**
+     * Pixmap for custom cursor
+     */
     private Pixmap cursorPixmap;
 
+
+    /**
+     * Create the setup player ship menu.
+     * @param parent screen manager
+     * @param controller setup menu controller
+     */
     public SetupPlayerShipView(ScreenController parent, SetupMenuController controller) {
         super(parent, controller);
         buildUI();
@@ -130,60 +296,59 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
     protected void buildUI() {
         super.buildUI();
 
-    root = new Table();
-    root.setFillParent(true);
-    root.defaults().top().left();
-    stage.addActor(root);
+        root = new Table();
+        root.setFillParent(true);
+        root.defaults().top().left();
+        stage.addActor(root);
 
-    leftPanel = new Table();
-    leftPanel.defaults().growX().padBottom(10f);
+        leftPanel = new Table();
+        leftPanel.defaults().growX().padBottom(10f);
 
-    Table leftHeader = new Table();
+        Table leftHeader = new Table();
 
-    titleLabel = new Label("Ship Placement", skin);
+        titleLabel = new Label("Ship Placement", skin);
         titleLabel.setAlignment(Align.left);
-    leftHeader.add(titleLabel).left().growX().row();
+        leftHeader.add(titleLabel).left().growX().row();
 
         instructionLabel = new Label("Left click = place, Right click = rotate", skin);
         instructionLabel.setAlignment(Align.left);
-    leftHeader.add(instructionLabel).left().growX().row();
+        leftHeader.add(instructionLabel).left().growX().row();
 
         directionLabel = new Label(directionText(), skin);
         directionLabel.setAlignment(Align.left);
-    leftHeader.add(directionLabel).left().growX().row();
+        leftHeader.add(directionLabel).left().growX().row();
 
         helperLabel = new Label("Place every ship to continue", skin);
         helperLabel.setAlignment(Align.left);
-    leftHeader.add(helperLabel).left().padBottom(6f).growX().row();
+        leftHeader.add(helperLabel).left().padBottom(6f).growX().row();
 
-    leftPanel.add(leftHeader).growX().padBottom(6f).row();
+        leftPanel.add(leftHeader).growX().padBottom(6f).row();
 
-    shipListGroup = new VerticalGroup();
-    shipListGroup.align(Align.topLeft);
-    shipListGroup.fill();
-    shipListGroup.space(8f);
-    shipListScroll = new ScrollPane(shipListGroup, skin);
-    shipListScroll.setScrollingDisabled(true, false);
-    shipListScroll.setFadeScrollBars(false);
-    shipListScroll.setForceScroll(false, true);
-    shipListContainer = new Container<>(shipListScroll);
-    shipListContainer.fill();
-    leftPanel.add(shipListContainer).grow().top().row();
+        shipListGroup = new VerticalGroup();
+        shipListGroup.align(Align.topLeft);
+        shipListGroup.fill();
+        shipListGroup.space(8f);
+        shipListScroll = new ScrollPane(shipListGroup, skin);
+        shipListScroll.setScrollingDisabled(true, false);
+        shipListScroll.setFadeScrollBars(false);
+        shipListScroll.setForceScroll(false, true);
+        shipListContainer = new Container<>(shipListScroll);
+        shipListContainer.fill();
+        leftPanel.add(shipListContainer).grow().top().row();
 
-    readyButton = new TextButton("Fleet ready", skin);
-        readyButton.setDisabled(true);
-        readyButton.addListener(new ClickListener() {
+        randomButton = new TextButton("Random placement", skin);
+        randomButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                handleReadyButton();
+                handleRandomPlacement();
             }
         });
-        leftPanel.add(readyButton)
+        leftPanel.add(randomButton)
             .growX()
-            .padTop(10f)
+            .padTop(6f)
             .row();
 
-    Table secondaryActionsRow = new Table();
+        Table secondaryActionsRow = new Table();
         secondaryActionsRow.defaults().growX().padRight(10f);
 
         resetButton = new TextButton("Reset placement", skin);
@@ -211,6 +376,31 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             .padTop(6f)
             .row();
 
+        readyButton = new TextButton("Fleet ready", skin);
+        readyButton.setDisabled(true);
+        readyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                handleReadyButton();
+            }
+        });
+        leftPanel.add(readyButton)
+            .growX()
+            .padTop(10f)
+            .row();
+
+        TextButton backButton = new TextButton("Back to Title", skin);
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                parent.changeController(GuiControllerEnum.MAIN_MENU);
+            }
+        });
+        leftPanel.add(backButton)
+            .growX()
+            .padTop(6f)
+            .row();
+
         leftPanelCell = root.add(leftPanel)
             .width(Value.percentWidth(0.35f, root))
             .minWidth(320f)
@@ -219,7 +409,7 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             .padRight(20f);
 
         gridTable = new Table();
-        gridTable.defaults().pad(2f);
+        gridTable.defaults().pad(0f);
         buildGrid();
 
         scheduleCellSizeUpdate();
@@ -241,12 +431,18 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         applyResponsiveLayout((int)Gdx.graphics.getWidth(), (int)Gdx.graphics.getHeight());
     }
 
+    /**
+     * Schedule an update for cell pixel size after layout pass
+     */
     private void scheduleCellSizeUpdate() {
         if(stage != null) {
             stage.addAction(Actions.run(this::updateCellPixelSize));
         }
     }
 
+    /**
+     * Update the current cell pixel size based on actual grid cell size
+     */
     private void updateCellPixelSize() {
         if(cellStacks == null || cellStacks.length == 0 || cellStacks[0].length == 0) {
             return;
@@ -262,6 +458,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Build the grid UI
+     */
     private void buildGrid() {
         gridTable.clear();
         headerLabels.clear();
@@ -279,7 +478,7 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         cellStacks = new Stack[width][height];
         highlightLayers = new Image[width][height];
 
-    gridTable.add().size(35f).expandX().left();
+        gridTable.add().size(35f).expandX().left();
         for (int x = 0; x < width; x++) {
             char columnLetter = (char) ('A' + x);
             Label header = new Label(String.valueOf(columnLetter), skin);
@@ -358,6 +557,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Refresh the ship list UI
+     */
     private void refreshShipList() {
         shipListGroup.clearChildren();
         shipIconWrappers.clear();
@@ -372,7 +574,6 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             doneLabel.setAlignment(Align.left);
             shipListGroup.addActor(doneLabel);
             updateCursorForSelection(null);
-            Gdx.app.postRunnable(() -> controller.handlePlacementComplete());
             return;
         }
 
@@ -443,6 +644,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         applyResponsiveLayout(width, height);
     }
 
+    /**
+     * Apply responsive layout adjustments
+     * 
+     * @param width new width
+     * @param height new height
+     */
     private void applyResponsiveLayout(int width, int height) {
         float baseSize = getBaseSize();
         if(baseSize <= 0f) {
@@ -455,43 +662,47 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         updateGridPresentation(baseSize);
     }
 
+    /**
+     * Update the panel distribution based on screen size
+     * 
+     * @param width new width
+     * @param height new height
+     */
     private void updatePanelDistribution(int width, int height) {
         if(root == null) {
             return;
         }
-    boolean narrowLayout = width < 1100 || height < 700;
         float padding = MathUtils.clamp(width * 0.015f, 10f, 40f);
 
         root.clearChildren();
-        if(narrowLayout) {
-            root.pad(padding).defaults().growX().padBottom(padding);
-            gridCell = root.add(gridContainer)
-                .grow()
-                .padBottom(padding * 0.5f);
-            root.row();
-            leftPanelCell = root.add(leftPanel)
-                .growX();
-        }
-        else {
-            root.pad(padding * 1.5f).defaults().top().left();
-            leftPanelCell = root.add(leftPanel)
-                .width(Value.percentWidth(0.32f, root))
-                .minWidth(320f)
-                .padRight(padding);
-            gridCell = root.add(gridContainer)
-                .grow();
-        }
+        root.pad(padding).defaults().top().left();
 
-        gridContainer.pad(padding * 0.3f);
+        leftPanelCell = root.add(leftPanel)
+            .width(Value.percentWidth(0.38f, root))
+            .minWidth(280f)
+            .growY()
+            .padRight(padding);
+
+        gridCell = root.add(gridContainer)
+            .width(Value.percentWidth(0.58f, root))
+            .grow();
+
+        float gridPadding = MathUtils.clamp(width * 0.02f, 15f, 50f);
+        gridContainer.pad(gridPadding);
 
         if(leftPanelCell != null) {
-            leftPanelCell.fillX();
+            leftPanelCell.fill();
         }
         if(gridCell != null) {
             gridCell.expand().fill();
         }
     }
 
+    /**
+     * Update text scales based on base size
+     * 
+     * @param baseSize base size for scaling
+     */
     private void updateTextScales(float baseSize) {
         float titleScale = MathUtils.clamp(baseSize / 320f, 1.1f, 2.8f);
         float bodyScale = MathUtils.clamp(baseSize / 520f, 0.8f, 1.7f);
@@ -506,19 +717,31 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         setButtonLabelScale(readyButton, buttonScale);
         setButtonLabelScale(resetButton, buttonScale);
         setButtonLabelScale(cancelSelectionButton, buttonScale);
+        setButtonLabelScale(randomButton, buttonScale);
 
         for (TextButton button : shipButtons.values()) {
             setButtonLabelScale(button, buttonScale * 0.95f);
         }
     }
 
+    /**
+     * Set the font scale for a button's label
+     * 
+     * @param button the button
+     * @param scale the font scale
+     */
     private void setButtonLabelScale(TextButton button, float scale) {
         if(button == null) {
             return;
         }
         button.getLabel().setFontScale(scale);
-    }
+    }   
 
+    /**
+     * Update ship list presentation based on base size
+     * 
+     * @param baseSize base size for scaling
+     */
     private void updateShipListPresentation(float baseSize) {
         if(shipListGroup == null) {
             return;
@@ -553,15 +776,19 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Update grid presentation based on base size
+     * 
+     * @param baseSize  base size for scaling
+     */
     private void updateGridPresentation(float baseSize) {
         if(gridTable == null) {
             return;
         }
-        float cellPadding = MathUtils.clamp(baseSize / 120f, 2f, 8f);
         float labelScale = MathUtils.clamp(baseSize / 720f, 0.65f, 1.4f);
 
         for (com.badlogic.gdx.scenes.scene2d.ui.Cell<?> cell : gridTable.getCells()) {
-            cell.pad(cellPadding).minSize(Math.max(40f, baseSize / 18f));
+            cell.pad(0f).minSize(Math.max(40f, baseSize / 18f));
         }
         for (Label label : headerLabels) {
             label.setFontScale(labelScale);
@@ -571,6 +798,13 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Handle ship selection
+     * 
+     * @param ship the selected ship
+     * @param button the selection button
+     * @return true if selection was successful, false otherwise
+     */
     private boolean handleShipSelection(Ship ship, TextButton button) {
         if(!controller.selectShip(ship)) {
             return false;
@@ -585,6 +819,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         return true;
     }
 
+    /**
+     * Create a ship icon image
+     * 
+     * @param ship the ship data
+     * @return the ship icon image
+     */
     private Image createShipIcon(Ship ship) {
         if(ship == null) {
             return null;
@@ -601,6 +841,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         return icon;
     }
 
+    /**
+     * Handle ready button click
+     * <p>
+     * Called when the player indicates they are done placing ships.
+     * </p>
+     */
     private void handleReadyButton() {
         if(controller == null || readyButton == null) {
             return;
@@ -615,6 +861,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         controller.handlePlacementComplete();
     }
 
+    /**
+     * Handle reset placement button click
+     * <p>
+     * Called when the player wants to reset all ship placements.
+     * </p>
+     */
     private void handleResetPlacement() {
         if(controller == null || resetButton == null || resetButton.isDisabled()) {
             return;
@@ -629,6 +881,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         updateControlButtonsState();
     }
 
+    /**
+     * Handle cancel selection button click
+     * <p>
+     * Called when the player wants to cancel the current ship selection.
+     * </p>
+     */
     private void handleCancelSelection() {
         if(controller == null || cancelSelectionButton == null || cancelSelectionButton.isDisabled()) {
             return;
@@ -641,6 +899,35 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         updateControlButtonsState();
     }
 
+    /**
+     * Handle random placement button click
+     * <p>
+     * Called when the player wants to place ships randomly.
+     * </p>
+     */
+    private void handleRandomPlacement() {
+        if(controller == null) {
+            return;
+        }
+        boolean success = controller.placeShipsRandomly();
+        if(success) {
+            refreshShipList();
+            refreshPlacedShips();
+            clearHover();
+            highlightSelectionButton(null);
+            updateCursorForSelection(null);
+            helperLabel.setText("Ships placed randomly. Ready to continue!");
+            updateControlButtonsState();
+        } else {
+            helperLabel.setText("Failed to place ships randomly. Try again.");
+        }
+    }
+
+    /**
+     * Update the ready button and helper label based on fleet completion state
+     * 
+     * @param fleetComplete true if the fleet is complete, false otherwise
+     */
     private void updateReadyState(boolean fleetComplete) {
         if(readyButton != null) {
             readyButton.setDisabled(!fleetComplete);
@@ -654,6 +941,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Update the state of control buttons based on current placement state
+     */
     private void updateControlButtonsState() {
         if(resetButton != null) {
             boolean canReset = controller != null && controller.hasPlacedShips();
@@ -665,6 +955,11 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Highlight the selected ship button
+     * 
+     * @param button the button to highlight
+     */
     private void highlightSelectionButton(TextButton button) {
         if(activeShipButton != null) {
             activeShipButton.setChecked(false);
@@ -675,6 +970,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Handle hover over a grid cell
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     private void handleHover(int x, int y) {
         Ship selected = controller.getSelectedShip();
         if(selected == null) {
@@ -701,6 +1002,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Clear all active hover highlights
+     */
     private void clearHover() {
         for (Image image : activeHighlights) {
             image.setVisible(false);
@@ -708,6 +1012,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         activeHighlights.clear();
     }
 
+    /**
+     * Attempt to place the selected ship at the given coordinates
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     private void attemptPlacement(int x, int y) {
         Ship selected = controller.getSelectedShip();
         if(selected == null) {
@@ -724,6 +1034,13 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Build a span of coordinates from an origin in the current placement direction
+     * 
+     * @param origin starting coordinate
+     * @param length length of the span
+     * @return list of coordinates in the span
+     */
     private List<Coordinate> buildSpan(Coordinate origin, int length) {
         List<Coordinate> coords = new ArrayList<>();
         if(origin == null) {
@@ -737,6 +1054,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         return coords;
     }
 
+    /**
+     * Check if a coordinate is inside the grid bounds
+     * 
+     * @param coord the coordinate to check
+     * @return true if inside bounds, false otherwise
+     */
     private boolean isInsideGrid(Coordinate coord) {
         Player player = controller.getCurrentSetupPlayer();
         if(player == null || coord == null) {
@@ -747,6 +1070,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             && coord.getY() >= 0 && coord.getY() < grid.getHeight();
     }
 
+    /**
+     * Toggle the current placement direction
+     */
     private void toggleDirection() {
         placementDirection = (placementDirection == Direction.HORIZONTAL)
             ? Direction.VERTICAL
@@ -758,14 +1084,25 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Update the direction label text
+     */
     private void updateDirectionLabel() {
         directionLabel.setText(directionText());
     }
 
+    /**
+     * Get the direction label text
+     * 
+     * @return the direction text
+     */
     private String directionText() {
         return String.format("Direction: %s", placementDirection.name());
     }
 
+    /**
+     * Refresh the placed ships on the grid
+     */
     private void refreshPlacedShips() {
         for (Image image : placedShipImages) {
             image.remove();
@@ -825,6 +1162,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         updateControlButtonsState();
     }
 
+    /**
+     * Get the texture drawable for a ship by name
+     * 
+     * @param shipName the ship name
+     * @return the texture drawable, or null if not found
+     */
     private TextureRegionDrawable getShipDrawable(String shipName) {
         if(shipName == null) {
             return null;
@@ -836,8 +1179,13 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             case "Torpedo" -> torpedoTexture;
             default -> null;
         };
-    }
-
+    }   
+    
+    /**
+     * Update the cursor appearance based on the selected ship
+     * 
+     * @param ship the selected ship
+     */
     private void updateCursorForSelection(Ship ship) {
         clearCursor();
         if(ship == null) {
@@ -867,6 +1215,9 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         Gdx.graphics.setCursor(customCursor);
     }
 
+    /**
+     * Clear the current custom cursor
+     */
     private void clearCursor() {
         if(customCursor != null) {
             customCursor.dispose();
@@ -878,6 +1229,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         }
     }
 
+    /**
+     * Get the cursor sprite path for a ship by name
+     * 
+     * @param shipName the ship name
+     * @return the sprite path, or null if not found
+     */
     private String getCursorSpritePath(String shipName) {
         return switch (shipName) {
             case "Carrier" -> "ships/carrier.png";
@@ -888,6 +1245,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         };
     }
 
+    /**
+     * Ensure the cursor pixmap has power-of-two dimensions
+     * 
+     * @param source the source pixmap
+     * @return the validated pixmap
+     */
     private Pixmap ensureCursorPixmapIsValid(Pixmap source) {
         if(source == null) {
             return null;
@@ -906,6 +1269,13 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         return resized;
     }
 
+    /**
+     * Prepare the cursor pixmap by aligning and scaling
+     * 
+     * @param source the source pixmap
+     * @param ship the ship data
+     * @return the prepared pixmap
+     */
     private Pixmap prepareCursorPixmap(Pixmap source, Ship ship) {
         if(source == null) {
             return null;
@@ -915,6 +1285,12 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
         return scalePixmapToCellSize(aligned, ship);
     }
 
+    /**
+     * Align the cursor pixmap to the current placement direction
+     * 
+     * @param source the source pixmap
+     * @return the aligned pixmap
+     */
     private Pixmap alignCursorPixmapToDirection(Pixmap source) {
         if(source == null) {
             return null;
@@ -924,21 +1300,34 @@ public class SetupPlayerShipView extends GuiView<SetupMenuController> {
             return source;
         }
 
-        return rotatePixmap90Degrees(source);
+        return rotatePixmapInverse90Degrees(source);
     }
 
-    private Pixmap rotatePixmap90Degrees(Pixmap source) {
+    /**
+     * Rotate a pixmap by -90 degrees
+     * 
+     * @param source the source pixmap
+     * @return the rotated pixmap
+     */
+    private Pixmap rotatePixmapInverse90Degrees(Pixmap source) {
         Pixmap rotated = new Pixmap(source.getHeight(), source.getWidth(), source.getFormat());
         for (int x = 0; x < source.getWidth(); x++) {
             for (int y = 0; y < source.getHeight(); y++) {
                 int pixel = source.getPixel(x, y);
-                rotated.drawPixel(source.getHeight() - 1 - y, x, pixel);
+                rotated.drawPixel(y, source.getWidth() - 1 - x, pixel);
             }
         }
         source.dispose();
         return rotated;
     }
 
+    /**
+     * Scale the cursor pixmap to match cell size and ship length
+     * 
+     * @param source the source pixmap
+     * @param ship the ship data
+     * @return the scaled pixmap
+     */
     private Pixmap scalePixmapToCellSize(Pixmap source, Ship ship) {
         if(source == null || ship == null) {
             return source;

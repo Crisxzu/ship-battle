@@ -313,9 +313,6 @@ public class Grid {
             throw new InvalidCoordinateException(coord);
         }
 
-        AttackResult result = null;
-        Ship ship = null;
-
         // Primary attack on the center
         AttackResponse primaryHit = receiveAttack(coord);
 
@@ -329,28 +326,10 @@ public class Grid {
             additionalHits.add(adjacentHit);
         }
 
-        if(primaryHit.isHit()) {
-            result = primaryHit.getResult();
-            ship = primaryHit.getShip();
-        }
-        else {
-            for(AttackResponse response : additionalHits) {
-                if(response.isHit()) {
-                    result = response.getResult();
-                    ship = response.getShip();
-                    break;
-                }
-            }
-
-            if(result == null) {
-                result = AttackResult.MISS;
-            }
-        }
-
         // Return combined response
         return new AttackResponse(
-            result,
-            ship,
+            primaryHit.getResult(),
+            primaryHit.getShip(),
             coord,
             additionalHits
         );
@@ -359,8 +338,7 @@ public class Grid {
     /**
      * Perform a radar scan in an area around the given coordinate.
      * <p>
-     * The radar detects if there are any ships in the target cell and adjacent cells
-     * without revealing their exact positions or attacking them.
+     * The radar checks the target cell and its adjacent cells for the presence of any unhit ships.
      * </p>
      *
      * @param coord center coordinate of the radar scan
@@ -374,13 +352,13 @@ public class Grid {
 
         // Check center cell
         Cell centerCell = getCell(coord);
-        boolean shipDetected = centerCell.hasShip();
+        boolean shipDetected = centerCell.hasShip() && !centerCell.isShot();
 
         // Check adjacent cells if center doesn't have a ship
         if (!shipDetected) {
             List<Cell> adjacentCells = getAdjacentCells(coord);
             for (Cell adjacentCell : adjacentCells) {
-                if (adjacentCell.hasShip()) {
+                if (adjacentCell.hasShip() &&  !adjacentCell.isShot()) {
                     shipDetected = true;
                     break;
                 }

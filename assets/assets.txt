@@ -31,14 +31,6 @@ sounds/radar_nothing.mp3
 sounds/sunk.mp3
 sounds/wrong.mp3
 sunk.png
-ui/README_SKIN.md
-ui/font-export.fnt
-ui/font-export.png
-ui/font-title-export.fnt
-ui/font-title-export.png
-ui/shipbattle-skin.atlas
-ui/shipbattle-skin.json
-ui/shipbattle-skin.png
 uiskin.atlas
 uiskin.json
 uiskin.png

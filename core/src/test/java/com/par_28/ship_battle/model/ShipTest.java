@@ -177,6 +177,59 @@ class ShipTest {
     }
 
     @Nested
+    @DisplayName("Refill Life Tests")
+    class RefillLifeTests {
+
+        @Test
+        @DisplayName("Should refill life to maximum after damage")
+        void shouldRefillLifeAfterDamage() {
+            // Given
+            Ship ship = new Destroyer(); // Length 3
+            ship.receiveDamage();
+            ship.receiveDamage();
+            assertEquals(1, ship.getLife());
+
+            // When
+            ship.refillLife();
+
+            // Then
+            assertEquals(3, ship.getLife());
+            assertFalse(ship.isDestroyed());
+        }
+
+        @Test
+        @DisplayName("Should refill destroyed ship")
+        void shouldRefillDestroyedShip() {
+            // Given
+            Ship ship = new Torpedo(); // Length 2
+            ship.receiveDamage();
+            ship.receiveDamage();
+            assertTrue(ship.isDestroyed());
+
+            // When
+            ship.refillLife();
+
+            // Then
+            assertEquals(2, ship.getLife());
+            assertFalse(ship.isDestroyed());
+        }
+
+        @Test
+        @DisplayName("Should have no effect on full life ship")
+        void shouldHaveNoEffectOnFullLifeShip() {
+            // Given
+            Ship ship = new Carrier();
+            assertEquals(5, ship.getLife());
+
+            // When
+            ship.refillLife();
+
+            // Then
+            assertEquals(5, ship.getLife());
+        }
+    }
+
+    @Nested
     @DisplayName("Direction Management Tests")
     class DirectionTests {
 

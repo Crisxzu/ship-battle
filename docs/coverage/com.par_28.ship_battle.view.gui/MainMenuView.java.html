@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MainMenuView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">MainMenuView.java</span></div><h1>MainMenuView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.MainMenuController;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+
+
+/**
+ * Main menu
+ */
+public class MainMenuView extends GuiView&lt;MainMenuController&gt; {
+    /**
+     * Title label
+     */
+    private Label titleLabel;
+
+    /**
+     * Version label
+     */
+    private Label versionLabel;
+
+    /**
+     * Logo texture
+     */
+    private TextureRegionDrawable logoTexture;
+
+    /**
+     * Initialize main menu
+     *
+     * @param parent screen manager
+     */
+    public MainMenuView(ScreenController parent) {
+<span class="nc" id="L39">        super(parent);</span>
+<span class="nc" id="L40">        buildUI();</span>
+<span class="nc" id="L41">    }</span>
+
+    @Override
+    protected void loadTextures() {
+<span class="nc" id="L45">        super.loadTextures();</span>
+<span class="nc" id="L46">        Texture logoTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.LOGO);</span>
+<span class="nc" id="L47">        this.logoTexture = new TextureRegionDrawable(new TextureRegion(logoTexture));</span>
+<span class="nc" id="L48">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L52">        super.buildUI();</span>
+<span class="nc" id="L53">        Table root = new Table();</span>
+<span class="nc" id="L54">        root.setFillParent(true);</span>
+
+<span class="nc" id="L56">        titleLabel = new Label(&quot;ShipBattle&quot;, skin);</span>
+<span class="nc" id="L57">        titleLabel.setFontScale(2.5f);</span>
+
+<span class="nc" id="L59">        Image logo = new Image(logoTexture);</span>
+
+<span class="nc" id="L61">        Container&lt;Image&gt; logoContainer = new Container&lt;&gt;(logo);</span>
+
+<span class="nc" id="L63">        logoContainer.pad(10f);</span>
+
+<span class="nc" id="L65">        root.add(logoContainer)</span>
+<span class="nc" id="L66">            .width(Value.percentWidth(0.50f, root))</span>
+<span class="nc" id="L67">            .height(Value.percentHeight(0.35f, root))</span>
+<span class="nc" id="L68">            .row();</span>
+
+
+<span class="nc" id="L71">        Table buttons = new Table();</span>
+<span class="nc" id="L72">        buttons.defaults()</span>
+<span class="nc" id="L73">            .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L74">            .height(Value.percentHeight(0.1f, root))</span>
+<span class="nc" id="L75">            .pad(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L77">        addMenuButton(buttons, &quot;New game&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.SETUP_MENU));</span>
+<span class="nc" id="L78">        addMenuButton(buttons, &quot;Settings&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.SETTINGS));</span>
+<span class="nc" id="L79">        addMenuButton(buttons, &quot;Quit&quot;, Gdx.app::exit);</span>
+
+<span class="nc" id="L81">        root.add(buttons).expand().fill().center().row();</span>
+
+<span class="nc" id="L83">        versionLabel = new Label(&quot;v1.0.0 - 2025&quot;, skin);</span>
+<span class="nc" id="L84">        versionLabel.setColor(Color.GRAY);</span>
+<span class="nc" id="L85">        root.add(versionLabel).expand().height(Value.percentHeight(0.1f)).row();</span>
+
+<span class="nc" id="L87">        stage.addActor(root);</span>
+
+<span class="nc" id="L89">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L90">    }</span>
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L94">        super.resize(width, height);</span>
+<span class="nc" id="L95">        titleLabel.setFontScale(base / 200f);</span>
+<span class="nc" id="L96">        versionLabel.setFontScale(base / 500f);</span>
+<span class="nc" id="L97">    }</span>
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L101">        super.dispose();</span>
+<span class="nc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.controller.gui</a> &gt; <span class="el_source">GameController.java</span></div><h1>GameController.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.controller.gui;
+
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.enums.PowerType;
+import com.par_28.ship_battle.model.exceptions.IllegalGameStateException;
+import com.par_28.ship_battle.view.gui.*;
+
+/**
+ * Manager of the game menu.
+ */
+public class GameController extends GuiController {
+    /**
+     * Current power type selected by the player
+     */
+    private PowerType currentPowerType;
+
+    /**
+     * Initialize the menu controller.
+     *
+     * @param parent Reference to the parent screen controller
+     */
+    public GameController(ScreenController parent) {
+<span class="nc" id="L25">        super(parent);</span>
+<span class="nc" id="L26">        this.currentPowerType = PowerType.NORMAL;</span>
+<span class="nc" id="L27">    }</span>
+
+    /**
+     * Update menu controller.
+     *
+     * @param dt Delta time since last update
+     */
+    public void update(float dt){
+
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * Render menu view.
+     *
+     * @param dt Delta time since last render
+     */
+    @Override
+    public void render(float dt){
+<span class="nc" id="L45">        super.render(dt);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(view != null) {</span>
+<span class="nc" id="L47">            view.render(dt);</span>
+        }
+<span class="nc" id="L49">    }</span>
+
+    /**
+     * Start a player's turn.
+     */
+    public void startTurn() {
+<span class="nc" id="L55">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(current.isAI()) {</span>
+<span class="nc" id="L58">            changeView(new AIGameView(parent, this));</span>
+        }
+        else {
+<span class="nc" id="L61">            changeView(new GameView(parent, this));</span>
+        }
+<span class="nc" id="L63">    }</span>
+
+    /**
+     * Update the view to reflect turn change.
+     * &lt;p&gt;
+     * If the game is over, switch to the game over view.
+     * Otherwise, display the turn change view.
+     * &lt;/p&gt;
+     */
+    public void changeTurn() {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if(this.parent.app.game.isGameOver()) {</span>
+<span class="nc" id="L74">            SoundHandler.playTrack(</span>
+                SoundHandler.TrackID.MENU_THEME,
+<span class="nc" id="L76">                0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
+                true
+            );
+<span class="nc" id="L79">            changeView(new GameOverView(parent, this));</span>
+        }
+        else {
+<span class="nc" id="L82">            changeView(new GameTurnDisplayView(parent, this));</span>
+        }
+<span class="nc" id="L84">    }</span>
+
+    /**
+     * Play a turn by attacking a coordinate using the currently selected power type.
+     *
+     * @param attackCord Coordinate to attack
+     * @return Attack response
+     */
+    public AttackResponse playTurn(Coordinate attackCord) {
+<span class="nc" id="L93">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc" id="L95">        AttackResponse response = this.parent.app.game.playTurn(attackCord, currentPowerType);</span>
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if(current instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L98">            aiPlayer.notifyAttackResult(attackCord, response);</span>
+        }
+
+        // Play appropriate sound based on power type
+<span class="nc bnc" id="L102" title="All 3 branches missed.">        switch (currentPowerType) {</span>
+            case BOMB:
+<span class="nc" id="L104">                SoundHandler.playSound(</span>
+                    SoundHandler.SoundID.BOMB_SHOT,
+<span class="nc" id="L106">                    0.5f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                );
+<span class="nc" id="L108">                break;</span>
+            case RADAR:
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                if(response.isRadarDetection()) {</span>
+<span class="nc" id="L111">                    SoundHandler.playSound(</span>
+                        SoundHandler.SoundID.RADAR_FOUND,
+<span class="nc" id="L113">                        0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                    );
+                }
+                else {
+<span class="nc" id="L117">                    SoundHandler.playSound(</span>
+                        SoundHandler.SoundID.RADAR_NOTHING,
+<span class="nc" id="L119">                        0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                    );
+                }
+<span class="nc" id="L122">                break;</span>
+            case NORMAL:
+            default:
+<span class="nc" id="L125">                SoundHandler.playSound(</span>
+                    SoundHandler.SoundID.CANNON_SHOT,
+<span class="nc" id="L127">                    0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+                );
+                break;
+        }
+
+        // Reset to normal attack after using a power
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (currentPowerType != PowerType.NORMAL) {</span>
+<span class="nc" id="L134">            currentPowerType = PowerType.NORMAL;</span>
+        }
+
+<span class="nc" id="L137">        return response;</span>
+    }
+
+    /**
+     * Get the next shot coordinate chosen by the AI player.
+     *
+     * @return Coordinate chosen by AI
+     */
+    public Coordinate getAIShot() {
+<span class="nc" id="L146">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if(current instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L149">            return aiPlayer.chooseShot(this.parent.app.game.getOpponent().getShips());</span>
+        }
+
+<span class="nc" id="L152">        return null;</span>
+    }
+
+    /**
+     * Set the current power type to be used in next attack.
+     *
+     * @param powerType Power type to set
+     */
+    public void setCurrentPowerType(PowerType powerType) {
+<span class="nc" id="L161">        this.currentPowerType = powerType;</span>
+<span class="nc" id="L162">    }</span>
+
+    /**
+     * Get the currently selected power type.
+     *
+     * @return Current power type
+     */
+    public PowerType getCurrentPowerType() {
+<span class="nc" id="L170">        return currentPowerType;</span>
+    }
+
+    /**
+     * Get the number of bomb charges available for the current player.
+     *
+     * @return Number of bomb charges
+     */
+    public int getCurrentPlayerBombCharges() {
+<span class="nc" id="L179">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+<span class="nc" id="L180">        return current.getBombCharges();</span>
+    }
+
+    /**
+     * Get the number of radar charges available for the current player.
+     *
+     * @return Number of radar charges
+     */
+    public int getCurrentPlayerRadarCharges() {
+<span class="nc" id="L189">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+<span class="nc" id="L190">        return current.getRadarCharges();</span>
+    }
+
+    /**
+     * Check if the current player can use the specified power type.
+     *
+     * @param powerType Power type to check
+     * @return true if the player has charges available for this power
+     */
+    public boolean canUsePower(PowerType powerType) {
+<span class="nc" id="L200">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+<span class="nc bnc" id="L201" title="All 3 branches missed.">        switch (powerType) {</span>
+            case BOMB:
+<span class="nc" id="L203">                return current.hasBombCharges();</span>
+            case RADAR:
+<span class="nc" id="L205">                return current.hasRadarCharges();</span>
+            case NORMAL:
+            default:
+<span class="nc" id="L208">                return true;</span>
+        }
+    }
+
+    /**
+     * Apply the Konami code effect: refill all power charges for the current player.
+     */
+    public void applyKonamiCode() {
+<span class="nc" id="L216">        Player current = this.parent.app.game.getCurrentPlayer();</span>
+
+<span class="nc" id="L218">        current.refillPowers();</span>
+<span class="nc" id="L219">    }</span>
+
+    /**
+     * Reset the game to its initial state with the same ship placements.
+     */
+    public void resetGame() {
+<span class="nc" id="L225">        Player player1 = new Player(this.parent.app.player1.getName(), this.parent.app.gridSize);</span>
+        Player player2;
+
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        if(this.parent.app.player2 instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L229">            player2 = new AIPlayer(aiPlayer.getName(), this.parent.app.gridSize, aiPlayer.getDifficulty());</span>
+        }
+        else {
+<span class="nc" id="L232">            player2 = new Player(this.parent.app.player2.getName(), this.parent.app.gridSize);</span>
+        }
+
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        for(Ship ship : this.parent.app.player1.getShips()) {</span>
+<span class="nc" id="L236">            ship.refillLife();</span>
+
+<span class="nc" id="L238">            player1.placeShipOnGrid(ship, ship.getPositions().get(0), ship.getDirection());</span>
+<span class="nc" id="L239">            player1.addShip(ship);</span>
+<span class="nc" id="L240">        }</span>
+
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        for(Ship ship : this.parent.app.player2.getShips()) {</span>
+<span class="nc" id="L243">            ship.refillLife();</span>
+
+<span class="nc" id="L245">            player2.placeShipOnGrid(ship, ship.getPositions().get(0), ship.getDirection());</span>
+<span class="nc" id="L246">            player2.addShip(ship);</span>
+<span class="nc" id="L247">        }</span>
+
+<span class="nc" id="L249">        this.parent.app.player1 = player1;</span>
+<span class="nc" id="L250">        this.parent.app.player2 = player2;</span>
+
+<span class="nc" id="L252">        this.parent.app.game = new Game(player1, player2);</span>
+        try {
+<span class="nc" id="L254">            this.parent.app.game.start();</span>
+        }
+<span class="nc" id="L256">        catch (IllegalGameStateException e) {</span>
+<span class="nc" id="L257">            Dialogs.showErrorDialog(view.stage, &quot;Unable to start game: &quot; + e.getMessage());</span>
+<span class="nc" id="L258">            return;</span>
+<span class="nc" id="L259">        }</span>
+
+<span class="nc" id="L261">        startTurn();</span>
+<span class="nc" id="L262">    }</span>
+
+    /**
+     * Reset the game to initial state without preserving ship placements.
+     */
+    public void resetGameWithoutSamePlacement() {
+<span class="nc" id="L268">        this.parent.changeController(GuiControllerEnum.SETUP_MENU);</span>
+<span class="nc" id="L269">        GuiController currentController = this.parent.getCurrentController();</span>
+
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if(currentController instanceof SetupMenuController setupMenuController) {</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            if(this.parent.app.player2 instanceof AIPlayer aiPlayer) {</span>
+<span class="nc" id="L273">                setupMenuController.setAIDifficulty(aiPlayer.getDifficulty());</span>
+            }
+
+<span class="nc" id="L276">            setupMenuController.addName(this.parent.app.player1.getName());</span>
+
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if(!setupMenuController.isAIMode()) {</span>
+<span class="nc" id="L279">                setupMenuController.addName(this.parent.app.player2.getName());</span>
+            }
+        }
+        else {
+<span class="nc" id="L283">            Dialogs.showErrorDialog(view.stage, &quot;Unable to retry without same placement&quot;);</span>
+        }
+<span class="nc" id="L285">    }</span>
+
+    /**
+     * Reset controller to initial state.
+     */
+    @Override
+    public void reset() {
+<span class="nc" id="L292">        super.reset();</span>
+<span class="nc" id="L293">        this.currentPowerType = PowerType.NORMAL;</span>
+<span class="nc" id="L294">        changeView(new GameTurnDisplayView(parent, this));</span>
+<span class="nc" id="L295">        System.out.println(this.parent.app.player1);</span>
+<span class="nc" id="L296">        System.out.println(this.parent.app.player2);</span>
+<span class="nc" id="L297">        SoundHandler.playTrack(</span>
+            SoundHandler.TrackID.GAME_THEME,
+<span class="nc" id="L299">            0.2f * this.parent.app.settingsHandler.getMusicVolume(),</span>
+            true
+        );
+<span class="nc" id="L302">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

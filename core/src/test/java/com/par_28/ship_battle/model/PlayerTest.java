@@ -601,6 +601,126 @@ class PlayerTest {
     }
 
     @Nested
+    @DisplayName("Power Charges Tests")
+    class PowerChargesTests {
+
+        @BeforeEach
+        void setUp() {
+            player = new Player("TestPlayer", 10);
+        }
+
+        @Test
+        @DisplayName("Should initialize with default bomb charges")
+        void shouldInitializeWithDefaultBombCharges() {
+            // Then
+            assertEquals(2, player.getBombCharges());
+            assertTrue(player.hasBombCharges());
+        }
+
+        @Test
+        @DisplayName("Should initialize with default radar charges")
+        void shouldInitializeWithDefaultRadarCharges() {
+            // Then
+            assertEquals(3, player.getRadarCharges());
+            assertTrue(player.hasRadarCharges());
+        }
+
+        @Test
+        @DisplayName("Should initialize with custom power charges")
+        void shouldInitializeWithCustomPowerCharges() {
+            // When
+            Player customPlayer = new Player("Custom", 10, 5, 7);
+
+            // Then
+            assertEquals(5, customPlayer.getBombCharges());
+            assertEquals(7, customPlayer.getRadarCharges());
+        }
+
+        @Test
+        @DisplayName("Should use bomb charge and decrement count")
+        void shouldUseBombChargeAndDecrement() {
+            // When
+            boolean used = player.useBombCharge();
+
+            // Then
+            assertTrue(used);
+            assertEquals(1, player.getBombCharges());
+        }
+
+        @Test
+        @DisplayName("Should return false when no bomb charges available")
+        void shouldReturnFalseWhenNoBombCharges() {
+            // Given - Use all charges
+            player.useBombCharge();
+            player.useBombCharge();
+
+            // When
+            boolean used = player.useBombCharge();
+
+            // Then
+            assertFalse(used);
+            assertEquals(0, player.getBombCharges());
+            assertFalse(player.hasBombCharges());
+        }
+
+        @Test
+        @DisplayName("Should use radar charge and decrement count")
+        void shouldUseRadarChargeAndDecrement() {
+            // When
+            boolean used = player.useRadarCharge();
+
+            // Then
+            assertTrue(used);
+            assertEquals(2, player.getRadarCharges());
+        }
+
+        @Test
+        @DisplayName("Should return false when no radar charges available")
+        void shouldReturnFalseWhenNoRadarCharges() {
+            // Given - Use all charges
+            player.useRadarCharge();
+            player.useRadarCharge();
+            player.useRadarCharge();
+
+            // When
+            boolean used = player.useRadarCharge();
+
+            // Then
+            assertFalse(used);
+            assertEquals(0, player.getRadarCharges());
+            assertFalse(player.hasRadarCharges());
+        }
+
+        @Test
+        @DisplayName("Should refill powers to default values")
+        void shouldRefillPowersToDefaultValues() {
+            // Given - Use all charges
+            player.useBombCharge();
+            player.useBombCharge();
+            player.useRadarCharge();
+            player.useRadarCharge();
+            player.useRadarCharge();
+
+            assertEquals(0, player.getBombCharges());
+            assertEquals(0, player.getRadarCharges());
+
+            // When
+            player.refillPowers();
+
+            // Then
+            assertEquals(2, player.getBombCharges());
+            assertEquals(3, player.getRadarCharges());
+        }
+
+        @Test
+        @DisplayName("Should return false for isAI on normal player")
+        void shouldReturnFalseForIsAI() {
+            // When & Then
+            assertFalse(player.isAI());
+        }
+    }
+
+    @Nested
     @DisplayName("Random Ship Placement Tests")
     class RandomPlacementTests {
 

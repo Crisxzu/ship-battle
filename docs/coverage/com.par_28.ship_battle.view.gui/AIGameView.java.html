@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIGameView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">AIGameView.java</span></div><h1>AIGameView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.par_28.ship_battle.controller.gui.GameController;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.model.Coordinate;
+
+import java.util.Random;
+
+/**
+ * Game menu for AI opponent
+ */
+public class AIGameView extends GameView {
+
+    /**
+     * Old position of AI snipe image
+     */
+<span class="nc" id="L19">    protected Stack oldPos = null;</span>
+
+    /**
+     * Timer to wait before AI makes a move
+     */
+<span class="nc" id="L24">    protected float waitAITimer = 0f;</span>
+
+    /**
+     * Random number generator for AI moves
+     */
+<span class="nc" id="L29">    protected Random random = new Random();</span>
+
+    /**
+     * Initializes game menu for AI opponent
+     * 
+     * @param parent screen manager
+     * @param controller game controller
+     */
+    public AIGameView(ScreenController parent, GameController controller) {
+<span class="nc" id="L38">        super(parent, controller);</span>
+<span class="nc" id="L39">        playDialog(</span>
+            DialogHandler.DialogID.TURN_START_AI,
+<span class="nc" id="L41">            (float) (loliAnimation.getAnimationDuration() * 1.25)</span>
+        );
+<span class="nc" id="L43">    }</span>
+
+    @Override
+    protected void buildPlayerGridsUI() {
+<span class="nc" id="L47">        trackingTable = new Table();</span>
+<span class="nc" id="L48">        trackingTable.defaults().expand().fill();</span>
+
+<span class="nc" id="L50">        updatePlayerTables();</span>
+
+<span class="nc" id="L52">        root.add(trackingTable)</span>
+<span class="nc" id="L53">            .width(Value.percentWidth(0.8f, root))</span>
+<span class="nc" id="L54">            .height(Value.percentHeight(0.7f, root))</span>
+<span class="nc" id="L55">            .expand();</span>
+
+<span class="nc" id="L57">        root.row();</span>
+<span class="nc" id="L58">    }</span>
+
+    @Override
+    protected void updatePlayerTables() {
+<span class="nc" id="L62">        trackingTableChildStacks = updateTableWithModel(</span>
+            trackingTable,
+<span class="nc" id="L64">            currentPlayer.getTrackingGrid(),</span>
+            true,
+            false
+        );
+<span class="nc" id="L68">    }</span>
+
+    @Override
+    public void update(float delta) {
+<span class="nc" id="L72">        super.update(delta);</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        if(!shoot &amp;&amp; !paused) {</span>
+<span class="nc" id="L74">            waitAITimer += delta;</span>
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            if(dialogTimer &lt; 5f) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                if(waitAITimer &gt; 1f) {</span>
+<span class="nc" id="L78">                    waitAITimer = 0;</span>
+
+<span class="nc" id="L80">                    int x = random.nextInt(this.parent.app.gridSize);</span>
+<span class="nc" id="L81">                    int y = random.nextInt(this.parent.app.gridSize);</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                    if(oldPos != null) {</span>
+<span class="nc" id="L84">                        Image snipeImage = (Image) oldPos.getChild(oldPos.getChildren().size-1);</span>
+
+<span class="nc" id="L86">                        snipeImage.setVisible(false);</span>
+                    }
+
+<span class="nc" id="L89">                    Stack stack = trackingTableChildStacks[x][y];</span>
+<span class="nc" id="L90">                    Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);</span>
+
+<span class="nc" id="L92">                    snipeImage.setVisible(true);</span>
+<span class="nc" id="L93">                    oldPos = stack;</span>
+
+<span class="nc" id="L95">                    coordLabel.setText(new Coordinate(x, y).toLetterFormat());</span>
+<span class="nc" id="L96">                }</span>
+            }
+            else {
+<span class="nc" id="L99">                shoot = true;</span>
+
+<span class="nc" id="L101">                Coordinate attackCord = this.controller.getAIShot();</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                if(attackCord != null) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                    if(oldPos != null) {</span>
+<span class="nc" id="L105">                        Image snipeImage = (Image) oldPos.getChild(oldPos.getChildren().size-1);</span>
+
+<span class="nc" id="L107">                        snipeImage.setVisible(false);</span>
+                    }
+
+<span class="nc" id="L110">                    Stack stack = trackingTableChildStacks[attackCord.getX()][attackCord.getY()];</span>
+<span class="nc" id="L111">                    Image snipeImage = (Image) stack.getChild(stack.getChildren().size-1);</span>
+
+<span class="nc" id="L113">                    snipeImage.setVisible(true);</span>
+<span class="nc" id="L114">                    oldPos = stack;</span>
+
+<span class="nc" id="L116">                    coordLabel.setText(new Coordinate(attackCord.getX(), attackCord.getY()).toLetterFormat());</span>
+
+<span class="nc" id="L118">                    response = controller.playTurn(attackCord);</span>
+<span class="nc" id="L119">                }</span>
+                else {
+<span class="nc" id="L121">                    System.out.println(&quot;Unexpected error Oo, ai tries to attack but nothing was chosen ! Seems that player was not AI&quot;);</span>
+<span class="nc" id="L122">                    Gdx.app.exit();</span>
+                }
+            }
+        }
+<span class="nc" id="L126">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

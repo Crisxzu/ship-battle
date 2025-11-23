@@ -1,0 +1,1377 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetupPlayerShipView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">SetupPlayerShipView.java</span></div><h1>SetupPlayerShipView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.controller.gui.SetupMenuController;
+import com.par_28.ship_battle.model.Cell;
+import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Grid;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.Ship;
+import com.par_28.ship_battle.model.enums.Direction;
+
+/**
+ * Setup player ship placement menu
+ */
+public class SetupPlayerShipView extends GuiView&lt;SetupMenuController&gt; {
+
+    /**
+     * Base size for ship icons
+     */
+    private static final float BASE_SHIP_ICON_SIZE = 48f;
+
+    /**
+     * Color for valid placement highlight
+     */
+<span class="nc" id="L58">    private static final Color VALID_COLOR = new Color(0f, 1f, 0f, 0.35f);</span>
+
+    /**
+     * Color for invalid placement highlight
+     */
+<span class="nc" id="L63">    private static final Color INVALID_COLOR = new Color(1f, 0f, 0f, 0.35f);</span>
+
+    /**
+     * Main layout table
+     */
+    private Table root;
+
+    /**
+     * Left panel container
+     */
+    private Table leftPanel;
+
+    /**
+     * Ship list container
+     */
+    private VerticalGroup shipListGroup;
+
+    /**
+     * Ship list scroll pane
+     */
+    private ScrollPane shipListScroll;
+
+    /**
+     * Ship list scroll container
+     */
+    private Container&lt;ScrollPane&gt; shipListContainer;
+
+    /**
+     * Grid container
+     */
+    private Table gridContainer;
+
+    /**
+     * Grid table
+     */
+    private Table gridTable;
+
+    /**
+     * Left panel cell in the root table
+     */
+    private com.badlogic.gdx.scenes.scene2d.ui.Cell&lt;Table&gt; leftPanelCell;
+
+    /**
+     * Grid cell in the root table
+     */
+    private com.badlogic.gdx.scenes.scene2d.ui.Cell&lt;Table&gt; gridCell;
+
+    /**
+     * Header labels for grid columns
+     */
+<span class="nc" id="L113">    private final List&lt;Label&gt; headerLabels = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Row labels for grid rows
+     */
+<span class="nc" id="L118">    private final List&lt;Label&gt; rowLabels = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Wrappers for ship icons
+     */
+<span class="nc" id="L123">    private final List&lt;Container&lt;Image&gt;&gt; shipIconWrappers = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Rows of ship selection
+     */
+<span class="nc" id="L128">    private final List&lt;HorizontalGroup&gt; shipRows = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Mapping of ships to their selection buttons
+     */
+<span class="nc" id="L133">    private final Map&lt;Ship, TextButton&gt; shipButtons = new HashMap&lt;&gt;();</span>
+
+    /**
+     * Currently active highlight images
+     */
+<span class="nc" id="L138">    private final List&lt;Image&gt; activeHighlights = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Currently placed ship images
+     */
+<span class="nc" id="L143">    private final List&lt;Image&gt; placedShipImages = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Grid cell stacks
+     */
+    private Stack[][] cellStacks;
+
+    /**
+     * Grid cell highlight layers
+     */
+    private Image[][] highlightLayers;
+
+    /**
+     * Current size of each grid cell in pixels
+     */
+<span class="nc" id="L158">    private float cellPixelSize = 64f;</span>
+
+    /**
+     * Title label
+     */
+    private Label titleLabel;
+
+    /**
+     * Instruction label
+     */
+    private Label instructionLabel;
+
+    /**
+     * Direction label
+     */
+    private Label directionLabel;
+
+    /**
+     * Helper label
+     */
+    private Label helperLabel;
+
+    /**
+     * Ready button
+     */
+    private TextButton readyButton;
+
+    /**
+     * Reset button
+     */
+    private TextButton resetButton;
+
+    /**
+     * Cancel selection button
+     */
+    private TextButton cancelSelectionButton;
+
+    /**
+     * Random placement button
+     */
+    private TextButton randomButton;
+
+    /**
+     * Current placement direction
+     */
+<span class="nc" id="L203">    private Direction placementDirection = Direction.HORIZONTAL;</span>
+
+    /**
+     * Last hovered cell coordinate
+     */
+<span class="nc" id="L208">    private Coordinate lastHoveredCell = null;</span>
+
+    /**
+     * Currently active ship selection button
+     */
+    private TextButton activeShipButton;
+
+    /**
+     * Grid case texture drawable
+     */
+    private TextureRegionDrawable gridCaseDrawable;
+    
+    /**
+     * Carrier texture drawable
+     */
+    private TextureRegionDrawable carrierTexture;
+
+    /**
+     * Cruiser texture drawable
+     */
+    private TextureRegionDrawable cruiserTexture;
+
+    /**
+     * Destroyer texture drawable
+     */
+    private TextureRegionDrawable destroyerTexture;
+
+    /**
+     * Torpedo texture drawable
+     */
+    private TextureRegionDrawable torpedoTexture;
+
+    /**
+     * Highlight texture
+     */
+    private Texture highlightTexture;
+
+    /**
+     * Custom cursor for ship placement
+     */
+    private Cursor customCursor;
+
+    /**
+     * Pixmap for custom cursor
+     */
+    private Pixmap cursorPixmap;
+
+
+    /**
+     * Create the setup player ship menu.
+     * @param parent screen manager
+     * @param controller setup menu controller
+     */
+    public SetupPlayerShipView(ScreenController parent, SetupMenuController controller) {
+<span class="nc" id="L262">        super(parent, controller);</span>
+<span class="nc" id="L263">        buildUI();</span>
+<span class="nc" id="L264">    }</span>
+
+    @Override
+    protected void loadTextures() {
+<span class="nc" id="L268">        super.loadTextures();</span>
+<span class="nc" id="L269">        Texture gridTexture = SpriteHandler.getTexture(SpriteHandler.TextureID.GRID_CASE);</span>
+<span class="nc" id="L270">        gridCaseDrawable = new TextureRegionDrawable(new TextureRegion(gridTexture));</span>
+<span class="nc bnc" id="L271" title="All 4 branches missed.">        if(gridCaseDrawable != null &amp;&amp; gridCaseDrawable.getMinWidth() &gt; 0f) {</span>
+<span class="nc" id="L272">            cellPixelSize = gridCaseDrawable.getMinWidth();</span>
+        }
+
+<span class="nc" id="L275">        carrierTexture = new TextureRegionDrawable(new TextureRegion(</span>
+<span class="nc" id="L276">            SpriteHandler.getTexture(SpriteHandler.TextureID.CARRIER)</span>
+        ));
+<span class="nc" id="L278">        cruiserTexture = new TextureRegionDrawable(new TextureRegion(</span>
+<span class="nc" id="L279">            SpriteHandler.getTexture(SpriteHandler.TextureID.CRUISER)</span>
+        ));
+<span class="nc" id="L281">        destroyerTexture = new TextureRegionDrawable(new TextureRegion(</span>
+<span class="nc" id="L282">            SpriteHandler.getTexture(SpriteHandler.TextureID.DESTROYER)</span>
+        ));
+<span class="nc" id="L284">        torpedoTexture = new TextureRegionDrawable(new TextureRegion(</span>
+<span class="nc" id="L285">            SpriteHandler.getTexture(SpriteHandler.TextureID.TORPEDO)</span>
+        ));
+
+<span class="nc" id="L288">        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);</span>
+<span class="nc" id="L289">        pixmap.setColor(Color.WHITE);</span>
+<span class="nc" id="L290">        pixmap.fill();</span>
+<span class="nc" id="L291">        highlightTexture = new Texture(pixmap);</span>
+<span class="nc" id="L292">        pixmap.dispose();</span>
+<span class="nc" id="L293">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L297">        super.buildUI();</span>
+
+<span class="nc" id="L299">        root = new Table();</span>
+<span class="nc" id="L300">        root.setFillParent(true);</span>
+<span class="nc" id="L301">        root.defaults().top().left();</span>
+<span class="nc" id="L302">        stage.addActor(root);</span>
+
+<span class="nc" id="L304">        leftPanel = new Table();</span>
+<span class="nc" id="L305">        leftPanel.defaults().growX().padBottom(10f);</span>
+
+<span class="nc" id="L307">        Table leftHeader = new Table();</span>
+
+<span class="nc" id="L309">        titleLabel = new Label(&quot;Ship Placement&quot;, skin);</span>
+<span class="nc" id="L310">        titleLabel.setAlignment(Align.left);</span>
+<span class="nc" id="L311">        leftHeader.add(titleLabel).left().growX().row();</span>
+
+<span class="nc" id="L313">        instructionLabel = new Label(&quot;Left click = place, Right click = rotate&quot;, skin);</span>
+<span class="nc" id="L314">        instructionLabel.setAlignment(Align.left);</span>
+<span class="nc" id="L315">        leftHeader.add(instructionLabel).left().growX().row();</span>
+
+<span class="nc" id="L317">        directionLabel = new Label(directionText(), skin);</span>
+<span class="nc" id="L318">        directionLabel.setAlignment(Align.left);</span>
+<span class="nc" id="L319">        leftHeader.add(directionLabel).left().growX().row();</span>
+
+<span class="nc" id="L321">        helperLabel = new Label(&quot;Place every ship to continue&quot;, skin);</span>
+<span class="nc" id="L322">        helperLabel.setAlignment(Align.left);</span>
+<span class="nc" id="L323">        leftHeader.add(helperLabel).left().padBottom(6f).growX().row();</span>
+
+<span class="nc" id="L325">        leftPanel.add(leftHeader).growX().padBottom(6f).row();</span>
+
+<span class="nc" id="L327">        shipListGroup = new VerticalGroup();</span>
+<span class="nc" id="L328">        shipListGroup.align(Align.topLeft);</span>
+<span class="nc" id="L329">        shipListGroup.fill();</span>
+<span class="nc" id="L330">        shipListGroup.space(8f);</span>
+<span class="nc" id="L331">        shipListScroll = new ScrollPane(shipListGroup, skin);</span>
+<span class="nc" id="L332">        shipListScroll.setScrollingDisabled(true, false);</span>
+<span class="nc" id="L333">        shipListScroll.setFadeScrollBars(false);</span>
+<span class="nc" id="L334">        shipListScroll.setForceScroll(false, true);</span>
+<span class="nc" id="L335">        shipListContainer = new Container&lt;&gt;(shipListScroll);</span>
+<span class="nc" id="L336">        shipListContainer.fill();</span>
+<span class="nc" id="L337">        leftPanel.add(shipListContainer).grow().top().row();</span>
+
+<span class="nc" id="L339">        randomButton = new TextButton(&quot;Random placement&quot;, skin);</span>
+<span class="nc" id="L340">        randomButton.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L343">                handleRandomPlacement();</span>
+<span class="nc" id="L344">            }</span>
+        });
+<span class="nc" id="L346">        leftPanel.add(randomButton)</span>
+<span class="nc" id="L347">            .growX()</span>
+<span class="nc" id="L348">            .padTop(6f)</span>
+<span class="nc" id="L349">            .row();</span>
+
+<span class="nc" id="L351">        Table secondaryActionsRow = new Table();</span>
+<span class="nc" id="L352">        secondaryActionsRow.defaults().growX().padRight(10f);</span>
+
+<span class="nc" id="L354">        resetButton = new TextButton(&quot;Reset placement&quot;, skin);</span>
+<span class="nc" id="L355">        resetButton.setDisabled(true);</span>
+<span class="nc" id="L356">        resetButton.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L359">                handleResetPlacement();</span>
+<span class="nc" id="L360">            }</span>
+        });
+<span class="nc" id="L362">        secondaryActionsRow.add(resetButton).growX();</span>
+
+<span class="nc" id="L364">        cancelSelectionButton = new TextButton(&quot;Cancel selection&quot;, skin);</span>
+<span class="nc" id="L365">        cancelSelectionButton.setDisabled(true);</span>
+<span class="nc" id="L366">        cancelSelectionButton.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L369">                handleCancelSelection();</span>
+<span class="nc" id="L370">            }</span>
+        });
+<span class="nc" id="L372">        secondaryActionsRow.add(cancelSelectionButton).growX().padRight(0f);</span>
+
+<span class="nc" id="L374">        leftPanel.add(secondaryActionsRow)</span>
+<span class="nc" id="L375">            .growX()</span>
+<span class="nc" id="L376">            .padTop(6f)</span>
+<span class="nc" id="L377">            .row();</span>
+
+<span class="nc" id="L379">        readyButton = new TextButton(&quot;Fleet ready&quot;, skin);</span>
+<span class="nc" id="L380">        readyButton.setDisabled(true);</span>
+<span class="nc" id="L381">        readyButton.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L384">                handleReadyButton();</span>
+<span class="nc" id="L385">            }</span>
+        });
+<span class="nc" id="L387">        leftPanel.add(readyButton)</span>
+<span class="nc" id="L388">            .growX()</span>
+<span class="nc" id="L389">            .padTop(10f)</span>
+<span class="nc" id="L390">            .row();</span>
+
+<span class="nc" id="L392">        TextButton backButton = new TextButton(&quot;Back to Title&quot;, skin);</span>
+<span class="nc" id="L393">        backButton.addListener(new ClickListener() {</span>
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L396">                parent.changeController(GuiControllerEnum.MAIN_MENU);</span>
+<span class="nc" id="L397">            }</span>
+        });
+<span class="nc" id="L399">        leftPanel.add(backButton)</span>
+<span class="nc" id="L400">            .growX()</span>
+<span class="nc" id="L401">            .padTop(6f)</span>
+<span class="nc" id="L402">            .row();</span>
+
+<span class="nc" id="L404">        leftPanelCell = root.add(leftPanel)</span>
+<span class="nc" id="L405">            .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L406">            .minWidth(320f)</span>
+<span class="nc" id="L407">            .growY()</span>
+<span class="nc" id="L408">            .pad(20f)</span>
+<span class="nc" id="L409">            .padRight(20f);</span>
+
+<span class="nc" id="L411">        gridTable = new Table();</span>
+<span class="nc" id="L412">        gridTable.defaults().pad(0f);</span>
+<span class="nc" id="L413">        buildGrid();</span>
+
+<span class="nc" id="L415">        scheduleCellSizeUpdate();</span>
+
+<span class="nc" id="L417">        gridContainer = new Table();</span>
+<span class="nc" id="L418">        gridContainer.setFillParent(false);</span>
+<span class="nc" id="L419">        gridContainer.add(gridTable).expand().center();</span>
+
+<span class="nc" id="L421">        gridCell = root.add(gridContainer)</span>
+<span class="nc" id="L422">            .grow()</span>
+<span class="nc" id="L423">            .pad(20f);</span>
+
+<span class="nc" id="L425">        refreshShipList();</span>
+<span class="nc" id="L426">        refreshPlacedShips();</span>
+
+<span class="nc" id="L428">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L429">        updateControlButtonsState();</span>
+
+<span class="nc" id="L431">        applyResponsiveLayout((int)Gdx.graphics.getWidth(), (int)Gdx.graphics.getHeight());</span>
+<span class="nc" id="L432">    }</span>
+
+    /**
+     * Schedule an update for cell pixel size after layout pass
+     */
+    private void scheduleCellSizeUpdate() {
+<span class="nc bnc" id="L438" title="All 2 branches missed.">        if(stage != null) {</span>
+<span class="nc" id="L439">            stage.addAction(Actions.run(this::updateCellPixelSize));</span>
+        }
+<span class="nc" id="L441">    }</span>
+
+    /**
+     * Update the current cell pixel size based on actual grid cell size
+     */
+    private void updateCellPixelSize() {
+<span class="nc bnc" id="L447" title="All 6 branches missed.">        if(cellStacks == null || cellStacks.length == 0 || cellStacks[0].length == 0) {</span>
+<span class="nc" id="L448">            return;</span>
+        }
+<span class="nc" id="L450">        Stack firstCell = cellStacks[0][0];</span>
+<span class="nc bnc" id="L451" title="All 2 branches missed.">        if(firstCell == null) {</span>
+<span class="nc" id="L452">            return;</span>
+        }
+<span class="nc" id="L454">        float currentSize = Math.min(firstCell.getWidth(), firstCell.getHeight());</span>
+<span class="nc bnc" id="L455" title="All 2 branches missed.">        if(currentSize &gt; 0f) {</span>
+<span class="nc" id="L456">            cellPixelSize = currentSize;</span>
+<span class="nc" id="L457">            updateCursorForSelection(controller.getSelectedShip());</span>
+        }
+<span class="nc" id="L459">    }</span>
+
+    /**
+     * Build the grid UI
+     */
+    private void buildGrid() {
+<span class="nc" id="L465">        gridTable.clear();</span>
+<span class="nc" id="L466">        headerLabels.clear();</span>
+<span class="nc" id="L467">        rowLabels.clear();</span>
+
+<span class="nc" id="L469">        Player player = controller.getCurrentSetupPlayer();</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">        if(player == null) {</span>
+<span class="nc" id="L471">            return;</span>
+        }
+
+<span class="nc" id="L474">        Grid grid = player.getGrid();</span>
+<span class="nc" id="L475">        int width = grid.getWidth();</span>
+<span class="nc" id="L476">        int height = grid.getHeight();</span>
+
+<span class="nc" id="L478">        cellStacks = new Stack[width][height];</span>
+<span class="nc" id="L479">        highlightLayers = new Image[width][height];</span>
+
+<span class="nc" id="L481">        gridTable.add().size(35f).expandX().left();</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">        for (int x = 0; x &lt; width; x++) {</span>
+<span class="nc" id="L483">            char columnLetter = (char) ('A' + x);</span>
+<span class="nc" id="L484">            Label header = new Label(String.valueOf(columnLetter), skin);</span>
+<span class="nc" id="L485">            header.setAlignment(Align.center);</span>
+<span class="nc" id="L486">            gridTable.add(header).height(35f).expandX();</span>
+<span class="nc" id="L487">            headerLabels.add(header);</span>
+        }
+<span class="nc" id="L489">        gridTable.row();</span>
+
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        for (int y = 0; y &lt; height; y++) {</span>
+<span class="nc" id="L492">            Label rowLabel = new Label(String.valueOf(y + 1), skin);</span>
+<span class="nc" id="L493">            rowLabel.setAlignment(Align.center);</span>
+<span class="nc" id="L494">            gridTable.add(rowLabel).width(35f).expandY();</span>
+<span class="nc" id="L495">            rowLabels.add(rowLabel);</span>
+
+<span class="nc bnc" id="L497" title="All 2 branches missed.">            for (int x = 0; x &lt; width; x++) {</span>
+<span class="nc" id="L498">                Stack stack = new Stack();</span>
+<span class="nc" id="L499">                stack.setTouchable(Touchable.enabled);</span>
+<span class="nc" id="L500">                stack.setName(String.format(&quot;cell-%d-%d&quot;, x, y));</span>
+
+<span class="nc" id="L502">                Image gridCellImage = new Image(gridCaseDrawable);</span>
+<span class="nc" id="L503">                gridCellImage.setFillParent(true);</span>
+<span class="nc" id="L504">                stack.add(gridCellImage);</span>
+
+<span class="nc" id="L506">                Image highlight = new Image(new TextureRegionDrawable(new TextureRegion(highlightTexture)));</span>
+<span class="nc" id="L507">                highlight.setFillParent(true);</span>
+<span class="nc" id="L508">                highlight.setVisible(false);</span>
+<span class="nc" id="L509">                stack.add(highlight);</span>
+<span class="nc" id="L510">                highlightLayers[x][y] = highlight;</span>
+
+<span class="nc" id="L512">                final int cellX = x;</span>
+<span class="nc" id="L513">                final int cellY = y;</span>
+
+<span class="nc" id="L515">                stack.addListener(new InputListener() {</span>
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+<span class="nc" id="L518">                        handleHover(cellX, cellY);</span>
+<span class="nc" id="L519">                    }</span>
+
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+<span class="nc bnc" id="L523" title="All 6 branches missed.">                        if (toActor == null || !(toActor.getName() != null &amp;&amp; toActor.getName().startsWith(&quot;cell-&quot;))) {</span>
+<span class="nc" id="L524">                            clearHover();</span>
+                        }
+<span class="nc" id="L526">                    }</span>
+
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+<span class="nc bnc" id="L530" title="All 2 branches missed.">                        if(pointer &gt; 0) {</span>
+<span class="nc" id="L531">                            return false;</span>
+                        }
+
+<span class="nc bnc" id="L534" title="All 2 branches missed.">                        if(button == Input.Buttons.RIGHT) {</span>
+<span class="nc" id="L535">                            toggleDirection();</span>
+<span class="nc" id="L536">                            handleHover(cellX, cellY);</span>
+<span class="nc" id="L537">                            return true;</span>
+                        }
+
+<span class="nc bnc" id="L540" title="All 2 branches missed.">                        if(button == Input.Buttons.LEFT) {</span>
+<span class="nc" id="L541">                            attemptPlacement(cellX, cellY);</span>
+<span class="nc" id="L542">                            return true;</span>
+                        }
+
+<span class="nc" id="L545">                        return false;</span>
+                    }
+                });
+
+<span class="nc" id="L549">                gridTable.add(stack)</span>
+<span class="nc" id="L550">                    .minSize(48f)</span>
+<span class="nc" id="L551">                    .grow()</span>
+<span class="nc" id="L552">                    .uniform();</span>
+
+<span class="nc" id="L554">                cellStacks[x][y] = stack;</span>
+            }
+<span class="nc" id="L556">            gridTable.row();</span>
+        }
+<span class="nc" id="L558">    }</span>
+
+    /**
+     * Refresh the ship list UI
+     */
+    private void refreshShipList() {
+<span class="nc" id="L564">        shipListGroup.clearChildren();</span>
+<span class="nc" id="L565">        shipIconWrappers.clear();</span>
+<span class="nc" id="L566">        shipRows.clear();</span>
+<span class="nc" id="L567">        shipButtons.clear();</span>
+<span class="nc" id="L568">        activeShipButton = null;</span>
+
+<span class="nc" id="L570">        List&lt;Ship&gt; ships = controller.getShipsToPlace();</span>
+<span class="nc" id="L571">        updateReadyState(ships.isEmpty());</span>
+<span class="nc bnc" id="L572" title="All 2 branches missed.">        if(ships.isEmpty()) {</span>
+<span class="nc" id="L573">            Label doneLabel = new Label(&quot;All ships placed&quot;, skin);</span>
+<span class="nc" id="L574">            doneLabel.setAlignment(Align.left);</span>
+<span class="nc" id="L575">            shipListGroup.addActor(doneLabel);</span>
+<span class="nc" id="L576">            updateCursorForSelection(null);</span>
+<span class="nc" id="L577">            return;</span>
+        }
+
+<span class="nc" id="L580">        Map&lt;String, Integer&gt; occurrences = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L581">        Map&lt;String, Integer&gt; indexMap = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L583" title="All 2 branches missed.">        for (Ship ship : ships) {</span>
+<span class="nc" id="L584">            occurrences.merge(ship.getName(), 1, Integer::sum);</span>
+<span class="nc" id="L585">        }</span>
+
+<span class="nc bnc" id="L587" title="All 2 branches missed.">        for (Ship ship : ships) {</span>
+<span class="nc" id="L588">            int count = occurrences.getOrDefault(ship.getName(), 1);</span>
+<span class="nc" id="L589">            int index = indexMap.merge(ship.getName(), 1, Integer::sum);</span>
+<span class="nc bnc" id="L590" title="All 2 branches missed.">            String label = count &gt; 1 ? String.format(&quot;%s #%d&quot;, ship.getName(), index) : ship.getName();</span>
+<span class="nc" id="L591">            TextButton button = new TextButton(label, skin);</span>
+<span class="nc" id="L592">            button.addListener(new ClickListener() {</span>
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+<span class="nc" id="L595">                    handleShipSelection(ship, button);</span>
+<span class="nc" id="L596">                }</span>
+            });
+<span class="nc" id="L598">            button.addListener(new InputListener() {</span>
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int buttonCode) {
+<span class="nc bnc" id="L601" title="All 4 branches missed.">                    if(pointer &gt; 0 || buttonCode != Input.Buttons.LEFT) {</span>
+<span class="nc" id="L602">                        return false;</span>
+                    }
+<span class="nc" id="L604">                    Ship current = controller.getSelectedShip();</span>
+<span class="nc bnc" id="L605" title="All 4 branches missed.">                    if(current != null &amp;&amp; current != ship) {</span>
+<span class="nc" id="L606">                        return handleShipSelection(ship, button);</span>
+                    }
+<span class="nc" id="L608">                    return false;</span>
+                }
+            });
+<span class="nc" id="L611">            HorizontalGroup row = new HorizontalGroup();</span>
+<span class="nc" id="L612">            row.align(Align.left);</span>
+<span class="nc" id="L613">            row.space(10f);</span>
+<span class="nc" id="L614">            row.fill();</span>
+<span class="nc" id="L615">            row.expand();</span>
+<span class="nc" id="L616">            shipRows.add(row);</span>
+
+<span class="nc" id="L618">            Container&lt;Image&gt; iconWrapper = new Container&lt;&gt;();</span>
+<span class="nc" id="L619">            iconWrapper.size(BASE_SHIP_ICON_SIZE, BASE_SHIP_ICON_SIZE);</span>
+<span class="nc" id="L620">            iconWrapper.fill();</span>
+<span class="nc" id="L621">            iconWrapper.align(Align.center);</span>
+<span class="nc" id="L622">            Image icon = createShipIcon(ship);</span>
+<span class="nc bnc" id="L623" title="All 2 branches missed.">            if(icon != null) {</span>
+<span class="nc" id="L624">                iconWrapper.setActor(icon);</span>
+            }
+<span class="nc" id="L626">            shipIconWrappers.add(iconWrapper);</span>
+<span class="nc" id="L627">            row.addActor(iconWrapper);</span>
+
+<span class="nc" id="L629">            Container&lt;TextButton&gt; buttonWrapper = new Container&lt;&gt;(button);</span>
+<span class="nc" id="L630">            buttonWrapper.fillX();</span>
+<span class="nc" id="L631">            buttonWrapper.align(Align.left);</span>
+<span class="nc" id="L632">            row.addActor(buttonWrapper);</span>
+
+<span class="nc" id="L634">            shipListGroup.addActor(row);</span>
+<span class="nc" id="L635">            shipButtons.put(ship, button);</span>
+<span class="nc" id="L636">        }</span>
+
+<span class="nc" id="L638">        updateControlButtonsState();</span>
+<span class="nc" id="L639">    }</span>
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L643">        super.resize(width, height);</span>
+<span class="nc" id="L644">        applyResponsiveLayout(width, height);</span>
+<span class="nc" id="L645">    }</span>
+
+    /**
+     * Apply responsive layout adjustments
+     * 
+     * @param width new width
+     * @param height new height
+     */
+    private void applyResponsiveLayout(int width, int height) {
+<span class="nc" id="L654">        float baseSize = getBaseSize();</span>
+<span class="nc bnc" id="L655" title="All 2 branches missed.">        if(baseSize &lt;= 0f) {</span>
+<span class="nc" id="L656">            baseSize = Math.min(Math.max(width, 1), Math.max(height, 1));</span>
+        }
+
+<span class="nc" id="L659">        updatePanelDistribution(width, height);</span>
+<span class="nc" id="L660">        updateTextScales(baseSize);</span>
+<span class="nc" id="L661">        updateShipListPresentation(baseSize);</span>
+<span class="nc" id="L662">        updateGridPresentation(baseSize);</span>
+<span class="nc" id="L663">    }</span>
+
+    /**
+     * Update the panel distribution based on screen size
+     * 
+     * @param width new width
+     * @param height new height
+     */
+    private void updatePanelDistribution(int width, int height) {
+<span class="nc bnc" id="L672" title="All 2 branches missed.">        if(root == null) {</span>
+<span class="nc" id="L673">            return;</span>
+        }
+<span class="nc" id="L675">        float padding = MathUtils.clamp(width * 0.015f, 10f, 40f);</span>
+
+<span class="nc" id="L677">        root.clearChildren();</span>
+<span class="nc" id="L678">        root.pad(padding).defaults().top().left();</span>
+
+<span class="nc" id="L680">        leftPanelCell = root.add(leftPanel)</span>
+<span class="nc" id="L681">            .width(Value.percentWidth(0.38f, root))</span>
+<span class="nc" id="L682">            .minWidth(280f)</span>
+<span class="nc" id="L683">            .growY()</span>
+<span class="nc" id="L684">            .padRight(padding);</span>
+
+<span class="nc" id="L686">        gridCell = root.add(gridContainer)</span>
+<span class="nc" id="L687">            .width(Value.percentWidth(0.58f, root))</span>
+<span class="nc" id="L688">            .grow();</span>
+
+<span class="nc" id="L690">        float gridPadding = MathUtils.clamp(width * 0.02f, 15f, 50f);</span>
+<span class="nc" id="L691">        gridContainer.pad(gridPadding);</span>
+
+<span class="nc bnc" id="L693" title="All 2 branches missed.">        if(leftPanelCell != null) {</span>
+<span class="nc" id="L694">            leftPanelCell.fill();</span>
+        }
+<span class="nc bnc" id="L696" title="All 2 branches missed.">        if(gridCell != null) {</span>
+<span class="nc" id="L697">            gridCell.expand().fill();</span>
+        }
+<span class="nc" id="L699">    }</span>
+
+    /**
+     * Update text scales based on base size
+     * 
+     * @param baseSize base size for scaling
+     */
+    private void updateTextScales(float baseSize) {
+<span class="nc" id="L707">        float titleScale = MathUtils.clamp(baseSize / 320f, 1.1f, 2.8f);</span>
+<span class="nc" id="L708">        float bodyScale = MathUtils.clamp(baseSize / 520f, 0.8f, 1.7f);</span>
+<span class="nc" id="L709">        float helperScale = MathUtils.clamp(baseSize / 600f, 0.7f, 1.4f);</span>
+<span class="nc" id="L710">        float buttonScale = MathUtils.clamp(baseSize / 620f, 0.65f, 1.4f);</span>
+
+<span class="nc" id="L712">        titleLabel.setFontScale(titleScale);</span>
+<span class="nc" id="L713">        instructionLabel.setFontScale(bodyScale);</span>
+<span class="nc" id="L714">        directionLabel.setFontScale(bodyScale);</span>
+<span class="nc" id="L715">        helperLabel.setFontScale(helperScale);</span>
+
+<span class="nc" id="L717">        setButtonLabelScale(readyButton, buttonScale);</span>
+<span class="nc" id="L718">        setButtonLabelScale(resetButton, buttonScale);</span>
+<span class="nc" id="L719">        setButtonLabelScale(cancelSelectionButton, buttonScale);</span>
+<span class="nc" id="L720">        setButtonLabelScale(randomButton, buttonScale);</span>
+
+<span class="nc bnc" id="L722" title="All 2 branches missed.">        for (TextButton button : shipButtons.values()) {</span>
+<span class="nc" id="L723">            setButtonLabelScale(button, buttonScale * 0.95f);</span>
+<span class="nc" id="L724">        }</span>
+<span class="nc" id="L725">    }</span>
+
+    /**
+     * Set the font scale for a button's label
+     * 
+     * @param button the button
+     * @param scale the font scale
+     */
+    private void setButtonLabelScale(TextButton button, float scale) {
+<span class="nc bnc" id="L734" title="All 2 branches missed.">        if(button == null) {</span>
+<span class="nc" id="L735">            return;</span>
+        }
+<span class="nc" id="L737">        button.getLabel().setFontScale(scale);</span>
+<span class="nc" id="L738">    }   </span>
+
+    /**
+     * Update ship list presentation based on base size
+     * 
+     * @param baseSize base size for scaling
+     */
+    private void updateShipListPresentation(float baseSize) {
+<span class="nc bnc" id="L746" title="All 2 branches missed.">        if(shipListGroup == null) {</span>
+<span class="nc" id="L747">            return;</span>
+        }
+<span class="nc" id="L749">        float iconSize = MathUtils.clamp(BASE_SHIP_ICON_SIZE * (baseSize / 600f), 30f, 84f);</span>
+<span class="nc" id="L750">        float rowSpacing = MathUtils.clamp(iconSize * 0.2f, 6f, 20f);</span>
+
+<span class="nc" id="L752">        shipListGroup.space(rowSpacing);</span>
+
+<span class="nc bnc" id="L754" title="All 2 branches missed.">        for (HorizontalGroup row : shipRows) {</span>
+<span class="nc bnc" id="L755" title="All 2 branches missed.">            if(row == null) {</span>
+<span class="nc" id="L756">                continue;</span>
+            }
+<span class="nc" id="L758">            row.space(Math.max(rowSpacing * 0.6f, 4f));</span>
+<span class="nc" id="L759">            row.padBottom(rowSpacing * 0.4f);</span>
+<span class="nc" id="L760">        }</span>
+
+<span class="nc bnc" id="L762" title="All 2 branches missed.">        for (Container&lt;Image&gt; iconWrapper : shipIconWrappers) {</span>
+<span class="nc bnc" id="L763" title="All 2 branches missed.">            if(iconWrapper == null) {</span>
+<span class="nc" id="L764">                continue;</span>
+            }
+<span class="nc" id="L766">            iconWrapper.size(iconSize, iconSize);</span>
+<span class="nc" id="L767">            Image icon = iconWrapper.getActor();</span>
+<span class="nc bnc" id="L768" title="All 2 branches missed.">            if(icon != null) {</span>
+<span class="nc" id="L769">                icon.setSize(iconSize, iconSize);</span>
+            }
+<span class="nc" id="L771">        }</span>
+
+<span class="nc bnc" id="L773" title="All 2 branches missed.">        if(shipListScroll != null) {</span>
+<span class="nc bnc" id="L774" title="All 2 branches missed.">            shipListScroll.setSmoothScrolling(baseSize &gt; 420f);</span>
+<span class="nc bnc" id="L775" title="All 2 branches missed.">            shipListScroll.setFadeScrollBars(baseSize &gt; 680f);</span>
+        }
+<span class="nc" id="L777">    }</span>
+
+    /**
+     * Update grid presentation based on base size
+     * 
+     * @param baseSize  base size for scaling
+     */
+    private void updateGridPresentation(float baseSize) {
+<span class="nc bnc" id="L785" title="All 2 branches missed.">        if(gridTable == null) {</span>
+<span class="nc" id="L786">            return;</span>
+        }
+<span class="nc" id="L788">        float labelScale = MathUtils.clamp(baseSize / 720f, 0.65f, 1.4f);</span>
+
+<span class="nc bnc" id="L790" title="All 2 branches missed.">        for (com.badlogic.gdx.scenes.scene2d.ui.Cell&lt;?&gt; cell : gridTable.getCells()) {</span>
+<span class="nc" id="L791">            cell.pad(0f).minSize(Math.max(40f, baseSize / 18f));</span>
+<span class="nc" id="L792">        }</span>
+<span class="nc bnc" id="L793" title="All 2 branches missed.">        for (Label label : headerLabels) {</span>
+<span class="nc" id="L794">            label.setFontScale(labelScale);</span>
+<span class="nc" id="L795">        }</span>
+<span class="nc bnc" id="L796" title="All 2 branches missed.">        for (Label label : rowLabels) {</span>
+<span class="nc" id="L797">            label.setFontScale(labelScale);</span>
+<span class="nc" id="L798">        }</span>
+<span class="nc" id="L799">    }</span>
+
+    /**
+     * Handle ship selection
+     * 
+     * @param ship the selected ship
+     * @param button the selection button
+     * @return true if selection was successful, false otherwise
+     */
+    private boolean handleShipSelection(Ship ship, TextButton button) {
+<span class="nc bnc" id="L809" title="All 2 branches missed.">        if(!controller.selectShip(ship)) {</span>
+<span class="nc" id="L810">            return false;</span>
+        }
+<span class="nc" id="L812">        placementDirection = Direction.HORIZONTAL;</span>
+<span class="nc" id="L813">        updateDirectionLabel();</span>
+<span class="nc" id="L814">        highlightSelectionButton(button);</span>
+<span class="nc" id="L815">        updateCursorForSelection(ship);</span>
+<span class="nc" id="L816">        lastHoveredCell = null;</span>
+<span class="nc" id="L817">        clearHover();</span>
+<span class="nc" id="L818">        updateControlButtonsState();</span>
+<span class="nc" id="L819">        return true;</span>
+    }
+
+    /**
+     * Create a ship icon image
+     * 
+     * @param ship the ship data
+     * @return the ship icon image
+     */
+    private Image createShipIcon(Ship ship) {
+<span class="nc bnc" id="L829" title="All 2 branches missed.">        if(ship == null) {</span>
+<span class="nc" id="L830">            return null;</span>
+        }
+
+<span class="nc" id="L833">        TextureRegionDrawable drawable = getShipDrawable(ship.getName());</span>
+<span class="nc bnc" id="L834" title="All 2 branches missed.">        if(drawable == null) {</span>
+<span class="nc" id="L835">            return null;</span>
+        }
+
+<span class="nc" id="L838">        Image icon = new Image(drawable);</span>
+<span class="nc" id="L839">        icon.setScaling(Scaling.fit);</span>
+<span class="nc" id="L840">        icon.setAlign(Align.center);</span>
+<span class="nc" id="L841">        return icon;</span>
+    }
+
+    /**
+     * Handle ready button click
+     * &lt;p&gt;
+     * Called when the player indicates they are done placing ships.
+     * &lt;/p&gt;
+     */
+    private void handleReadyButton() {
+<span class="nc bnc" id="L851" title="All 4 branches missed.">        if(controller == null || readyButton == null) {</span>
+<span class="nc" id="L852">            return;</span>
+        }
+
+<span class="nc bnc" id="L855" title="All 2 branches missed.">        if(controller.getShipsToPlaceCount() &gt; 0) {</span>
+<span class="nc" id="L856">            helperLabel.setText(&quot;Finish placing every ship before validating.&quot;);</span>
+<span class="nc" id="L857">            return;</span>
+        }
+
+<span class="nc" id="L860">        readyButton.setDisabled(true);</span>
+<span class="nc" id="L861">        controller.handlePlacementComplete();</span>
+<span class="nc" id="L862">    }</span>
+
+    /**
+     * Handle reset placement button click
+     * &lt;p&gt;
+     * Called when the player wants to reset all ship placements.
+     * &lt;/p&gt;
+     */
+    private void handleResetPlacement() {
+<span class="nc bnc" id="L871" title="All 6 branches missed.">        if(controller == null || resetButton == null || resetButton.isDisabled()) {</span>
+<span class="nc" id="L872">            return;</span>
+        }
+<span class="nc" id="L874">        controller.resetCurrentPlacement();</span>
+<span class="nc" id="L875">        refreshShipList();</span>
+<span class="nc" id="L876">        refreshPlacedShips();</span>
+<span class="nc" id="L877">        clearHover();</span>
+<span class="nc" id="L878">        highlightSelectionButton(null);</span>
+<span class="nc" id="L879">        updateCursorForSelection(null);</span>
+<span class="nc" id="L880">        helperLabel.setText(&quot;Placements cleared. Select a ship to start again.&quot;);</span>
+<span class="nc" id="L881">        updateControlButtonsState();</span>
+<span class="nc" id="L882">    }</span>
+
+    /**
+     * Handle cancel selection button click
+     * &lt;p&gt;
+     * Called when the player wants to cancel the current ship selection.
+     * &lt;/p&gt;
+     */
+    private void handleCancelSelection() {
+<span class="nc bnc" id="L891" title="All 6 branches missed.">        if(controller == null || cancelSelectionButton == null || cancelSelectionButton.isDisabled()) {</span>
+<span class="nc" id="L892">            return;</span>
+        }
+<span class="nc" id="L894">        controller.cancelSelection();</span>
+<span class="nc" id="L895">        highlightSelectionButton(null);</span>
+<span class="nc" id="L896">        clearHover();</span>
+<span class="nc" id="L897">        updateCursorForSelection(null);</span>
+<span class="nc" id="L898">        helperLabel.setText(&quot;Selection canceled. Pick a ship to continue.&quot;);</span>
+<span class="nc" id="L899">        updateControlButtonsState();</span>
+<span class="nc" id="L900">    }</span>
+
+    /**
+     * Handle random placement button click
+     * &lt;p&gt;
+     * Called when the player wants to place ships randomly.
+     * &lt;/p&gt;
+     */
+    private void handleRandomPlacement() {
+<span class="nc bnc" id="L909" title="All 2 branches missed.">        if(controller == null) {</span>
+<span class="nc" id="L910">            return;</span>
+        }
+<span class="nc" id="L912">        boolean success = controller.placeShipsRandomly();</span>
+<span class="nc bnc" id="L913" title="All 2 branches missed.">        if(success) {</span>
+<span class="nc" id="L914">            refreshShipList();</span>
+<span class="nc" id="L915">            refreshPlacedShips();</span>
+<span class="nc" id="L916">            clearHover();</span>
+<span class="nc" id="L917">            highlightSelectionButton(null);</span>
+<span class="nc" id="L918">            updateCursorForSelection(null);</span>
+<span class="nc" id="L919">            helperLabel.setText(&quot;Ships placed randomly. Ready to continue!&quot;);</span>
+<span class="nc" id="L920">            updateControlButtonsState();</span>
+        } else {
+<span class="nc" id="L922">            helperLabel.setText(&quot;Failed to place ships randomly. Try again.&quot;);</span>
+        }
+<span class="nc" id="L924">    }</span>
+
+    /**
+     * Update the ready button and helper label based on fleet completion state
+     * 
+     * @param fleetComplete true if the fleet is complete, false otherwise
+     */
+    private void updateReadyState(boolean fleetComplete) {
+<span class="nc bnc" id="L932" title="All 2 branches missed.">        if(readyButton != null) {</span>
+<span class="nc bnc" id="L933" title="All 2 branches missed.">            readyButton.setDisabled(!fleetComplete);</span>
+        }
+<span class="nc bnc" id="L935" title="All 2 branches missed.">        if(helperLabel != null) {</span>
+<span class="nc" id="L936">            helperLabel.setText(</span>
+<span class="nc bnc" id="L937" title="All 2 branches missed.">                fleetComplete</span>
+<span class="nc" id="L938">                    ? &quot;Fleet complete! Validate to continue.&quot;</span>
+<span class="nc" id="L939">                    : &quot;Place every ship to continue&quot;</span>
+            );
+        }
+<span class="nc" id="L942">    }</span>
+
+    /**
+     * Update the state of control buttons based on current placement state
+     */
+    private void updateControlButtonsState() {
+<span class="nc bnc" id="L948" title="All 2 branches missed.">        if(resetButton != null) {</span>
+<span class="nc bnc" id="L949" title="All 4 branches missed.">            boolean canReset = controller != null &amp;&amp; controller.hasPlacedShips();</span>
+<span class="nc bnc" id="L950" title="All 2 branches missed.">            resetButton.setDisabled(!canReset);</span>
+        }
+<span class="nc bnc" id="L952" title="All 2 branches missed.">        if(cancelSelectionButton != null) {</span>
+<span class="nc bnc" id="L953" title="All 4 branches missed.">            boolean hasSelection = controller != null &amp;&amp; controller.getSelectedShip() != null;</span>
+<span class="nc bnc" id="L954" title="All 2 branches missed.">            cancelSelectionButton.setDisabled(!hasSelection);</span>
+        }
+<span class="nc" id="L956">    }</span>
+
+    /**
+     * Highlight the selected ship button
+     * 
+     * @param button the button to highlight
+     */
+    private void highlightSelectionButton(TextButton button) {
+<span class="nc bnc" id="L964" title="All 2 branches missed.">        if(activeShipButton != null) {</span>
+<span class="nc" id="L965">            activeShipButton.setChecked(false);</span>
+        }
+<span class="nc" id="L967">        activeShipButton = button;</span>
+<span class="nc bnc" id="L968" title="All 2 branches missed.">        if(activeShipButton != null) {</span>
+<span class="nc" id="L969">            activeShipButton.setChecked(true);</span>
+        }
+<span class="nc" id="L971">    }</span>
+
+    /**
+     * Handle hover over a grid cell
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     */
+    private void handleHover(int x, int y) {
+<span class="nc" id="L980">        Ship selected = controller.getSelectedShip();</span>
+<span class="nc bnc" id="L981" title="All 2 branches missed.">        if(selected == null) {</span>
+<span class="nc" id="L982">            clearHover();</span>
+<span class="nc" id="L983">            return;</span>
+        }
+
+<span class="nc" id="L986">        lastHoveredCell = new Coordinate(x, y);</span>
+<span class="nc" id="L987">        clearHover();</span>
+
+<span class="nc" id="L989">        List&lt;Coordinate&gt; span = buildSpan(lastHoveredCell, selected.getLength());</span>
+<span class="nc bnc" id="L990" title="All 2 branches missed.">        boolean outOfBounds = span.size() &lt; selected.getLength();</span>
+<span class="nc bnc" id="L991" title="All 4 branches missed.">        boolean canPlace = !outOfBounds &amp;&amp; controller.canPlaceSelectedShip(lastHoveredCell, placementDirection);</span>
+
+<span class="nc bnc" id="L993" title="All 2 branches missed.">        Color color = canPlace ? VALID_COLOR : INVALID_COLOR;</span>
+<span class="nc bnc" id="L994" title="All 2 branches missed.">        for (Coordinate coord : span) {</span>
+<span class="nc bnc" id="L995" title="All 2 branches missed.">            if(!isInsideGrid(coord)) {</span>
+<span class="nc" id="L996">                continue;</span>
+            }
+<span class="nc" id="L998">            Image overlay = highlightLayers[coord.getX()][coord.getY()];</span>
+<span class="nc" id="L999">            overlay.setColor(color);</span>
+<span class="nc" id="L1000">            overlay.setVisible(true);</span>
+<span class="nc" id="L1001">            activeHighlights.add(overlay);</span>
+<span class="nc" id="L1002">        }</span>
+<span class="nc" id="L1003">    }</span>
+
+    /**
+     * Clear all active hover highlights
+     */
+    private void clearHover() {
+<span class="nc bnc" id="L1009" title="All 2 branches missed.">        for (Image image : activeHighlights) {</span>
+<span class="nc" id="L1010">            image.setVisible(false);</span>
+<span class="nc" id="L1011">        }</span>
+<span class="nc" id="L1012">        activeHighlights.clear();</span>
+<span class="nc" id="L1013">    }</span>
+
+    /**
+     * Attempt to place the selected ship at the given coordinates
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     */
+    private void attemptPlacement(int x, int y) {
+<span class="nc" id="L1022">        Ship selected = controller.getSelectedShip();</span>
+<span class="nc bnc" id="L1023" title="All 2 branches missed.">        if(selected == null) {</span>
+<span class="nc" id="L1024">            return;</span>
+        }
+
+<span class="nc" id="L1027">        Coordinate origin = new Coordinate(x, y);</span>
+<span class="nc bnc" id="L1028" title="All 2 branches missed.">        if(controller.placeSelectedShip(origin, placementDirection)) {</span>
+<span class="nc" id="L1029">            refreshShipList();</span>
+<span class="nc" id="L1030">            refreshPlacedShips();</span>
+<span class="nc" id="L1031">            clearHover();</span>
+<span class="nc" id="L1032">            updateCursorForSelection(null);</span>
+<span class="nc" id="L1033">            updateControlButtonsState();</span>
+        }
+<span class="nc" id="L1035">    }</span>
+
+    /**
+     * Build a span of coordinates from an origin in the current placement direction
+     * 
+     * @param origin starting coordinate
+     * @param length length of the span
+     * @return list of coordinates in the span
+     */
+    private List&lt;Coordinate&gt; buildSpan(Coordinate origin, int length) {
+<span class="nc" id="L1045">        List&lt;Coordinate&gt; coords = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L1046" title="All 2 branches missed.">        if(origin == null) {</span>
+<span class="nc" id="L1047">            return coords;</span>
+        }
+<span class="nc bnc" id="L1049" title="All 2 branches missed.">        int dx = placementDirection == Direction.HORIZONTAL ? 1 : 0;</span>
+<span class="nc bnc" id="L1050" title="All 2 branches missed.">        int dy = placementDirection == Direction.VERTICAL ? 1 : 0;</span>
+<span class="nc bnc" id="L1051" title="All 2 branches missed.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="nc" id="L1052">            coords.add(new Coordinate(origin.getX() + i * dx, origin.getY() + i * dy));</span>
+        }
+<span class="nc" id="L1054">        return coords;</span>
+    }
+
+    /**
+     * Check if a coordinate is inside the grid bounds
+     * 
+     * @param coord the coordinate to check
+     * @return true if inside bounds, false otherwise
+     */
+    private boolean isInsideGrid(Coordinate coord) {
+<span class="nc" id="L1064">        Player player = controller.getCurrentSetupPlayer();</span>
+<span class="nc bnc" id="L1065" title="All 4 branches missed.">        if(player == null || coord == null) {</span>
+<span class="nc" id="L1066">            return false;</span>
+        }
+<span class="nc" id="L1068">        Grid grid = player.getGrid();</span>
+<span class="nc bnc" id="L1069" title="All 4 branches missed.">        return coord.getX() &gt;= 0 &amp;&amp; coord.getX() &lt; grid.getWidth()</span>
+<span class="nc bnc" id="L1070" title="All 4 branches missed.">            &amp;&amp; coord.getY() &gt;= 0 &amp;&amp; coord.getY() &lt; grid.getHeight();</span>
+    }
+
+    /**
+     * Toggle the current placement direction
+     */
+    private void toggleDirection() {
+<span class="nc bnc" id="L1077" title="All 2 branches missed.">        placementDirection = (placementDirection == Direction.HORIZONTAL)</span>
+<span class="nc" id="L1078">            ? Direction.VERTICAL</span>
+<span class="nc" id="L1079">            : Direction.HORIZONTAL;</span>
+<span class="nc" id="L1080">        updateDirectionLabel();</span>
+<span class="nc" id="L1081">        updateCursorForSelection(controller.getSelectedShip());</span>
+<span class="nc bnc" id="L1082" title="All 2 branches missed.">        if(lastHoveredCell != null) {</span>
+<span class="nc" id="L1083">            handleHover(lastHoveredCell.getX(), lastHoveredCell.getY());</span>
+        }
+<span class="nc" id="L1085">    }</span>
+
+    /**
+     * Update the direction label text
+     */
+    private void updateDirectionLabel() {
+<span class="nc" id="L1091">        directionLabel.setText(directionText());</span>
+<span class="nc" id="L1092">    }</span>
+
+    /**
+     * Get the direction label text
+     * 
+     * @return the direction text
+     */
+    private String directionText() {
+<span class="nc" id="L1100">        return String.format(&quot;Direction: %s&quot;, placementDirection.name());</span>
+    }
+
+    /**
+     * Refresh the placed ships on the grid
+     */
+    private void refreshPlacedShips() {
+<span class="nc bnc" id="L1107" title="All 2 branches missed.">        for (Image image : placedShipImages) {</span>
+<span class="nc" id="L1108">            image.remove();</span>
+<span class="nc" id="L1109">        }</span>
+<span class="nc" id="L1110">        placedShipImages.clear();</span>
+
+<span class="nc" id="L1112">        Player player = controller.getCurrentSetupPlayer();</span>
+<span class="nc bnc" id="L1113" title="All 2 branches missed.">        if(player == null) {</span>
+<span class="nc" id="L1114">            return;</span>
+        }
+
+<span class="nc" id="L1117">        Grid grid = player.getGrid();</span>
+<span class="nc" id="L1118">        Cell[][] cells = grid.getCells();</span>
+<span class="nc" id="L1119">        int width = grid.getWidth();</span>
+<span class="nc" id="L1120">        int height = grid.getHeight();</span>
+
+<span class="nc bnc" id="L1122" title="All 2 branches missed.">        for (int x = 0; x &lt; width; x++) {</span>
+<span class="nc bnc" id="L1123" title="All 2 branches missed.">            for (int y = 0; y &lt; height; y++) {</span>
+<span class="nc" id="L1124">                Cell cell = cells[x][y];</span>
+<span class="nc bnc" id="L1125" title="All 4 branches missed.">                if(cell.hasShip() &amp;&amp; cell.getShip().getPositions() != null) {</span>
+<span class="nc" id="L1126">                    Ship ship = cell.getShip();</span>
+<span class="nc" id="L1127">                    List&lt;Coordinate&gt; positions = ship.getPositions();</span>
+<span class="nc" id="L1128">                    int index = positions.indexOf(new Coordinate(x, y));</span>
+<span class="nc bnc" id="L1129" title="All 2 branches missed.">                    if(index &lt; 0) {</span>
+<span class="nc" id="L1130">                        continue;</span>
+                    }
+
+<span class="nc" id="L1133">                    TextureRegionDrawable shipDrawable = getShipDrawable(ship.getName());</span>
+<span class="nc bnc" id="L1134" title="All 2 branches missed.">                    if(shipDrawable == null) {</span>
+<span class="nc" id="L1135">                        continue;</span>
+                    }
+
+<span class="nc" id="L1138">                    Texture shipTexture = shipDrawable.getRegion().getTexture();</span>
+<span class="nc" id="L1139">                    int shipLength = ship.getLength();</span>
+<span class="nc" id="L1140">                    int partHeight = shipTexture.getHeight() / shipLength;</span>
+<span class="nc" id="L1141">                    TextureRegion partRegion = new TextureRegion(</span>
+                        shipTexture,
+                        0,
+                        partHeight * index,
+<span class="nc" id="L1145">                        shipTexture.getWidth(),</span>
+                        partHeight
+                    );
+
+<span class="nc" id="L1149">                    Image partImage = new Image(new TextureRegionDrawable(partRegion));</span>
+<span class="nc" id="L1150">                    partImage.setFillParent(true);</span>
+<span class="nc" id="L1151">                    partImage.setOrigin(Align.center);</span>
+<span class="nc" id="L1152">                    partImage.setScaling(Scaling.stretch);</span>
+<span class="nc bnc" id="L1153" title="All 2 branches missed.">                    if(ship.getDirection() == Direction.HORIZONTAL) {</span>
+<span class="nc" id="L1154">                        partImage.setRotation(90f);</span>
+                    }
+<span class="nc" id="L1156">                    cellStacks[x][y].add(partImage);</span>
+<span class="nc" id="L1157">                    placedShipImages.add(partImage);</span>
+                }
+            }
+        }
+
+<span class="nc" id="L1162">        updateControlButtonsState();</span>
+<span class="nc" id="L1163">    }</span>
+
+    /**
+     * Get the texture drawable for a ship by name
+     * 
+     * @param shipName the ship name
+     * @return the texture drawable, or null if not found
+     */
+    private TextureRegionDrawable getShipDrawable(String shipName) {
+<span class="nc bnc" id="L1172" title="All 2 branches missed.">        if(shipName == null) {</span>
+<span class="nc" id="L1173">            return null;</span>
+        }
+<span class="nc bnc" id="L1175" title="All 5 branches missed.">        return switch (shipName) {</span>
+<span class="nc" id="L1176">            case &quot;Carrier&quot; -&gt; carrierTexture;</span>
+<span class="nc" id="L1177">            case &quot;Cruiser&quot; -&gt; cruiserTexture;</span>
+<span class="nc" id="L1178">            case &quot;Destroyer&quot; -&gt; destroyerTexture;</span>
+<span class="nc" id="L1179">            case &quot;Torpedo&quot; -&gt; torpedoTexture;</span>
+<span class="nc" id="L1180">            default -&gt; null;</span>
+        };
+    }   
+    
+    /**
+     * Update the cursor appearance based on the selected ship
+     * 
+     * @param ship the selected ship
+     */
+    private void updateCursorForSelection(Ship ship) {
+<span class="nc" id="L1190">        clearCursor();</span>
+<span class="nc bnc" id="L1191" title="All 2 branches missed.">        if(ship == null) {</span>
+<span class="nc" id="L1192">            Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);</span>
+<span class="nc" id="L1193">            return;</span>
+        }
+
+<span class="nc" id="L1196">        String spritePath = getCursorSpritePath(ship.getName());</span>
+<span class="nc bnc" id="L1197" title="All 2 branches missed.">        if(spritePath == null) {</span>
+<span class="nc" id="L1198">            return;</span>
+        }
+
+<span class="nc" id="L1201">        Pixmap pixmap = new Pixmap(Gdx.files.internal(spritePath));</span>
+<span class="nc" id="L1202">        pixmap = prepareCursorPixmap(pixmap, ship);</span>
+<span class="nc bnc" id="L1203" title="All 2 branches missed.">        if(pixmap == null) {</span>
+<span class="nc" id="L1204">            return;</span>
+        }
+
+<span class="nc" id="L1207">        cursorPixmap = ensureCursorPixmapIsValid(pixmap);</span>
+<span class="nc bnc" id="L1208" title="All 2 branches missed.">        if(cursorPixmap == null) {</span>
+<span class="nc" id="L1209">            return;</span>
+        }
+
+<span class="nc" id="L1212">        int hotspotX = Math.min(cursorPixmap.getWidth() / 2, cursorPixmap.getWidth() - 1);</span>
+<span class="nc" id="L1213">        int hotspotY = Math.min(cursorPixmap.getHeight() / 2, cursorPixmap.getHeight() - 1);</span>
+<span class="nc" id="L1214">        customCursor = Gdx.graphics.newCursor(cursorPixmap, hotspotX, hotspotY);</span>
+<span class="nc" id="L1215">        Gdx.graphics.setCursor(customCursor);</span>
+<span class="nc" id="L1216">    }</span>
+
+    /**
+     * Clear the current custom cursor
+     */
+    private void clearCursor() {
+<span class="nc bnc" id="L1222" title="All 2 branches missed.">        if(customCursor != null) {</span>
+<span class="nc" id="L1223">            customCursor.dispose();</span>
+<span class="nc" id="L1224">            customCursor = null;</span>
+        }
+<span class="nc bnc" id="L1226" title="All 2 branches missed.">        if(cursorPixmap != null) {</span>
+<span class="nc" id="L1227">            cursorPixmap.dispose();</span>
+<span class="nc" id="L1228">            cursorPixmap = null;</span>
+        }
+<span class="nc" id="L1230">    }</span>
+
+    /**
+     * Get the cursor sprite path for a ship by name
+     * 
+     * @param shipName the ship name
+     * @return the sprite path, or null if not found
+     */
+    private String getCursorSpritePath(String shipName) {
+<span class="nc bnc" id="L1239" title="All 5 branches missed.">        return switch (shipName) {</span>
+<span class="nc" id="L1240">            case &quot;Carrier&quot; -&gt; &quot;ships/carrier.png&quot;;</span>
+<span class="nc" id="L1241">            case &quot;Cruiser&quot; -&gt; &quot;ships/cruiser.png&quot;;</span>
+<span class="nc" id="L1242">            case &quot;Destroyer&quot; -&gt; &quot;ships/destroyer.png&quot;;</span>
+<span class="nc" id="L1243">            case &quot;Torpedo&quot; -&gt; &quot;ships/torpedo.png&quot;;</span>
+<span class="nc" id="L1244">            default -&gt; null;</span>
+        };
+    }
+
+    /**
+     * Ensure the cursor pixmap has power-of-two dimensions
+     * 
+     * @param source the source pixmap
+     * @return the validated pixmap
+     */
+    private Pixmap ensureCursorPixmapIsValid(Pixmap source) {
+<span class="nc bnc" id="L1255" title="All 2 branches missed.">        if(source == null) {</span>
+<span class="nc" id="L1256">            return null;</span>
+        }
+<span class="nc" id="L1258">        int width = source.getWidth();</span>
+<span class="nc" id="L1259">        int height = source.getHeight();</span>
+<span class="nc" id="L1260">        int pow2Width = MathUtils.nextPowerOfTwo(width);</span>
+<span class="nc" id="L1261">        int pow2Height = MathUtils.nextPowerOfTwo(height);</span>
+<span class="nc bnc" id="L1262" title="All 4 branches missed.">        if(pow2Width == width &amp;&amp; pow2Height == height) {</span>
+<span class="nc" id="L1263">            return source;</span>
+        }
+
+<span class="nc" id="L1266">        Pixmap resized = new Pixmap(pow2Width, pow2Height, source.getFormat());</span>
+<span class="nc" id="L1267">        resized.drawPixmap(source, 0, 0);</span>
+<span class="nc" id="L1268">        source.dispose();</span>
+<span class="nc" id="L1269">        return resized;</span>
+    }
+
+    /**
+     * Prepare the cursor pixmap by aligning and scaling
+     * 
+     * @param source the source pixmap
+     * @param ship the ship data
+     * @return the prepared pixmap
+     */
+    private Pixmap prepareCursorPixmap(Pixmap source, Ship ship) {
+<span class="nc bnc" id="L1280" title="All 2 branches missed.">        if(source == null) {</span>
+<span class="nc" id="L1281">            return null;</span>
+        }
+
+<span class="nc" id="L1284">        Pixmap aligned = alignCursorPixmapToDirection(source);</span>
+<span class="nc" id="L1285">        return scalePixmapToCellSize(aligned, ship);</span>
+    }
+
+    /**
+     * Align the cursor pixmap to the current placement direction
+     * 
+     * @param source the source pixmap
+     * @return the aligned pixmap
+     */
+    private Pixmap alignCursorPixmapToDirection(Pixmap source) {
+<span class="nc bnc" id="L1295" title="All 2 branches missed.">        if(source == null) {</span>
+<span class="nc" id="L1296">            return null;</span>
+        }
+
+<span class="nc bnc" id="L1299" title="All 2 branches missed.">        if(placementDirection != Direction.HORIZONTAL) {</span>
+<span class="nc" id="L1300">            return source;</span>
+        }
+
+<span class="nc" id="L1303">        return rotatePixmapInverse90Degrees(source);</span>
+    }
+
+    /**
+     * Rotate a pixmap by -90 degrees
+     * 
+     * @param source the source pixmap
+     * @return the rotated pixmap
+     */
+    private Pixmap rotatePixmapInverse90Degrees(Pixmap source) {
+<span class="nc" id="L1313">        Pixmap rotated = new Pixmap(source.getHeight(), source.getWidth(), source.getFormat());</span>
+<span class="nc bnc" id="L1314" title="All 2 branches missed.">        for (int x = 0; x &lt; source.getWidth(); x++) {</span>
+<span class="nc bnc" id="L1315" title="All 2 branches missed.">            for (int y = 0; y &lt; source.getHeight(); y++) {</span>
+<span class="nc" id="L1316">                int pixel = source.getPixel(x, y);</span>
+<span class="nc" id="L1317">                rotated.drawPixel(y, source.getWidth() - 1 - x, pixel);</span>
+            }
+        }
+<span class="nc" id="L1320">        source.dispose();</span>
+<span class="nc" id="L1321">        return rotated;</span>
+    }
+
+    /**
+     * Scale the cursor pixmap to match cell size and ship length
+     * 
+     * @param source the source pixmap
+     * @param ship the ship data
+     * @return the scaled pixmap
+     */
+    private Pixmap scalePixmapToCellSize(Pixmap source, Ship ship) {
+<span class="nc bnc" id="L1332" title="All 4 branches missed.">        if(source == null || ship == null) {</span>
+<span class="nc" id="L1333">            return source;</span>
+        }
+
+<span class="nc" id="L1336">        int cellSize = Math.max(1, Math.round(cellPixelSize));</span>
+<span class="nc" id="L1337">        int shipLength = Math.max(1, ship.getLength());</span>
+
+<span class="nc" id="L1339">        int targetWidth = cellSize;</span>
+<span class="nc" id="L1340">        int targetHeight = cellSize * shipLength;</span>
+
+<span class="nc bnc" id="L1342" title="All 2 branches missed.">        if(placementDirection == Direction.HORIZONTAL) {</span>
+<span class="nc" id="L1343">            targetWidth = cellSize * shipLength;</span>
+<span class="nc" id="L1344">            targetHeight = cellSize;</span>
+        }
+
+<span class="nc bnc" id="L1347" title="All 4 branches missed.">        if(source.getWidth() == targetWidth &amp;&amp; source.getHeight() == targetHeight) {</span>
+<span class="nc" id="L1348">            return source;</span>
+        }
+
+<span class="nc" id="L1351">        Pixmap scaled = new Pixmap(targetWidth, targetHeight, source.getFormat());</span>
+<span class="nc" id="L1352">        scaled.drawPixmap(</span>
+            source,
+            0,
+            0,
+<span class="nc" id="L1356">            source.getWidth(),</span>
+<span class="nc" id="L1357">            source.getHeight(),</span>
+            0,
+            0,
+            targetWidth,
+            targetHeight
+        );
+<span class="nc" id="L1363">        source.dispose();</span>
+<span class="nc" id="L1364">        return scaled;</span>
+    }
+
+    @Override
+    public void dispose() {
+<span class="nc" id="L1369">        super.dispose();</span>
+<span class="nc" id="L1370">        clearCursor();</span>
+<span class="nc bnc" id="L1371" title="All 2 branches missed.">        if(highlightTexture != null) {</span>
+<span class="nc" id="L1372">            highlightTexture.dispose();</span>
+<span class="nc" id="L1373">            highlightTexture = null;</span>
+        }
+<span class="nc" id="L1375">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

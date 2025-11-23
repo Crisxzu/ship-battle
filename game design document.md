@@ -118,10 +118,10 @@ Les assets proviennent de différentes sources open source et libres de droits :
 - **Icônes** : Radar, bombes et éléments d'interface issus de ressources libres
 - **Animations** : GIFs de personnages pour les dialogues
 
-https://opengameart.org/content/animated-radar-assets
-https://opengameart.org/content/bomb-explosion
-https://opengameart.org/content/naval-battle-assets-pack
-https://opengameart.org/content/sea-warfare-set-ships-and-more
+https://opengameart.org/content/animated-radar-assets <br/>
+https://opengameart.org/content/bomb-explosion <br/>
+https://opengameart.org/content/naval-battle-assets-pack <br/>
+https://opengameart.org/content/sea-warfare-set-ships-and-more <br/>
 
 ## Audio
 
@@ -253,6 +253,14 @@ Structure du code basée sur le pattern MVC :
 - **model** : Logique du jeu et modèle de données (Game, Grid, Cell, Ship, Coordinate, AttackResponse, AI)
 - **view** : Interface graphique (MainMenuView, GameView, SetupPlayerShipView, etc.) et gestion audio/sprites
 - **controller** : Intermédiaire entre model et view, gestion des entrées utilisateur
+
+### Diagrammes UML
+
+| Diagramme | Description |
+|-----------|-------------|
+| [Modèles](docs/uml-model-classes.md) | Classes du domaine : Game, Player, Ship, Grid, Cell, Coordinate, AI |
+| [Contrôleurs GUI](docs/uml-gui-controllers.md) | Architecture des contrôleurs : ScreenController, GameController, etc. |
+| [Vues GUI](docs/uml-gui-views.md) | Interfaces graphiques : GuiView, GameView, Handlers |
 
 ## Système de coordonnées
 - Indexation à base zéro (0-9 pour grille 10x10)

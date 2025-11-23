@@ -533,6 +533,263 @@ class GridTest {
     }
 
     @Nested
+    @DisplayName("Bomb Attack Tests")
+    class BombAttackTests {
+
+        @BeforeEach
+        void setUp() {
+            grid = new Grid(10, 10);
+        }
+
+        @Test
+        @DisplayName("Should hit center and adjacent cells in bomb attack")
+        void shouldHitCenterAndAdjacentCells() throws Exception {
+            // Given
+            Ship ship = new Carrier();
+            grid.placeShip(ship, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            // When
+            AttackResponse response = grid.receiveBombAttack(new Coordinate(5, 5));
+
+            // Then
+            assertTrue(response.isBombAttack());
+            assertFalse(response.getAdditionalHits().isEmpty());
+            assertEquals(8, response.getAdditionalHits().size()); // 8 adjacent cells
+        }
+
+        @Test
+        @DisplayName("Should hit fewer cells at corner")
+        void shouldHitFewerCellsAtCorner() throws Exception {
+            // When
+            AttackResponse response = grid.receiveBombAttack(new Coordinate(0, 0));
+
+            // Then
+            assertTrue(response.isBombAttack());
+            assertEquals(3, response.getAdditionalHits().size()); // Only 3 adjacent at corner
+        }
+
+        @Test
+        @DisplayName("Should hit fewer cells at edge")
+        void shouldHitFewerCellsAtEdge() throws Exception {
+            // When
+            AttackResponse response = grid.receiveBombAttack(new Coordinate(0, 5));
+
+            // Then
+            assertTrue(response.isBombAttack());
+            assertEquals(5, response.getAdditionalHits().size()); // 5 adjacent at edge
+        }
+
+        @Test
+        @DisplayName("Should throw exception for invalid bomb coordinate")
+        void shouldThrowExceptionForInvalidBombCoordinate() {
+            // When & Then
+            assertThrows(InvalidCoordinateException.class, () -> {
+                grid.receiveBombAttack(new Coordinate(-1, 5));
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("Radar Scan Tests")
+    class RadarScanTests {
+
+        @BeforeEach
+        void setUp() {
+            grid = new Grid(10, 10);
+        }
+
+        @Test
+        @DisplayName("Should detect ship at center of radar scan")
+        void shouldDetectShipAtCenter() throws Exception {
+            // Given
+            Ship ship = new Destroyer();
+            grid.placeShip(ship, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            // When
+            AttackResponse response = grid.radarScan(new Coordinate(5, 5));
+
+            // Then
+            assertEquals(AttackResult.RADAR_USED, response.getResult());
+            assertTrue(response.isRadarDetection());
+        }
+
+        @Test
+        @DisplayName("Should detect ship adjacent to radar center")
+        void shouldDetectShipAdjacent() throws Exception {
+            // Given
+            Ship ship = new Destroyer();
+            grid.placeShip(ship, new Coordinate(6, 6), Direction.HORIZONTAL);
+
+            // When - Scan at (5,5), ship is adjacent at (6,6)
+            AttackResponse response = grid.radarScan(new Coordinate(5, 5));
+
+            // Then
+            assertTrue(response.isRadarDetection());
+        }
+
+        @Test
+        @DisplayName("Should not detect ship when area is empty")
+        void shouldNotDetectShipWhenEmpty() throws Exception {
+            // Given
+            Ship ship = new Destroyer();
+            grid.placeShip(ship, new Coordinate(0, 0), Direction.HORIZONTAL);
+
+            // When - Scan far from ship
+            AttackResponse response = grid.radarScan(new Coordinate(8, 8));
+
+            // Then
+            assertFalse(response.isRadarDetection());
+        }
+
+        @Test
+        @DisplayName("Should not detect already hit ship cells")
+        void shouldNotDetectAlreadyHitCells() throws Exception {
+            // Given
+            Ship ship = new Torpedo();
+            grid.placeShip(ship, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            // Hit all ship cells
+            grid.receiveAttack(new Coordinate(5, 5));
+            grid.receiveAttack(new Coordinate(6, 5));
+
+            // When
+            AttackResponse response = grid.radarScan(new Coordinate(5, 5));
+
+            // Then - Ship cells are hit, so not "detected" as hidden
+            assertFalse(response.isRadarDetection());
+        }
+
+        @Test
+        @DisplayName("Should throw exception for invalid radar coordinate")
+        void shouldThrowExceptionForInvalidRadarCoordinate() {
+            // When & Then
+            assertThrows(InvalidCoordinateException.class, () -> {
+                grid.radarScan(new Coordinate(10, 10));
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("Preview Placement Tests")
+    class PreviewPlacementTests {
+
+        @BeforeEach
+        void setUp() {
+            grid = new Grid(10, 10);
+        }
+
+        @Test
+        @DisplayName("Should return positions for valid placement")
+        void shouldReturnPositionsForValidPlacement() {
+            // Given
+            Ship ship = new Destroyer();
+
+            // When
+            var positions = grid.previewPlacement(ship, new Coordinate(2, 3), Direction.HORIZONTAL);
+
+            // Then
+            assertFalse(positions.isEmpty());
+            assertEquals(3, positions.size());
+        }
+
+        @Test
+        @DisplayName("Should return empty list for out of bounds placement")
+        void shouldReturnEmptyForOutOfBounds() {
+            // Given
+            Ship ship = new Carrier();
+
+            // When
+            var positions = grid.previewPlacement(ship, new Coordinate(8, 5), Direction.HORIZONTAL);
+
+            // Then
+            assertTrue(positions.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should return empty list for overlapping placement")
+        void shouldReturnEmptyForOverlapping() throws Exception {
+            // Given
+            Ship ship1 = new Destroyer();
+            Ship ship2 = new Cruiser();
+            grid.placeShip(ship1, new Coordinate(2, 3), Direction.HORIZONTAL);
+
+            // When
+            var positions = grid.previewPlacement(ship2, new Coordinate(2, 3), Direction.HORIZONTAL);
+
+            // Then
+            assertTrue(positions.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should return empty list for adjacent placement")
+        void shouldReturnEmptyForAdjacent() throws Exception {
+            // Given
+            Ship ship1 = new Destroyer();
+            Ship ship2 = new Cruiser();
+            grid.placeShip(ship1, new Coordinate(2, 2), Direction.HORIZONTAL);
+
+            // When - Try adjacent placement
+            var positions = grid.previewPlacement(ship2, new Coordinate(2, 3), Direction.HORIZONTAL);
+
+            // Then
+            assertTrue(positions.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Should return unmodifiable list")
+        void shouldReturnUnmodifiableList() {
+            // Given
+            Ship ship = new Destroyer();
+            var positions = grid.previewPlacement(ship, new Coordinate(0, 0), Direction.HORIZONTAL);
+
+            // When & Then
+            assertThrows(UnsupportedOperationException.class, () -> {
+                positions.add(new Coordinate(9, 9));
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("Clear Ships Tests")
+    class ClearShipsTests {
+
+        @Test
+        @DisplayName("Should clear all ships from grid")
+        void shouldClearAllShips() throws Exception {
+            // Given
+            grid = new Grid(10, 10);
+            Ship ship = new Destroyer();
+            grid.placeShip(ship, new Coordinate(2, 3), Direction.HORIZONTAL);
+
+            // Verify ship is on grid
+            assertTrue(grid.getCell(new Coordinate(2, 3)).hasShip());
+
+            // When
+            grid.clearShips();
+
+            // Then
+            assertFalse(grid.getCell(new Coordinate(2, 3)).hasShip());
+            assertFalse(grid.getCell(new Coordinate(3, 3)).hasShip());
+            assertFalse(grid.getCell(new Coordinate(4, 3)).hasShip());
+        }
+
+        @Test
+        @DisplayName("Should reset shot state when clearing ships")
+        void shouldResetShotState() throws Exception {
+            // Given
+            grid = new Grid(10, 10);
+            grid.receiveAttack(new Coordinate(5, 5));
+            assertTrue(grid.getCell(new Coordinate(5, 5)).isShot());
+
+            // When
+            grid.clearShips();
+
+            // Then
+            assertFalse(grid.getCell(new Coordinate(5, 5)).isShot());
+        }
+    }
+
+    @Nested
     @DisplayName("Integration Scenario Tests")
     class IntegrationTests {
 

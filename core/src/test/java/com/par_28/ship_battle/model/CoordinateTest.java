@@ -500,6 +500,73 @@ class CoordinateTest {
     }
 
     @Nested
+    @DisplayName("Coordinate ToLetterFormat Tests")
+    class ToLetterFormatTests {
+
+        @Test
+        @DisplayName("Should convert (0,0) to A1")
+        void shouldConvertOriginToA1() {
+            // Given
+            Coordinate coord = new Coordinate(0, 0);
+
+            // When
+            String result = coord.toLetterFormat();
+
+            // Then
+            assertEquals("A1", result);
+        }
+
+        @Test
+        @DisplayName("Should convert single letter coordinates")
+        void shouldConvertSingleLetterCoordinates() {
+            // Given & When & Then
+            assertEquals("B5", new Coordinate(1, 4).toLetterFormat());
+            assertEquals("C10", new Coordinate(2, 9).toLetterFormat());
+            assertEquals("Z1", new Coordinate(25, 0).toLetterFormat());
+        }
+
+        @Test
+        @DisplayName("Should convert multi-letter columns")
+        void shouldConvertMultiLetterColumns() {
+            // Given
+            Coordinate coord = new Coordinate(26, 0);
+
+            // When
+            String result = coord.toLetterFormat();
+
+            // Then
+            assertEquals("AA1", result);
+        }
+
+        @Test
+        @DisplayName("Should convert to letter format with large row numbers")
+        void shouldConvertLargeRowNumbers() {
+            // Given
+            Coordinate coord = new Coordinate(0, 99);
+
+            // When
+            String result = coord.toLetterFormat();
+
+            // Then
+            assertEquals("A100", result);
+        }
+
+        @Test
+        @DisplayName("Should round-trip letter format correctly")
+        void shouldRoundTripLetterFormat() {
+            // Given
+            Coordinate original = new Coordinate(2, 5);
+
+            // When
+            String letterFormat = original.toLetterFormat();
+            Coordinate parsed = Coordinate.fromString(letterFormat);
+
+            // Then
+            assertEquals(original, parsed);
+        }
+    }
+
+    @Nested
     @DisplayName("Coordinate Round-trip Tests")
     class RoundTripTests {
 

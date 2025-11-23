@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameModeView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">GameModeView.java</span></div><h1>GameModeView.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.par_28.ship_battle.controller.gui.GuiControllerEnum;
+import com.par_28.ship_battle.controller.gui.ScreenController;
+import com.par_28.ship_battle.controller.gui.SetupMenuController;
+
+
+/**
+ * Menu to select game mode
+ */
+public class GameModeView extends GuiView&lt;SetupMenuController&gt; {
+    /**
+     *  Title label
+     */
+    private Label titleLabel;
+
+
+    /**
+     * Initialize menu to select game mode
+     *
+     * @param parent screen manager
+     * @param controller setup menu controller
+     */
+    public GameModeView(ScreenController parent, SetupMenuController controller) {
+<span class="nc" id="L29">        super(parent, controller);</span>
+<span class="nc" id="L30">        buildUI();</span>
+<span class="nc" id="L31">    }</span>
+
+    @Override
+    protected void buildUI() {
+<span class="nc" id="L35">        super.buildUI();</span>
+<span class="nc" id="L36">        Table root = new Table();</span>
+<span class="nc" id="L37">        root.setFillParent(true);</span>
+
+<span class="nc" id="L39">        titleLabel = new Label(&quot;Game Mode&quot;, skin);</span>
+<span class="nc" id="L40">        titleLabel.setFontScale(2.5f);</span>
+
+<span class="nc" id="L42">        root.add(titleLabel)</span>
+<span class="nc" id="L43">            .expand()</span>
+<span class="nc" id="L44">            .height(Value.percentHeight(0.2f, root))</span>
+<span class="nc" id="L45">            .row();</span>
+
+
+<span class="nc" id="L48">        Table buttons = new Table();</span>
+<span class="nc" id="L49">        buttons.defaults()</span>
+<span class="nc" id="L50">            .width(Value.percentWidth(0.35f, root))</span>
+<span class="nc" id="L51">            .height(Value.percentHeight(0.1f, root))</span>
+<span class="nc" id="L52">            .pad(Value.percentHeight(0.02f, root));</span>
+
+<span class="nc" id="L54">        addMenuButton(buttons, &quot;Player VS AI&quot;, () -&gt; {</span>
+<span class="nc" id="L55">            this.controller.goToDifficultyMenu();</span>
+<span class="nc" id="L56">        });</span>
+<span class="nc" id="L57">        addMenuButton(buttons, &quot;Player VS Player&quot;, () -&gt; {</span>
+<span class="nc" id="L58">            this.controller.gotoSetupPlayerNameMenu();</span>
+<span class="nc" id="L59">        });</span>
+<span class="nc" id="L60">        addMenuButton(buttons, &quot;Return to title&quot;, () -&gt; this.parent.changeController(GuiControllerEnum.MAIN_MENU));</span>
+
+<span class="nc" id="L62">        root.add(buttons).expand().fill().center().row();</span>
+
+<span class="nc" id="L64">        stage.addActor(root);</span>
+<span class="nc" id="L65">        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L66">    }</span>
+
+    @Override
+    public void resize(int width, int height) {
+<span class="nc" id="L70">        super.resize(width, height);</span>
+<span class="nc" id="L71">        titleLabel.setFontScale(base / 200f);</span>
+<span class="nc" id="L72">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

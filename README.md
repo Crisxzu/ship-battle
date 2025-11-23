@@ -129,6 +129,27 @@ Les assets proviennent de sources open source :
 - **Game Design Document** : [game design document.md](game%20design%20document.md)
 - **Javadoc** : Générer avec `./gradlew javadoc`
 
+### Diagrammes UML
+
+- **Modèles** : [uml-model-classes.md](docs/uml-model-classes.md) - Classes du domaine (Game, Player, Ship, Grid, AI)
+- **Contrôleurs GUI** : [uml-gui-controllers.md](docs/uml-gui-controllers.md) - Architecture MVC côté contrôleurs
+- **Vues GUI** : [uml-gui-views.md](docs/uml-gui-views.md) - Interfaces graphiques et handlers
+
+### Couverture de code (JaCoCo)
+
+- **Rapport HTML** : [docs/coverage/index.html](docs/coverage/index.html)
+
+| Package | Couverture Instructions | Couverture Branches |
+|---------|------------------------|---------------------|
+| `model` | 99% | 97% |
+| `model.ai` | 93% | 87% |
+| `model.enums` | 100% | n/a |
+| `model.exceptions` | 100% | n/a |
+
+> Note : Les packages `view.gui` et `controller.gui` ne sont pas encore testés pour le moment, leur dépendance à libGDX rend la question plus délicate.
+
+Généré via `./gradlew :core:test :core:jacocoTestReport`
+
 ## Auteurs
 
 Projet universitaire - 2025

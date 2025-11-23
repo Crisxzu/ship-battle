@@ -7,6 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -395,6 +398,158 @@ class GameTest {
             boolean isGameOver = game.isGameOver();
             assertTrue(isGameOver);
             assertEquals(GameState.GAME_OVER, game.getGameState());
+        }
+    }
+
+    @Nested
+    @DisplayName("Power Attack Tests")
+    class PowerAttackTests {
+
+        @Test
+        @DisplayName("Should use bomb attack and hit multiple cells")
+        void shouldUseBombAttackAndHitMultipleCells() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When
+            AttackResponse response = testGame.playTurn(new Coordinate(5, 5), PowerType.BOMB);
+
+            // Then
+            assertTrue(response.isBombAttack());
+            assertFalse(response.getAdditionalHits().isEmpty());
+            assertEquals(1, p1.getBombCharges()); // One charge used
+        }
+
+        @Test
+        @DisplayName("Should throw exception when no bomb charges available")
+        void shouldThrowExceptionWhenNoBombCharges() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10, 0, 3); // No bomb charges
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When & Then
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
+                testGame.playTurn(new Coordinate(5, 5), PowerType.BOMB);
+            });
+            assertEquals("No bomb charges available", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Should use radar scan and detect ship")
+        void shouldUseRadarScanAndDetectShip() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When
+            AttackResponse response = testGame.playTurn(new Coordinate(5, 5), PowerType.RADAR);
+
+            // Then
+            assertEquals(AttackResult.RADAR_USED, response.getResult());
+            assertTrue(response.isRadarDetection());
+            assertEquals(2, p1.getRadarCharges()); // One charge used
+            // Radar doesn't switch turn
+            assertEquals(p1, testGame.getCurrentPlayer());
+        }
+
+        @Test
+        @DisplayName("Should use radar scan and not detect ship")
+        void shouldUseRadarScanAndNotDetectShip() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When - Scan area with no ship
+            AttackResponse response = testGame.playTurn(new Coordinate(0, 0), PowerType.RADAR);
+
+            // Then
+            assertEquals(AttackResult.RADAR_USED, response.getResult());
+            assertFalse(response.isRadarDetection());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when no radar charges available")
+        void shouldThrowExceptionWhenNoRadarCharges() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10, 2, 0); // No radar charges
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            // When & Then
+            IllegalGameStateException exception = assertThrows(IllegalGameStateException.class, () -> {
+                testGame.playTurn(new Coordinate(5, 5), PowerType.RADAR);
+            });
+            assertEquals("No radar charges available", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Radar scan should not increment turn counter")
+        void radarScanShouldNotIncrementTurnCounter() throws Exception {
+            // Given
+            Player p1 = new Player("P1", 10);
+            Player p2 = new Player("P2", 10);
+            Ship ship1 = new Torpedo();
+            Ship ship2 = new Carrier();
+            p1.addShip(ship1);
+            p2.addShip(ship2);
+            p1.placeShipOnGrid(ship1, new Coordinate(0, 0), Direction.HORIZONTAL);
+            p2.placeShipOnGrid(ship2, new Coordinate(5, 5), Direction.HORIZONTAL);
+
+            Game testGame = new Game(p1, p2);
+            testGame.start();
+
+            int turnsBefore = testGame.getNbTurns();
+
+            // When
+            testGame.playTurn(new Coordinate(5, 5), PowerType.RADAR);
+
+            // Then
+            assertEquals(turnsBefore, testGame.getNbTurns());
         }
     }
 

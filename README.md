@@ -126,8 +126,11 @@ Les assets proviennent de sources open source :
 
 ## Documentation
 
+📖 **Documentation en ligne** : [https://crisxzu.github.io/ShipBattle/](https://crisxzu.github.io/ShipBattle/)
+
 - **Game Design Document** : [game design document.md](game%20design%20document.md)
-- **Javadoc** : [docs/javadoc/index.html](docs/javadoc/index.html)
+- **Javadoc** : [docs/javadoc/index.html](docs/javadoc/index.html) | [En ligne](https://crisxzu.github.io/ShipBattle/javadoc/)
+- **Couverture de code** : [docs/coverage/index.html](docs/coverage/index.html) | [En ligne](https://crisxzu.github.io/ShipBattle/coverage/)
 
 ### Diagrammes UML
 

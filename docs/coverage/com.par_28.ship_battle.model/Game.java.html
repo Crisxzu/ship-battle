@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model;
+
+
+import com.par_28.ship_battle.model.enums.GameState;
+import com.par_28.ship_battle.model.enums.PowerType;
+import com.par_28.ship_battle.model.exceptions.*;
+
+/**
+ * Game state and logic
+ *
+ * @see Player
+ * @see Coordinate
+ * @see AttackResponse
+ * @see GameState
+ */
+public class Game {
+    /**
+     * Player 1
+     */
+    private final Player player1;
+    /**
+     * Player 2
+     */
+    private final Player player2;
+
+    /**
+     * Current player whose turn it is
+     */
+    private Player currentPlayer;
+
+    /**
+     * Current state of the game
+     */
+    private GameState gameState;
+
+    /**
+     * Number of turns played
+     */
+<span class="fc" id="L39">    private int nbTurns = 0;</span>
+
+    /**
+     * Initialize game
+     *
+     * @param player1 First player
+     * @param player2 Second player
+     */
+<span class="fc" id="L47">    public Game(Player player1, Player player2) {</span>
+<span class="fc" id="L48">        this.player1 = player1;</span>
+<span class="fc" id="L49">        this.player2 = player2;</span>
+<span class="fc" id="L50">        this.gameState = GameState.SETUP;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Start the game if both players have ships placed and game is not already started
+     *
+     * @throws IllegalGameStateException if game is already started or players have no ships
+     */
+    public void start() throws IllegalGameStateException {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if(gameState != GameState.SETUP) {</span>
+<span class="fc" id="L60">            throw new IllegalGameStateException(&quot;Game is already started&quot;);</span>
+        }
+
+<span class="fc bfc" id="L63" title="All 4 branches covered.">        if(player1.getShips().isEmpty() || player2.getShips().isEmpty()) {</span>
+<span class="fc" id="L64">            throw new IllegalGameStateException(&quot;Both players must have ships to start the game&quot;);</span>
+        }
+
+<span class="fc" id="L67">        gameState = GameState.PLAYER1_TURN;</span>
+<span class="fc" id="L68">        currentPlayer = player1;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Play a turn for the current player by attacking the opponent at the given coordinate
+     *
+     * &lt;p&gt;
+     * After the attack, if the opponent has no remaining ships, the game state is updated to GAME_OVER.
+     * Otherwise, the turn switches to the other player.
+     * The current player records the result of the attack on their tracking grid.
+     * Each call to this method increments the turn counter.
+     * &lt;/p&gt;
+     *
+     * @param coord Coordinate to attack
+     * @return AttackResponse response of the attack with hit/miss and ship info
+     * @throws IllegalGameStateException if game is already over
+     * @throws InvalidCoordinateException if the coordinate is invalid
+     */
+    public AttackResponse playTurn(Coordinate coord) throws IllegalGameStateException, InvalidCoordinateException {
+<span class="fc" id="L87">        return playTurn(coord, PowerType.NORMAL);</span>
+    }
+
+    /**
+     * Play a turn for the current player using a specific power type
+     *
+     * &lt;p&gt;
+     * Supports NORMAL attacks, BOMB attacks (3x3 area), and RADAR scans (detection only).
+     * After the attack, if the opponent has no remaining ships, the game state is updated to GAME_OVER.
+     * For RADAR scans, the turn does not switch.
+     * For other attacks, the turn switches to the other player.
+     * The current player records the result of the attack on their tracking grid.
+     * Each call to this method increments the turn counter.
+     * &lt;/p&gt;
+     *
+     * @param coord Coordinate to attack or scan
+     * @param powerType Type of power to use (NORMAL, BOMB, RADAR)
+     * @return AttackResponse response of the attack with hit/miss and ship info
+     * @throws IllegalGameStateException if game is already over or player doesn't have required charges
+     * @throws InvalidCoordinateException if the coordinate is invalid
+     */
+    public AttackResponse playTurn(Coordinate coord, PowerType powerType) throws IllegalGameStateException, InvalidCoordinateException {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if(gameState == GameState.GAME_OVER) {</span>
+<span class="fc" id="L110">            throw new IllegalGameStateException(&quot;Game is already over&quot;);</span>
+        }
+
+<span class="fc" id="L113">        Player opponent = getOpponent();</span>
+        AttackResponse response;
+
+<span class="fc bfc" id="L116" title="All 3 branches covered.">        switch (powerType) {</span>
+            case BOMB:
+<span class="fc bfc" id="L118" title="All 2 branches covered.">                if (!currentPlayer.hasBombCharges()) {</span>
+<span class="fc" id="L119">                    throw new IllegalGameStateException(&quot;No bomb charges available&quot;);</span>
+                }
+<span class="fc" id="L121">                currentPlayer.useBombCharge();</span>
+<span class="fc" id="L122">                response = opponent.getGrid().receiveBombAttack(coord);</span>
+
+                // Record primary hit and additional hits on tracking grid
+<span class="fc" id="L125">                currentPlayer.recordAttack(coord, response);</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">                for (AttackResponse additionalHit : response.getAdditionalHits()) {</span>
+<span class="fc" id="L127">                    currentPlayer.recordAttack(additionalHit.getCoordinate(), additionalHit);</span>
+<span class="fc" id="L128">                }</span>
+<span class="fc" id="L129">                break;</span>
+
+            case RADAR:
+<span class="fc bfc" id="L132" title="All 2 branches covered.">                if (!currentPlayer.hasRadarCharges()) {</span>
+<span class="fc" id="L133">                    throw new IllegalGameStateException(&quot;No radar charges available&quot;);</span>
+                }
+<span class="fc" id="L135">                currentPlayer.useRadarCharge();</span>
+<span class="fc" id="L136">                response = opponent.getGrid().radarScan(coord);</span>
+                // Radar scan doesn't switch turn, doesn't increment turn counter
+<span class="fc" id="L138">                return response;</span>
+
+            case NORMAL:
+            default:
+<span class="fc" id="L142">                response = opponent.receiveAttack(coord);</span>
+<span class="fc" id="L143">                currentPlayer.recordAttack(coord, response);</span>
+                break;
+        }
+
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(opponent.isDead()) {</span>
+<span class="fc" id="L148">            gameState = GameState.GAME_OVER;</span>
+        }
+        else {
+<span class="fc" id="L151">            switchPlayer();</span>
+        }
+
+<span class="fc" id="L154">        nbTurns++;</span>
+
+<span class="fc" id="L156">        return response;</span>
+    }
+
+    /**
+     * Switch the current player to the other player
+     */
+    public void switchPlayer() {
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if(gameState == GameState.PLAYER1_TURN) {</span>
+<span class="fc" id="L164">            gameState = GameState.PLAYER2_TURN;</span>
+<span class="fc" id="L165">            currentPlayer = player2;</span>
+        }
+        else {
+<span class="fc" id="L168">            gameState = GameState.PLAYER1_TURN;</span>
+<span class="fc" id="L169">            currentPlayer = player1;</span>
+        }
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Check if the game is over
+     *
+     * @return boolean true if game is over, false otherwise
+     */
+    public boolean isGameOver() {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        return gameState == GameState.GAME_OVER;</span>
+    }
+
+    /**
+     * Get the winner of the game if it's over
+     *
+     * @return Player winner player who won the game, null if game is not over
+     */
+    public Player getWinner() {
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        if(!isGameOver()) {</span>
+<span class="fc" id="L189">            return null;</span>
+        }
+
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        if(player1.isDead()) {</span>
+<span class="fc" id="L193">            return player2;</span>
+        }
+        else {
+<span class="fc" id="L196">            return player1;</span>
+        }
+    }
+
+    /**
+     * Get the current player
+     *
+     * @return Player current player whose turn it is
+     */
+    public Player getCurrentPlayer() {
+<span class="fc" id="L206">        return currentPlayer;</span>
+    }
+
+    /**
+     * Get the opponent of the current player
+     *
+     * @return Player opponent player who is not the current player
+     */
+    public Player getOpponent() {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        return currentPlayer == player1 ? player2 : player1;</span>
+    }
+
+    /**
+     * Get the current game state
+     *
+     * @return GameState current state of the game
+     */
+    public GameState getGameState() {
+<span class="fc" id="L224">        return gameState;</span>
+    }
+
+    /**
+     * Get the number of turns played
+     *
+     * @return int number of turns played
+     */
+    public int getNbTurns() {
+<span class="fc" id="L233">        return nbTurns;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

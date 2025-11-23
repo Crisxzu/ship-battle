@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SoundHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">SoundHandler.java</span></div><h1>SoundHandler.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.audio.Sound;
+
+/**
+ * Handler for sound and music in the GUI.
+ */
+public class SoundHandler implements Handler {
+    /**
+     * Sounds.
+     */
+    private static Sound[] sounds;
+    /**
+     * Music tracks.
+     */
+    private static Music[] tracks;
+
+    /**
+     * Sound identifiers.
+     */
+<span class="nc" id="L24">    public enum SoundID {</span>
+        /**
+         * Error sound
+         */
+<span class="nc" id="L28">        ERROR(0),</span>
+
+        /**
+         * Cannon shot sound
+         */
+<span class="nc" id="L33">        CANNON_SHOT(1),</span>
+        /**
+         * Hit sound
+         */
+<span class="nc" id="L37">        HIT(2),</span>
+
+        /**
+         * Miss sound
+         */
+<span class="nc" id="L42">        MISS(3),</span>
+
+        /**
+         * Sunk sound
+         */
+<span class="nc" id="L47">        SUNK(4),</span>
+
+        /**
+         * Already hit sound
+         */
+<span class="nc" id="L52">        ALREADY_HIT(5),</span>
+
+        /**
+         * Radar found nothing sound
+         */
+<span class="nc" id="L57">        RADAR_NOTHING(6),</span>
+
+        /**
+         * Radar found ship sound
+         */
+<span class="nc" id="L62">        RADAR_FOUND(7),</span>
+
+        /**
+         * Bomb shot sound
+         */
+<span class="nc" id="L67">        BOMB_SHOT(8),</span>
+
+        /**
+         * Cheat code sound
+         */
+<span class="nc" id="L72">        CHEAT_CODE(9);</span>
+
+        /**
+         * Index of sound
+         */
+        private int value;
+
+        /**
+         * Initialize sound
+         *
+         * @param value sound index
+         */
+<span class="nc" id="L84">        SoundID(int value) {</span>
+<span class="nc" id="L85">            this.value = value;</span>
+<span class="nc" id="L86">        }</span>
+    }
+
+    /**
+     * Music track identifiers.
+     */
+<span class="nc" id="L92">    public enum TrackID {</span>
+        /**
+         * Menu theme track
+         */
+<span class="nc" id="L96">        MENU_THEME(0),</span>
+        /**
+         * Game theme track
+         */
+<span class="nc" id="L100">        GAME_THEME(1),;</span>
+
+        /**
+         * Index of track
+         */
+        private int value;
+
+        /**
+         * Initialize track
+         *
+         * @param value track index
+         */
+<span class="nc" id="L112">        TrackID(int value) {</span>
+<span class="nc" id="L113">            this.value = value;</span>
+<span class="nc" id="L114">        }</span>
+    }
+
+    /**
+     * Current playing track
+     */
+    static Music currentTrack;
+
+    /**
+     * Initialize handler and load sounds/music.
+     */
+<span class="nc" id="L125">    public SoundHandler() {</span>
+<span class="nc" id="L126">        loadContent();</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * Loads all sounds and music.
+     */
+    public void loadContent() {
+<span class="nc" id="L133">        sounds = new Sound[] {</span>
+<span class="nc" id="L134">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/wrong.mp3&quot;)),</span>
+<span class="nc" id="L135">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/cannon_shot.mp3&quot;)),</span>
+<span class="nc" id="L136">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/hit.mp3&quot;)),</span>
+<span class="nc" id="L137">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/miss.mp3&quot;)),</span>
+<span class="nc" id="L138">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/sunk.mp3&quot;)),</span>
+<span class="nc" id="L139">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/already_hit.mp3&quot;)),</span>
+<span class="nc" id="L140">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/radar_nothing.mp3&quot;)),</span>
+<span class="nc" id="L141">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/radar_found.mp3&quot;)),</span>
+<span class="nc" id="L142">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/bomb_shot.mp3&quot;)),</span>
+<span class="nc" id="L143">            Gdx.audio.newSound(Gdx.files.internal(&quot;sounds/cheat_code.mp3&quot;)),</span>
+        };
+<span class="nc" id="L145">        tracks = new Music[] {</span>
+<span class="nc" id="L146">            Gdx.audio.newMusic(Gdx.files.internal(&quot;musics/theme_menu.mp3&quot;)),</span>
+<span class="nc" id="L147">            Gdx.audio.newMusic(Gdx.files.internal(&quot;musics/theme_game.mp3&quot;)),</span>
+        };
+<span class="nc" id="L149">    }</span>
+
+    /**
+     * Play a sound.
+     *
+     * @param sound sound identifier (SoundID).
+     * @param volume sound volume.
+     */
+    public static void playSound(SoundID sound, float volume){
+<span class="nc bnc" id="L158" title="All 4 branches missed.">        if (sounds != null &amp;&amp; sound.value &lt;= sounds.length)</span>
+<span class="nc" id="L159">            sounds[sound.value].play(volume);</span>
+<span class="nc" id="L160">    }</span>
+
+    /**
+     * Play a music track.
+     *
+     * @param track track identifier (TrackID).
+     * @param volume track volume.
+     * @param loop states if the track should be looping.
+     */
+    public static void playTrack(TrackID track, float volume, boolean loop){
+<span class="nc bnc" id="L170" title="All 4 branches missed.">        if (tracks != null &amp;&amp; track.value &lt;= tracks.length) {</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">            if(currentTrack != null){</span>
+<span class="nc" id="L172">                currentTrack.stop();</span>
+            }
+
+<span class="nc" id="L175">            tracks[track.value].setVolume(volume);</span>
+<span class="nc" id="L176">            tracks[track.value].setLooping(loop);</span>
+<span class="nc" id="L177">            tracks[track.value].play();</span>
+<span class="nc" id="L178">            currentTrack = tracks[track.value];</span>
+        }
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Disposes all sounds and music.
+     */
+    public void dispose() {
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        for (Sound sound : sounds)</span>
+<span class="nc" id="L187">            sound.dispose();</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if(tracks != null) {</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            for (Music track : tracks)</span>
+<span class="nc" id="L190">                track.dispose();</span>
+        }
+
+
+<span class="nc" id="L194">        System.out.println(&quot;SoundHandler content disposed&quot;);</span>
+<span class="nc" id="L195">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

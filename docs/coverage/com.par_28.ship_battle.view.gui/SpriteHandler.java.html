@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpriteHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">SpriteHandler.java</span></div><h1>SpriteHandler.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.Objects;
+
+/**
+ * Handler for sprites in the GUI.
+ */
+public class SpriteHandler implements Handler {
+    /**
+     * Textures
+     */
+    private static Texture[] textures;
+
+    /**
+     * Animations
+     */
+    private static Animation&lt;TextureRegion&gt;[] animations;
+
+    /**
+     * Sprite identifiers.
+     */
+<span class="nc" id="L27">    public enum TextureID {</span>
+        /**
+         * Background sprite
+         */
+<span class="nc" id="L31">        BACKGROUND(0, &quot;Background&quot;),</span>
+
+        /**
+         * Grid case sprite
+         */
+<span class="nc" id="L36">        GRID_CASE(1,&quot;GridCase&quot;),</span>
+
+        /**
+         * Carrier ship sprite
+         */
+<span class="nc" id="L41">        CARRIER(2, &quot;Carrier&quot;),</span>
+
+        /**
+         * Cruiser ship sprite
+         */
+<span class="nc" id="L46">        CRUISER(3, &quot;Cruiser&quot;),</span>
+
+        /**
+         * Destroyer ship sprite
+         */
+<span class="nc" id="L51">        DESTROYER(4, &quot;Destroyer&quot;),</span>
+
+        /**
+         * Torpedo sprite
+         */
+<span class="nc" id="L56">        TORPEDO(5, &quot;Torpedo&quot;),</span>
+
+        /**
+         * Snipe sprite
+         */
+<span class="nc" id="L61">        SNIPE(6, &quot;Snipe&quot;),</span>
+
+        /**
+         * Miss sprite
+         */
+<span class="nc" id="L66">        MISS(7, &quot;Miss&quot;),</span>
+
+        /**
+         * Hit sprite
+         */
+<span class="nc" id="L71">        HIT(8, &quot;Hit&quot;),</span>
+
+        /**
+         * Sunk sprite
+         */
+<span class="nc" id="L76">        SUNK(9, &quot;Sunk&quot;),</span>
+
+        /**
+         * Pause background sprite
+         */
+<span class="nc" id="L81">        PAUSE_BACKGROUND(10, &quot;PauseBackground&quot;),</span>
+
+        /**
+         * Game logo sprite
+         */
+<span class="nc" id="L86">        LOGO(11, &quot;Logo&quot;),</span>
+        
+        /**
+         * Radar icon sprite
+         */
+<span class="nc" id="L91">        RADAR(12, &quot;Radar&quot;),</span>
+
+        /**
+         * Bomb icon sprite
+         */
+<span class="nc" id="L96">        BOMB(13, &quot;Bomb&quot;);</span>
+
+        /**
+         * Name of sprite
+         */
+        private final String name;
+
+        /**
+         * Index of sprite
+         */
+        private final int value;
+
+        /**
+         * Initialize sprite
+         *
+         * @param value index of sprite
+         * @param name name of sprite
+         */
+<span class="nc" id="L114">        TextureID(int value, String name) {</span>
+<span class="nc" id="L115">            this.value = value;</span>
+<span class="nc" id="L116">            this.name = name;</span>
+<span class="nc" id="L117">        }</span>
+    }
+
+    /**
+     * Animation identifiers.
+     */
+<span class="nc" id="L123">    public enum AnimationID {</span>
+        /**
+         * Loli talking animation
+         */
+<span class="nc" id="L127">        LOLI(0, &quot;loli_talking.gif&quot;),</span>
+        /**
+         * Radar found nothing animation
+         */
+<span class="nc" id="L131">        RADAR_NOTHING(1, &quot;radar_nothing.gif&quot;),</span>
+        
+        /**
+         * Radar found ship animation
+         */
+<span class="nc" id="L136">        RADAR_FOUND(2, &quot;radar_found.gif&quot;),;</span>
+
+        /**
+         * Index of animation
+         */
+        private int value;
+
+        /**
+         * Name of animation file
+         */
+        private String name;
+
+        /**
+         * Initialize animation
+         * 
+         * @param value index of animation
+         * @param name name of animation file
+         */
+<span class="nc" id="L154">        AnimationID(int value, String name) {</span>
+<span class="nc" id="L155">            this.value = value;</span>
+<span class="nc" id="L156">            this.name = name;</span>
+<span class="nc" id="L157">        }</span>
+    }
+
+    /**
+     * Initialize handler and load sprites.
+     */
+<span class="nc" id="L163">    public SpriteHandler() {</span>
+<span class="nc" id="L164">        loadContent();</span>
+<span class="nc" id="L165">    }</span>
+
+    /**
+     * Load textures.
+     */
+    public void loadContent() {
+<span class="nc" id="L171">        textures = new Texture[] {</span>
+            new Texture(&quot;background.png&quot;),
+            new Texture(&quot;gridCase.png&quot;),
+            new Texture(&quot;ships/carrier.png&quot;),
+            new Texture(&quot;ships/cruiser.png&quot;),
+            new Texture(&quot;ships/destroyer.png&quot;),
+            new Texture(&quot;ships/torpedo.png&quot;),
+            new Texture(&quot;snipe.png&quot;),
+            new Texture(&quot;miss.png&quot;),
+            new Texture(&quot;hit.png&quot;),
+            new Texture(&quot;sunk.png&quot;),
+            new Texture(&quot;pause_background.png&quot;),
+            new Texture(&quot;logo.png&quot;),
+            new Texture(&quot;radar.png&quot;),
+            new Texture(&quot;bomb.png&quot;),
+        };
+
+<span class="nc" id="L188">        animations = new Animation[AnimationID.values().length];</span>
+
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        for (int i = 0; i &lt; AnimationID.values().length; i++) {</span>
+<span class="nc" id="L191">            animations[i] = GifDecoder.loadGIFAnimation(</span>
+                Animation.PlayMode.NORMAL,
+<span class="nc" id="L193">                Gdx.files.internal(AnimationID.values()[i].name).read()</span>
+            );
+        }
+<span class="nc" id="L196">    }</span>
+
+    /**
+     * Get texture by sprite ID
+     *
+     * @param textureID sprite identifier
+     * @return texture
+     */
+    public static Texture getTexture(TextureID textureID) {
+<span class="nc bnc" id="L205" title="All 4 branches missed.">        if(textures != null &amp;&amp; textureID.value &lt;= textures.length) {</span>
+<span class="nc" id="L206">            return textures[textureID.value];</span>
+        }
+<span class="nc" id="L208">        return null;</span>
+    }
+
+    /**
+     * Get animation by animation ID
+     * 
+     * @param animationID animation identifier
+     * @return animation
+     */
+    public static Animation&lt;TextureRegion&gt; getAnimation(AnimationID animationID) {
+<span class="nc bnc" id="L218" title="All 4 branches missed.">        if(animations != null &amp;&amp; animationID.value &lt;= animations.length) {</span>
+<span class="nc" id="L219">            return animations[animationID.value];</span>
+        }
+<span class="nc" id="L221">        return null;</span>
+    }
+
+    /**
+     * Get ship texture by name
+     *
+     * @param shipName name of ship
+     * @return texture
+     */
+    public static Texture getShipByName(String shipName) {
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        for (TextureID textureID : TextureID.values()) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">            if (Objects.equals(textureID.name, shipName)) {</span>
+<span class="nc" id="L233">                return textures[textureID.value];</span>
+            }
+        }
+
+<span class="nc" id="L237">        return null;</span>
+    }
+
+    /**
+     * Dispose resources
+     */
+    public void dispose() {
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        for(Texture texture : textures) {</span>
+<span class="nc" id="L245">            texture.dispose();</span>
+        }
+
+<span class="nc" id="L248">        System.out.println(&quot;Textures content disposed&quot;);</span>
+<span class="nc" id="L249">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

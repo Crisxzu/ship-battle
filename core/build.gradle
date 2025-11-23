@@ -1,0 +1,117 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
+
+apply plugin: "java-library"
+apply plugin: "jacoco"
+
+sourceSets.main.java.srcDirs = ["src/main/java"]
+sourceSets.test.java.srcDirs = ["src/test/java"]
+
+// Encodage UTF-8
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+}
+
+dependencies {
+  // libGDX Core
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+  // JUnit 5 pour les tests
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+
+  // Mockito pour les mocks
+  testImplementation "org.mockito:mockito-core:$mockitoVersion"
+  testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+
+  // VisUi
+  api "com.kotcrab.vis:vis-ui:$visuiVersion"
+
+  if(enableGraalNative == 'true') {
+    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+  }
+}
+
+// Configuration des tests (comme Surefire)
+test {
+  useJUnitPlatform()
+
+  testLogging {
+    events "passed", "skipped", "failed"
+    exceptionFormat "full"
+    showStandardStreams = false
+  }
+
+  // Générer le rapport JaCoCo après les tests
+finalizedBy jacocoTestReport
+}
+
+// Configuration JaCoCo (comme dans votre Maven)
+jacoco {
+  toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+  dependsOn test
+
+  reports {
+    xml.required = true
+    html.required = true
+    csv.required = false
+  }
+
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+        // Exclure les classes de test si nécessaire
+        '**/test/**'
+      ])
+    }))
+  }
+}
+
+// Vérification de la couverture (comme votre jacoco-check)
+jacocoTestCoverageVerification {
+  dependsOn jacocoTestReport
+
+  violationRules {
+    rule {
+      element = 'PACKAGE'
+      limit {
+        counter = 'LINE'
+        value = 'COVEREDRATIO'
+        minimum = 0.80
+      }
+    }
+  }
+}
+
+// Task pour vérifier la couverture
+check.dependsOn jacocoTestCoverageVerification
+
+// Configuration Javadoc (comme votre maven-javadoc-plugin)
+javadoc {
+  options.encoding = 'UTF-8'
+  options.charSet = 'UTF-8'
+  options.docEncoding = 'UTF-8'
+  options.memberLevel = JavadocMemberLevel.PRIVATE
+  options.noHelp = true
+}
+
+// Task pour générer le JAR de Javadoc
+tasks.register('javadocJar', Jar) {
+  dependsOn javadoc
+  archiveClassifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+// Task pour générer un rapport HTML des tests
+tasks.register('testReport', TestReport) {
+  destinationDir = file("$buildDir/reports/allTests")
+  reportOn test
+}
+
+// Ajouter les JARs aux artifacts
+artifacts {
+  archives javadocJar
+}

@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HardAI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model.ai</a> &gt; <span class="el_source">HardAI.java</span></div><h1>HardAI.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model.ai;
+
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.enums.*;
+
+
+import java.util.*;
+
+/**
+ * AI strategy - probability-based targeting with advanced hunt mode.
+ * &lt;div&gt;
+ * This AI uses sophisticated algorithms:
+ * &lt;ul&gt;
+ *   &lt;li&gt;&lt;b&gt;Probability density map:&lt;/b&gt; Calculates where ships are most likely to be&lt;/li&gt;
+ *   &lt;li&gt;&lt;b&gt;Smart targeting:&lt;/b&gt; After a hit, determines ship orientation and targets accordingly&lt;/li&gt;
+ *   &lt;li&gt;&lt;b&gt;Parity optimization:&lt;/b&gt; Uses checkerboard pattern for efficient hunting&lt;/li&gt;
+ *   &lt;li&gt;&lt;b&gt;Adaptive strategy:&lt;/b&gt; Adjusts based on remaining ships&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;/div&gt;
+ */
+public class HardAI extends AI {
+    /**
+     * AI mode
+     */
+<span class="fc" id="L25">    private enum Mode {</span>
+        /**
+         * Probability-based searching
+         */
+<span class="fc" id="L29">        HUNT,</span>
+
+        /**
+         * Targeting based on hits
+         */
+<span class="fc" id="L34">        TARGET</span>
+    }
+
+    /**
+     * Current AI mode
+     */
+    private Mode currentMode;
+
+
+    /**
+     * Create AI with default random generator.
+     */
+    public HardAI() {
+<span class="fc" id="L47">        super();</span>
+<span class="fc" id="L48">        this.currentMode = Mode.HUNT;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Create AI with a seeded random generator (for testing).
+     *
+     * @param seed Random seed for deterministic behavior
+     */
+    public HardAI(long seed) {
+<span class="fc" id="L57">        super(seed);</span>
+<span class="fc" id="L58">        this.currentMode = Mode.HUNT;</span>
+<span class="fc" id="L59">    }</span>
+
+    @Override
+    public Coordinate chooseShot(Grid trackingGrid, List&lt;Ship&gt; remainingOpponentShips) {
+<span class="fc" id="L63">        gridSize = trackingGrid.getWidth();</span>
+
+<span class="pc bpc" id="L65" title="1 of 4 branches missed.">        if (currentMode == Mode.TARGET &amp;&amp; !hitHistory.isEmpty()) {</span>
+            // Try to find ship orientation and target accordingly
+<span class="fc" id="L67">            Coordinate targetShot = findTargetShot(trackingGrid);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            if (targetShot != null) {</span>
+<span class="fc" id="L69">                return targetShot;</span>
+            }
+            // If no good target shot, fall back to hunt mode
+<span class="fc" id="L72">            currentMode = Mode.HUNT;</span>
+        }
+
+        // HUNT mode: Use probability density
+<span class="fc" id="L76">        return probabilityBasedShot(trackingGrid, remainingOpponentShips);</span>
+    }
+
+    @Override
+    public void updateAfterShot(Coordinate shot, AttackResponse response) {
+<span class="fc" id="L81">        AttackResult result = response.getResult();</span>
+
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (result == AttackResult.HIT) {</span>
+<span class="fc" id="L84">            currentMode = Mode.TARGET;</span>
+<span class="fc" id="L85">            hitHistory.add(shot);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        } else if (result == AttackResult.SUNK) {</span>
+            // Clear hits and return to HUNT
+<span class="fc" id="L88">            hitHistory.clear();</span>
+<span class="fc" id="L89">            currentMode = Mode.HUNT;</span>
+        }
+<span class="fc" id="L91">    }</span>
+
+    @Override
+    public void reset() {
+<span class="fc" id="L95">        super.reset();</span>
+<span class="fc" id="L96">        currentMode = Mode.HUNT;</span>
+<span class="fc" id="L97">    }</span>
+
+    /**
+     * Find the best target shot based on current hits.
+     * &lt;p&gt;
+     * If multiple hits exist in a line, continue in that direction.
+     * Otherwise, try all four cardinal directions from the last hit.
+     * &lt;/p&gt;
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Best target coordinate, or null if none found
+     */
+    private Coordinate findTargetShot(Grid trackingGrid) {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (hitHistory.isEmpty()) {</span>
+<span class="nc" id="L111">            return null;</span>
+        }
+
+        // If we have multiple hits, determine the orientation
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (hitHistory.size() &gt;= 2) {</span>
+<span class="fc" id="L116">            return findDirectionalTarget(trackingGrid);</span>
+        }
+
+        // Single hit - try all four directions
+<span class="fc" id="L120">        return findAdjacentTarget(trackingGrid, hitHistory.get(0));</span>
+    }
+
+    /**
+     * Find a target shot in the direction of existing hits.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Target coordinate in line with hits, or null
+     */
+    private Coordinate findDirectionalTarget(Grid trackingGrid) {
+        // Check if hits are in a line (horizontal or vertical)
+<span class="fc" id="L131">        boolean horizontal = areHitsHorizontal();</span>
+<span class="fc" id="L132">        boolean vertical = areHitsVertical();</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (horizontal) {</span>
+<span class="fc" id="L135">            return findHorizontalTarget(trackingGrid);</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        } else if (vertical) {</span>
+<span class="fc" id="L137">            return findVerticalTarget(trackingGrid);</span>
+        }
+
+        // Hits not in a clear line, try adjacent to last hit
+<span class="nc" id="L141">        return findAdjacentTarget(trackingGrid, hitHistory.get(hitHistory.size() - 1));</span>
+    }
+
+    /**
+     * Check if all hits are on the same row (horizontal).
+     *
+     * @return true if horizontal alignment
+     */
+    private boolean areHitsHorizontal() {
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (hitHistory.size() &lt; 2) return false;</span>
+<span class="fc" id="L151">        int firstY = hitHistory.get(0).getY();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (Coordinate hit : hitHistory) {</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">            if (hit.getY() != firstY) return false;</span>
+<span class="fc" id="L154">        }</span>
+<span class="fc" id="L155">        return true;</span>
+    }
+
+    /**
+     * Check if all hits are on the same column (vertical).
+     *
+     * @return true if vertical alignment
+     */
+    private boolean areHitsVertical() {
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (hitHistory.size() &lt; 2) return false;</span>
+<span class="fc" id="L165">        int firstX = hitHistory.get(0).getX();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        for (Coordinate hit : hitHistory) {</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            if (hit.getX() != firstX) return false;</span>
+<span class="fc" id="L168">        }</span>
+<span class="fc" id="L169">        return true;</span>
+    }
+
+    /**
+     * Find target at either end of horizontal hit line.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Target coordinate or null
+     */
+    private Coordinate findHorizontalTarget(Grid trackingGrid) {
+<span class="fc" id="L179">        int y = hitHistory.get(0).getY();</span>
+<span class="fc" id="L180">        int minX = hitHistory.stream().mapToInt(Coordinate::getX).min().orElse(0);</span>
+<span class="fc" id="L181">        int maxX = hitHistory.stream().mapToInt(Coordinate::getX).max().orElse(0);</span>
+
+        // Try extending to the right
+<span class="fc" id="L184">        Coordinate right = new Coordinate(maxX + 1, y);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (isValidAndUnshot(trackingGrid, right)) {</span>
+<span class="fc" id="L186">            return right;</span>
+        }
+
+        // Try extending to the left
+<span class="fc" id="L190">        Coordinate left = new Coordinate(minX - 1, y);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (isValidAndUnshot(trackingGrid, left)) {</span>
+<span class="fc" id="L192">            return left;</span>
+        }
+
+<span class="nc" id="L195">        return null;</span>
+    }
+
+    /**
+     * Find target at either end of vertical hit line.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Target coordinate or null
+     */
+    private Coordinate findVerticalTarget(Grid trackingGrid) {
+<span class="fc" id="L205">        int x = hitHistory.get(0).getX();</span>
+<span class="fc" id="L206">        int minY = hitHistory.stream().mapToInt(Coordinate::getY).min().orElse(0);</span>
+<span class="fc" id="L207">        int maxY = hitHistory.stream().mapToInt(Coordinate::getY).max().orElse(0);</span>
+
+        // Try extending down
+<span class="fc" id="L210">        Coordinate down = new Coordinate(x, maxY + 1);</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (isValidAndUnshot(trackingGrid, down)) {</span>
+<span class="fc" id="L212">            return down;</span>
+        }
+
+        // Try extending up
+<span class="nc" id="L216">        Coordinate up = new Coordinate(x, minY - 1);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">        if (isValidAndUnshot(trackingGrid, up)) {</span>
+<span class="nc" id="L218">            return up;</span>
+        }
+
+<span class="nc" id="L221">        return null;</span>
+    }
+
+    /**
+     * Find an unshot adjacent cell to the given coordinate.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param coord Center coordinate
+     * @return Adjacent unshot coordinate or null
+     */
+    private Coordinate findAdjacentTarget(Grid trackingGrid, Coordinate coord) {
+<span class="fc" id="L232">        int[][] directions = {</span>
+            {0, -1},  // Up
+            {0, 1},   // Down
+            {-1, 0},  // Left
+            {1, 0}    // Right
+        };
+
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        for (int[] dir : directions) {</span>
+<span class="fc" id="L240">            Coordinate adj = new Coordinate(coord.getX() + dir[0], coord.getY() + dir[1]);</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">            if (isValidAndUnshot(trackingGrid, adj)) {</span>
+<span class="fc" id="L242">                return adj;</span>
+            }
+        }
+
+<span class="fc" id="L246">        return null;</span>
+    }
+
+    /**
+     * Select shot based on probability density map.
+     * &lt;p&gt;
+     * Calculates which cells are most likely to contain ships based on
+     * remaining ships and available space.
+     * &lt;/p&gt;
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param remainingShips List of opponent's remaining ships
+     * @return Best probability coordinate
+     */
+    private Coordinate probabilityBasedShot(Grid trackingGrid, List&lt;Ship&gt; remainingShips) {
+<span class="fc" id="L261">        int[][] probabilityMap = new int[gridSize][gridSize];</span>
+
+        // Calculate probability for each ship placement
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        for (Ship ship : remainingShips) {</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">            if (ship.isDestroyed()) continue;</span>
+
+<span class="fc" id="L267">            int shipLength = ship.getLength();</span>
+
+            // Try horizontal placements
+<span class="fc" id="L270">            addHorizontalProbabilities(trackingGrid, probabilityMap, shipLength);</span>
+
+            // Try vertical placements
+<span class="fc" id="L273">            addVerticalProbabilities(trackingGrid, probabilityMap, shipLength);</span>
+<span class="fc" id="L274">        }</span>
+
+        // Find cell with highest probability
+<span class="fc" id="L277">        return findMaxProbabilityCell(trackingGrid, probabilityMap);</span>
+    }
+
+    /**
+     * Add probability scores for all possible horizontal ship placements.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param probabilityMap Probability accumulator map
+     * @param shipLength Length of ship to place
+     */
+    private void addHorizontalProbabilities(Grid trackingGrid, int[][] probabilityMap, int shipLength) {
+<span class="fc bfc" id="L288" title="All 2 branches covered.">        for (int y = 0; y &lt; gridSize; y++) {</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            for (int x = 0; x &lt;= gridSize - shipLength; x++) {</span>
+<span class="fc bfc" id="L290" title="All 2 branches covered.">                if (canPlaceShip(trackingGrid, x, y, shipLength, Direction.HORIZONTAL)) {</span>
+                    // Increment probability for each cell this ship would occupy
+<span class="fc bfc" id="L292" title="All 2 branches covered.">                    for (int i = 0; i &lt; shipLength; i++) {</span>
+<span class="fc" id="L293">                        probabilityMap[x + i][y]++;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L298">    }</span>
+
+    /**
+     * Add probability scores for all possible vertical ship placements.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param probabilityMap Probability accumulator map
+     * @param shipLength Length of ship to place
+     */
+    private void addVerticalProbabilities(Grid trackingGrid, int[][] probabilityMap, int shipLength) {
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        for (int x = 0; x &lt; gridSize; x++) {</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">            for (int y = 0; y &lt;= gridSize - shipLength; y++) {</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">                if (canPlaceShip(trackingGrid, x, y, shipLength, Direction.VERTICAL)) {</span>
+                    // Increment probability for each cell this ship would occupy
+<span class="fc bfc" id="L312" title="All 2 branches covered.">                    for (int i = 0; i &lt; shipLength; i++) {</span>
+<span class="fc" id="L313">                        probabilityMap[x][y + i]++;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L318">    }</span>
+
+    /**
+     * Check if a ship of given length can be placed at the position.
+     * &lt;p&gt;
+     * A ship can be placed if all cells are unshot.
+     * &lt;/p&gt;
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param startX Starting X coordinate
+     * @param startY Starting Y coordinate
+     * @param length Ship length
+     * @param direction Placement direction
+     * @return true if placement is possible
+     */
+    private boolean canPlaceShip(Grid trackingGrid, int startX, int startY, int length, Direction direction) {
+<span class="fc" id="L334">        Cell[][] cells = trackingGrid.getCells();</span>
+
+<span class="fc bfc" id="L336" title="All 2 branches covered.">        for (int i = 0; i &lt; length; i++) {</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">            int x = direction == Direction.HORIZONTAL ? startX + i : startX;</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">            int y = direction == Direction.VERTICAL ? startY + i : startY;</span>
+
+<span class="fc bfc" id="L340" title="All 2 branches covered.">            if (cells[x][y].isShot()) {</span>
+<span class="fc" id="L341">                return false;</span>
+            }
+        }
+<span class="fc" id="L344">        return true;</span>
+    }
+
+    /**
+     * Find the cell with the highest probability that hasn't been shot.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param probabilityMap Probability map
+     * @return Coordinate with max probability
+     */
+    private Coordinate findMaxProbabilityCell(Grid trackingGrid, int[][] probabilityMap) {
+<span class="fc" id="L355">        List&lt;Coordinate&gt; maxCells = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L356">        int maxProbability = 0;</span>
+
+<span class="fc bfc" id="L358" title="All 2 branches covered.">        for (int x = 0; x &lt; gridSize; x++) {</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">            for (int y = 0; y &lt; gridSize; y++) {</span>
+<span class="fc bfc" id="L360" title="All 2 branches covered.">                if (!trackingGrid.getCells()[x][y].isShot()) {</span>
+<span class="fc bfc" id="L361" title="All 2 branches covered.">                    if (probabilityMap[x][y] &gt; maxProbability) {</span>
+<span class="fc" id="L362">                        maxProbability = probabilityMap[x][y];</span>
+<span class="fc" id="L363">                        maxCells.clear();</span>
+<span class="fc" id="L364">                        maxCells.add(new Coordinate(x, y));</span>
+<span class="fc bfc" id="L365" title="All 2 branches covered.">                    } else if (probabilityMap[x][y] == maxProbability) {</span>
+<span class="fc" id="L366">                        maxCells.add(new Coordinate(x, y));</span>
+                    }
+                }
+            }
+        }
+
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (maxCells.isEmpty()) {</span>
+            // Fallback: return any unshot cell
+<span class="nc" id="L374">            return findAnyUnshotCell(trackingGrid);</span>
+        }
+
+        // If multiple cells have same probability, choose randomly
+<span class="fc" id="L378">        return maxCells.get(random.nextInt(maxCells.size()));</span>
+    }
+
+    /**
+     * Find any unshot cell (fallback method).
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Any unshot coordinate
+     */
+    private Coordinate findAnyUnshotCell(Grid trackingGrid) {
+<span class="nc" id="L388">        Cell[][] cells = trackingGrid.getCells();</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">        for (int x = 0; x &lt; gridSize; x++) {</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">            for (int y = 0; y &lt; gridSize; y++) {</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                if (!cells[x][y].isShot()) {</span>
+<span class="nc" id="L392">                    return new Coordinate(x, y);</span>
+                }
+            }
+        }
+<span class="nc" id="L396">        return new Coordinate(0, 0); // Should never happen</span>
+    }
+
+    /**
+     * Check if coordinate is valid and hasn't been shot.
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @param coord Coordinate to check
+     * @return true if valid and unshot
+     */
+    private boolean isValidAndUnshot(Grid trackingGrid, Coordinate coord) {
+<span class="fc bfc" id="L407" title="All 2 branches covered.">        if (!trackingGrid.isValidCoordinate(coord)) {</span>
+<span class="fc" id="L408">            return false;</span>
+        }
+<span class="fc bfc" id="L410" title="All 2 branches covered.">        return !trackingGrid.getCell(coord).isShot();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

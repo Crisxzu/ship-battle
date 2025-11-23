@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MediumAI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model.ai</a> &gt; <span class="el_source">MediumAI.java</span></div><h1>MediumAI.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model.ai;
+
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.enums.*;
+
+import java.util.*;
+
+/**
+ * AI strategy - intelligent hunting after hits.
+ * &lt;div&gt;
+ * This AI operates in two modes:
+ * &lt;ul&gt;
+ *   &lt;li&gt;&lt;b&gt;HUNT mode:&lt;/b&gt; Randomly selects unshot cells until a hit is made&lt;/li&gt;
+ *   &lt;li&gt;&lt;b&gt;TARGET mode:&lt;/b&gt; After hitting a ship, targets adjacent cells to sink it&lt;/li&gt;
+ * &lt;/ul&gt;
+ * Once a ship is sunk, it returns to HUNT mode.
+ * &lt;/div&gt;
+ */
+public class MediumAI extends AI {
+    /**
+     * AI mode
+     */
+<span class="fc" id="L23">    private enum Mode {</span>
+        /**
+         * Random searching
+         */
+<span class="fc" id="L27">        HUNT,</span>
+        /**
+         * Targeting adjacent cells after a hit
+         */
+<span class="fc" id="L31">        TARGET</span>
+    }
+
+    /**
+     * Current AI mode
+     */
+    private Mode currentMode;
+
+    /**
+     * Stack of coordinates to target
+     */
+    private final Stack&lt;Coordinate&gt; targetStack;
+
+    /**
+     * Create AI with default random generator.
+     */
+    public MediumAI() {
+<span class="fc" id="L48">        super();</span>
+<span class="fc" id="L49">        this.currentMode = Mode.HUNT;</span>
+<span class="fc" id="L50">        this.targetStack = new Stack&lt;&gt;();</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Create AI with a seeded random generator (for testing).
+     *
+     * @param seed Random seed for deterministic behavior
+     */
+    public MediumAI(long seed) {
+<span class="fc" id="L59">        super(seed);</span>
+<span class="fc" id="L60">        this.currentMode = Mode.HUNT;</span>
+<span class="fc" id="L61">        this.targetStack = new Stack&lt;&gt;();</span>
+<span class="fc" id="L62">    }</span>
+
+    @Override
+    public Coordinate chooseShot(Grid trackingGrid, List&lt;Ship&gt; remainingOpponentShips) {
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if (currentMode == Mode.TARGET &amp;&amp; !targetStack.isEmpty()) {</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">            while (!targetStack.isEmpty()) {</span>
+<span class="fc" id="L68">                Coordinate targetCoord = targetStack.pop();</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                if (trackingGrid.isValidCoordinate(targetCoord)</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">                        &amp;&amp; !trackingGrid.getCell(targetCoord).isShot()) {</span>
+<span class="fc" id="L72">                    return targetCoord;</span>
+                }
+<span class="fc" id="L74">            }</span>
+        }
+
+<span class="fc" id="L77">        return huntModeShot(trackingGrid);</span>
+    }
+
+    @Override
+    public void updateAfterShot(Coordinate shot, AttackResponse response) {
+<span class="fc" id="L82">        AttackResult result = response.getResult();</span>
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (result == AttackResult.HIT) {</span>
+<span class="fc" id="L85">            currentMode = Mode.TARGET;</span>
+<span class="fc" id="L86">            hitHistory.add(shot);</span>
+<span class="fc" id="L87">            addAdjacentTargets(shot);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        } else if (result == AttackResult.SUNK) {</span>
+<span class="fc" id="L89">            currentMode = Mode.HUNT;</span>
+<span class="fc" id="L90">            targetStack.clear();</span>
+<span class="fc" id="L91">            hitHistory.clear();</span>
+        }
+
+        // For MISS or ALREADY_HIT, continue current mode
+<span class="fc" id="L95">    }</span>
+
+    @Override
+    public void reset() {
+<span class="fc" id="L99">        super.reset();</span>
+<span class="fc" id="L100">        currentMode = Mode.HUNT;</span>
+<span class="fc" id="L101">        targetStack.clear();</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Select a random unshot coordinate (HUNT mode).
+     *
+     * @param trackingGrid The AI's tracking grid
+     * @return Random available coordinate
+     */
+    private Coordinate huntModeShot(Grid trackingGrid) {
+<span class="fc" id="L111">        List&lt;Coordinate&gt; availableShots = getAvailableShots(trackingGrid);</span>
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (availableShots.isEmpty()) {</span>
+<span class="fc" id="L114">            return new Coordinate(0, 0);</span>
+        }
+
+<span class="fc" id="L117">        int randomIndex = random.nextInt(availableShots.size());</span>
+<span class="fc" id="L118">        return availableShots.get(randomIndex);</span>
+    }
+
+    /**
+     * Add adjacent coordinates (up, down, left, right) to the target stack.
+     * &lt;p&gt;
+     * Only adds coordinates haven't been shot yet.
+     * &lt;/p&gt;
+     *
+     * @param coord The coordinate that was just hit
+     */
+    private void addAdjacentTargets(Coordinate coord) {
+<span class="fc" id="L130">        int x = coord.getX();</span>
+<span class="fc" id="L131">        int y = coord.getY();</span>
+
+<span class="fc" id="L133">        int[][] directions = {</span>
+            {0, -1},  // Up
+            {0, 1},   // Down
+            {-1, 0},  // Left
+            {1, 0}    // Right
+        };
+
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (int[] dir : directions) {</span>
+<span class="fc" id="L141">            Coordinate adjacent = new Coordinate(x + dir[0], y + dir[1]);</span>
+
+<span class="pc bpc" id="L143" title="1 of 4 branches missed.">            if (!targetStack.contains(adjacent) &amp;&amp; !hitHistory.contains(adjacent)) {</span>
+<span class="fc" id="L144">                targetStack.add(adjacent);</span>
+            }
+        }
+<span class="fc" id="L147">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

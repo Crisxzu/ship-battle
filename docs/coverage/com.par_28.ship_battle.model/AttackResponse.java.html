@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AttackResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model</a> &gt; <span class="el_source">AttackResponse.java</span></div><h1>AttackResponse.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model;
+
+import com.par_28.ship_battle.model.enums.AttackResult;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Represents the response to an attack on a ship.
+ * &lt;p&gt;
+ * Contains the result of the attack and the targeted ship.
+ * For multi-cell attacks (like bombs), contains additional affected cells.
+ * For radar scans, contains detection information.
+ * &lt;/p&gt;
+ * @author James
+ * @version 1.0
+ * @since 1.0
+ */
+public class AttackResponse {
+
+    /**
+     * The result of the attack (MISS, HIT, SUNK, etc.)
+     */
+    private final AttackResult result;
+
+    /**
+     * The ship that was targeted by the attack
+     */
+    private final Ship ship;
+
+    /**
+     * List of additional attack responses for multi-cell attacks (e.g., bomb)
+     */
+    private final List&lt;AttackResponse&gt;  additionalHits;
+
+    /**
+     * Radar detection result (true if ships detected in area)
+     */
+    private final boolean radarDetection;
+
+    /**
+     * Coordinate of the attack
+     */
+    private final Coordinate coordinate;
+
+    /**
+     * Constructor for AttackResponse.
+     *
+     * @param result the result of the attack
+     * @param ship the ship that was targeted
+     */
+    public AttackResponse(AttackResult result, Ship ship) {
+<span class="fc" id="L53">        this(result, ship, null, new ArrayList&lt;&gt;(), false);</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Constructor for AttackResponse with coordinate.
+     *
+     * @param result the result of the attack
+     * @param ship the ship that was targeted
+     * @param coordinate the coordinate of the attack
+     */
+    public AttackResponse(AttackResult result, Ship ship, Coordinate coordinate) {
+<span class="fc" id="L64">        this(result, ship, coordinate, new ArrayList&lt;&gt;(), false);</span>
+<span class="fc" id="L65">    }</span>
+
+    /**
+     * Constructor for bomb attack response with multiple hits.
+     *
+     * @param result the result of the primary attack
+     * @param ship the ship that was targeted
+     * @param coordinate the coordinate of the attack
+     * @param additionalHits list of responses from adjacent cells
+     */
+    public AttackResponse(AttackResult result, Ship ship, Coordinate coordinate, List&lt;AttackResponse&gt; additionalHits) {
+<span class="fc" id="L76">        this(result, ship, coordinate, additionalHits, false);</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Constructor for radar scan response.
+     *
+     * @param coordinate the coordinate of the radar scan
+     * @param radarDetection true if ships were detected
+     */
+    public AttackResponse(Coordinate coordinate, boolean radarDetection) {
+<span class="fc" id="L86">        this(AttackResult.RADAR_USED, null, coordinate, new ArrayList&lt;&gt;(), radarDetection);</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Full constructor for AttackResponse.
+     *
+     * @param result the result of the attack
+     * @param ship the ship that was targeted
+     * @param coordinate the coordinate of the attack
+     * @param additionalHits list of responses from adjacent cells
+     * @param radarDetection radar detection result
+     */
+<span class="fc" id="L98">    private AttackResponse(AttackResult result, Ship ship, Coordinate coordinate, List&lt;AttackResponse&gt; additionalHits, boolean radarDetection) {</span>
+<span class="fc" id="L99">        this.result = result;</span>
+<span class="fc" id="L100">        this.ship = ship;</span>
+<span class="fc" id="L101">        this.coordinate = coordinate;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        this.additionalHits = additionalHits != null ? new ArrayList&lt;&gt;(additionalHits) : new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L103">        this.radarDetection = radarDetection;</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Get the result of the attack.
+     *
+     * @return the attack result
+     */
+    public AttackResult getResult() {
+<span class="fc" id="L112">        return result;</span>
+    }
+
+    /**
+     * Get the ship that was targeted by the attack.
+     *
+     * @return the targeted ship
+     */
+    public Ship getShip() {
+<span class="fc" id="L121">        return ship;</span>
+    }
+
+    /**
+     * Get the coordinate of the attack.
+     *
+     * @return the coordinate
+     */
+    public Coordinate getCoordinate() {
+<span class="fc" id="L130">        return coordinate;</span>
+    }
+
+    /**
+     * Get additional hits from multi-cell attacks.
+     *
+     * @return unmodifiable list of additional attack responses
+     */
+    public List&lt;AttackResponse&gt; getAdditionalHits() {
+<span class="fc" id="L139">        return Collections.unmodifiableList(additionalHits);</span>
+    }
+
+    /**
+     * Check if radar detected ships in the scanned area.
+     *
+     * @return true if ships were detected
+     */
+    public boolean isRadarDetection() {
+<span class="fc" id="L148">        return radarDetection;</span>
+    }
+
+    /**
+     * Check if the attack was a hit.
+     *
+     * @return true if the attack hit a ship, false otherwise
+     */
+    public boolean isHit() {
+<span class="fc bfc" id="L157" title="All 4 branches covered.">        return result == AttackResult.HIT || result == AttackResult.SUNK;</span>
+    }
+
+    /**
+     * Check if this is a bomb attack (has additional hits).
+     *
+     * @return true if this is a bomb attack
+     */
+    public boolean isBombAttack() {
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        return !additionalHits.isEmpty();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

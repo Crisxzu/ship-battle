@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetupMenuController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.controller.gui</a> &gt; <span class="el_source">SetupMenuController.java</span></div><h1>SetupMenuController.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.controller.gui;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.par_28.ship_battle.model.Carrier;
+import com.par_28.ship_battle.model.Coordinate;
+import com.par_28.ship_battle.model.Cruiser;
+import com.par_28.ship_battle.model.Destroyer;
+import com.par_28.ship_battle.model.Game;
+import com.par_28.ship_battle.model.Player;
+import com.par_28.ship_battle.model.Ship;
+import com.par_28.ship_battle.model.Torpedo;
+import com.par_28.ship_battle.model.ai.AIPlayer;
+import com.par_28.ship_battle.model.ai.enums.AIDifficulty;
+import com.par_28.ship_battle.model.enums.Direction;
+import com.par_28.ship_battle.model.exceptions.IllegalGameStateException;
+import com.par_28.ship_battle.model.exceptions.InvalidCoordinateException;
+import com.par_28.ship_battle.model.exceptions.ShipPlacementException;
+import com.par_28.ship_battle.view.gui.DifficultyView;
+import com.par_28.ship_battle.view.gui.GameModeView;
+import com.par_28.ship_battle.view.gui.SetupPlayerNameView;
+import com.par_28.ship_battle.view.gui.SetupPlayerShipView;
+import com.par_28.ship_battle.view.gui.SoundHandler;
+
+/**
+ * Manager of setup menu where players enter their names and set up ships.
+ */
+public class SetupMenuController extends GuiController {
+    /**
+     * List of player names entered.
+     */
+<span class="nc" id="L36">    List&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * AI difficulty level if playing against AI, null otherwise.
+     */
+<span class="nc" id="L41">    AIDifficulty aiDifficulty = null;</span>
+
+    /**
+     * List of ships waiting to be placed by the current player.
+     */
+<span class="nc" id="L46">    private final List&lt;Ship&gt; shipsToPlace = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Ship currently selected by the player.
+     */
+    private Ship selectedShip;
+
+    /**
+     * Index of the player currently placing ships.
+     */
+<span class="nc" id="L56">    private int currentSetupPlayerIndex = 0;</span>
+
+    /**
+     * Track which players have completed manual placement.
+     */
+<span class="nc" id="L61">    private final boolean[] placementDone = new boolean[2];</span>
+
+    /**
+     * Initialize the menu controller.
+     *
+     * @param parent Reference to the parent screen controller
+     */
+    public SetupMenuController(ScreenController parent) {
+<span class="nc" id="L69">        super(parent);</span>
+<span class="nc" id="L70">        resetPlacementTracking();</span>
+<span class="nc" id="L71">    }</span>
+
+    /**
+     * Update menu controller.
+     *
+     * @param dt Delta time since last update
+     */
+    @Override
+    public void update(float dt){
+
+<span class="nc" id="L81">    }</span>
+
+    /**
+     * Add a player name to the setup.
+     *
+     * @param name Player name to add
+     * @return true if name added successfully, false otherwise
+     */
+    public boolean addName(String name) {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(name.isEmpty()) {</span>
+<span class="nc" id="L91">            SoundHandler.playSound(</span>
+                SoundHandler.SoundID.ERROR,
+<span class="nc" id="L93">                0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+            );
+<span class="nc" id="L95">            Dialogs.showErrorDialog(view.stage, &quot;Please enter a name&quot;);</span>
+<span class="nc" id="L96">            return false;</span>
+        }
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if(names.contains(name)) {</span>
+<span class="nc" id="L100">            SoundHandler.playSound(</span>
+                SoundHandler.SoundID.ERROR,
+<span class="nc" id="L102">                0.2f * this.parent.app.settingsHandler.getSoundVolume()</span>
+            );
+<span class="nc" id="L104">            Dialogs.showErrorDialog(view.stage, String.format(&quot;%s already registered&quot;, name));</span>
+<span class="nc" id="L105">            return false;</span>
+        }
+
+<span class="nc" id="L108">        this.names.add(name);</span>
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if(isAIMode()) {</span>
+<span class="nc" id="L111">            this.names.add(AIPlayer.getRandomName());</span>
+        }
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if(this.names.size() &gt;= this.parent.app.nbPlayers) {</span>
+            Player player1;
+            Player player2;
+
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if(isAIMode()) {</span>
+<span class="nc" id="L119">                player1 = new Player(this.names.get(0), this.parent.app.gridSize);</span>
+<span class="nc" id="L120">                player2 = new AIPlayer(this.names.get(1), this.parent.app.gridSize, aiDifficulty);</span>
+            }
+            else {
+<span class="nc" id="L123">                player1 = new Player(this.names.get(0), this.parent.app.gridSize);</span>
+<span class="nc" id="L124">                player2 = new Player(this.names.get(1), this.parent.app.gridSize);</span>
+            }
+
+<span class="nc" id="L127">            this.parent.app.player1 = player1;</span>
+<span class="nc" id="L128">            this.parent.app.player2 = player2;</span>
+
+<span class="nc" id="L130">            startPlacementFlow();</span>
+        }
+
+<span class="nc" id="L133">        return true;</span>
+    }
+
+    /**
+     * Get number of names entered.
+     *
+     * @return number of names entered
+     */
+    public int getNamesNumber() {
+<span class="nc" id="L142">        return this.names.size();</span>
+    }
+
+    /**
+     * Check if battle will be played against AI.
+     *
+     * @return true if ai mode is selected, false otherwise
+     */
+    public boolean isAIMode() {
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        return aiDifficulty != null;</span>
+    }
+
+    /**
+     * Set AI difficulty level.
+     *
+     * @param aiDifficulty AI difficulty level to set
+     */
+    public void setAIDifficulty(AIDifficulty aiDifficulty) {
+<span class="nc" id="L160">        this.aiDifficulty = aiDifficulty;</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Go to difficulty selection menu.
+     */
+    public void goToDifficultyMenu() {
+<span class="nc" id="L167">        changeView(new DifficultyView(this.parent, this));</span>
+<span class="nc" id="L168">    }</span>
+
+    /**
+     * Go to player name setup menu.
+     */
+    public void gotoSetupPlayerNameMenu() {
+<span class="nc" id="L174">        changeView(new SetupPlayerNameView(this.parent, this));</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Go to game mode selection menu.
+     */
+    public void gotoGameModeMenu() {
+<span class="nc" id="L181">        changeView(new GameModeView(this.parent, this));</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+            startPlacementFlow();
+     *
+     * @param dt Delta time since last render
+     */
+    @Override
+    public void render(float dt){
+<span class="nc" id="L191">        super.render(dt);</span>
+<span class="nc" id="L192">        view.render(dt);</span>
+<span class="nc" id="L193">    }</span>
+
+    /**
+     * Reset menu to initial state.
+     */
+    @Override
+    public void reset() {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if(names != null) {</span>
+<span class="nc" id="L201">            names.clear();</span>
+        }
+<span class="nc" id="L203">        aiDifficulty = null;</span>
+<span class="nc" id="L204">        resetPlacementTracking();</span>
+<span class="nc" id="L205">        changeView(new GameModeView(this.parent, this));</span>
+<span class="nc" id="L206">    }</span>
+
+    /**
+     * Get the player currently setting up their ships.
+     *
+     * @return current setup player
+     */
+    private Player getSetupPlayer() {
+<span class="nc bnc" id="L214" title="All 4 branches missed.">        if(this.parent == null || this.parent.app == null) {</span>
+<span class="nc" id="L215">            return null;</span>
+        }
+<span class="nc" id="L217">        return getPlayerByIndex(currentSetupPlayerIndex);</span>
+    }
+
+    /**
+     * Get the current setup player.
+     *
+     * @return current setup player
+     */
+    public Player getCurrentSetupPlayer() {
+<span class="nc" id="L226">        return getSetupPlayer();</span>
+    }
+
+    /**
+     * Check if the currently selected ship can be placed at the given coordinate.
+     *
+     * @param coord starting coordinate on the grid
+     * @param direction placement direction
+     * @return true if placement would be valid
+     */
+    public boolean canPlaceSelectedShip(Coordinate coord, Direction direction) {
+<span class="nc" id="L237">        Player player = getSetupPlayer();</span>
+<span class="nc bnc" id="L238" title="All 8 branches missed.">        if(selectedShip == null || player == null || coord == null || direction == null) {</span>
+<span class="nc" id="L239">            return false;</span>
+        }
+
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        return player.getGrid().previewPlacement(selectedShip, coord, direction).size() == selectedShip.getLength();</span>
+    }
+
+    /**
+     * Place the selected ship on the player's grid.
+     *
+     * @param coord starting coordinate
+     * @param direction placement direction
+     * @return true if placement succeeded
+     */
+    public boolean placeSelectedShip(Coordinate coord, Direction direction) {
+<span class="nc" id="L253">        Player player = getSetupPlayer();</span>
+<span class="nc bnc" id="L254" title="All 8 branches missed.">        if(selectedShip == null || player == null || coord == null || direction == null) {</span>
+<span class="nc" id="L255">            return false;</span>
+        }
+
+        try {
+<span class="nc" id="L259">            player.placeShipOnGrid(selectedShip, coord, direction);</span>
+<span class="nc" id="L260">            player.addShip(selectedShip);</span>
+<span class="nc" id="L261">            shipsToPlace.remove(selectedShip);</span>
+<span class="nc" id="L262">            selectedShip = null;</span>
+<span class="nc" id="L263">            return true;</span>
+        }
+<span class="nc" id="L265">        catch (InvalidCoordinateException | ShipPlacementException ex) {</span>
+<span class="nc" id="L266">            return false;</span>
+        }
+    }
+
+
+    /**
+     * Get an immutable view of ships waiting for placement.
+     *
+     * @return list of ships to place
+     */
+    public List&lt;Ship&gt; getShipsToPlace() {
+<span class="nc" id="L277">        return Collections.unmodifiableList(shipsToPlace);</span>
+    }
+
+    /**
+     * Get number of ships left to place.
+     *
+     * @return number of ships left to place
+     */
+    public int getShipsToPlaceCount() {
+<span class="nc" id="L286">        return shipsToPlace.size();</span>
+    }
+
+    /**
+     * Select a ship to place on the grid.
+     *
+     * @param ship ship reference from the available list
+     * @return true if the selection is valid
+     */
+    public boolean selectShip(Ship ship) {
+<span class="nc bnc" id="L296" title="All 4 branches missed.">        if(ship == null || !shipsToPlace.contains(ship)) {</span>
+<span class="nc" id="L297">            return false;</span>
+        }
+<span class="nc" id="L299">        this.selectedShip = ship;</span>
+<span class="nc" id="L300">        return true;</span>
+    }
+
+    /**
+     * Get the currently selected ship.
+     *
+     * @return selected ship or null when nothing is selected
+     */
+    public Ship getSelectedShip() {
+<span class="nc" id="L309">        return selectedShip;</span>
+    }
+
+    /**
+     * Cancel the current selection so the player can choose another ship later.
+     */
+    public void cancelSelection() {
+<span class="nc" id="L316">        selectedShip = null;</span>
+<span class="nc" id="L317">    }</span>
+
+    /**
+     * Reset available ships and clear the current selection.
+     */
+    private void initializeShipsToPlace() {
+<span class="nc" id="L323">        shipsToPlace.clear();</span>
+<span class="nc" id="L324">        shipsToPlace.addAll(createDefaultFleet());</span>
+<span class="nc" id="L325">        selectedShip = null;</span>
+<span class="nc" id="L326">    }</span>
+
+    /**
+     * Remove every ship placed by the active player and restart their placement list.
+     */
+    public void resetCurrentPlacement() {
+<span class="nc" id="L332">        Player player = getSetupPlayer();</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if(player == null) {</span>
+<span class="nc" id="L334">            return;</span>
+        }
+<span class="nc" id="L336">        player.resetFleet();</span>
+<span class="nc" id="L337">        initializeShipsToPlace();</span>
+<span class="nc" id="L338">    }</span>
+
+    /**
+     * Place all remaining ships randomly for the current player.
+     *
+     * @return true if placement was successful, false otherwise
+     */
+    public boolean placeShipsRandomly() {
+<span class="nc" id="L346">        Player player = getSetupPlayer();</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        if(player == null) {</span>
+<span class="nc" id="L348">            return false;</span>
+        }
+
+<span class="nc" id="L351">        player.resetFleet();</span>
+<span class="nc" id="L352">        boolean success = player.placeShipsRandomly(createDefaultFleet());</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">        if(success) {</span>
+<span class="nc" id="L354">            shipsToPlace.clear();</span>
+<span class="nc" id="L355">            selectedShip = null;</span>
+        }
+<span class="nc" id="L357">        return success;</span>
+    }
+
+    /**
+     * Check if the active player has placed at least one ship on the grid.
+     *
+     * @return true when at least one ship is already on the board
+     */
+    public boolean hasPlacedShips() {
+<span class="nc" id="L366">        Player player = getSetupPlayer();</span>
+<span class="nc bnc" id="L367" title="All 4 branches missed.">        return player != null &amp;&amp; !player.getShips().isEmpty();</span>
+    }
+
+    /**
+     * Get player by index.
+     *
+     * @param index player index
+     * @return player at index
+     */
+    private Player getPlayerByIndex(int index) {
+<span class="nc bnc" id="L377" title="All 4 branches missed.">        if(this.parent == null || this.parent.app == null) {</span>
+<span class="nc" id="L378">            return null;</span>
+        }
+<span class="nc bnc" id="L380" title="All 3 branches missed.">        return switch (index) {</span>
+<span class="nc" id="L381">            case 0 -&gt; this.parent.app.player1;</span>
+<span class="nc" id="L382">            case 1 -&gt; this.parent.app.player2;</span>
+<span class="nc" id="L383">            default -&gt; null;</span>
+        };
+    }
+
+    /**
+     * Check if player at index is human.
+     *
+     * @param index player index
+     * @return true if human player, false otherwise
+     */
+    private boolean isHumanPlayer(int index) {
+<span class="nc" id="L394">        Player player = getPlayerByIndex(index);</span>
+<span class="nc bnc" id="L395" title="All 4 branches missed.">        return player != null &amp;&amp; !player.isAI();</span>
+    }
+
+    /**
+     * Create default fleet of ships.
+     *
+     * @return list of ships
+     */
+    private List&lt;Ship&gt; createDefaultFleet() {
+<span class="nc" id="L404">        List&lt;Ship&gt; fleet = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L405">        fleet.add(new Carrier());</span>
+<span class="nc" id="L406">        fleet.add(new Cruiser());</span>
+<span class="nc" id="L407">        fleet.add(new Destroyer());</span>
+<span class="nc" id="L408">        fleet.add(new Destroyer());</span>
+<span class="nc" id="L409">        fleet.add(new Torpedo());</span>
+<span class="nc" id="L410">        return fleet;</span>
+    }
+
+    /**
+     * Reset placement tracking for all players.
+     */
+    private void resetPlacementTracking() {
+<span class="nc" id="L417">        Arrays.fill(placementDone, false);</span>
+<span class="nc" id="L418">        currentSetupPlayerIndex = 0;</span>
+<span class="nc" id="L419">        initializeShipsToPlace();</span>
+<span class="nc" id="L420">    }</span>
+
+    /**
+     * Start the ship placement flow.
+     */
+    private void startPlacementFlow() {
+<span class="nc" id="L426">        resetPlacementTracking();</span>
+<span class="nc" id="L427">        int nextIndex = findNextHumanNeedingPlacement();</span>
+<span class="nc bnc" id="L428" title="All 2 branches missed.">        if(nextIndex &lt; 0) {</span>
+<span class="nc" id="L429">            autoPlaceAIShips();</span>
+<span class="nc" id="L430">            startGameAndTransition();</span>
+<span class="nc" id="L431">            return;</span>
+        }
+
+<span class="nc" id="L434">        currentSetupPlayerIndex = nextIndex;</span>
+<span class="nc" id="L435">        initializeShipsToPlace();</span>
+<span class="nc" id="L436">        changeView(new SetupPlayerShipView(parent, this));</span>
+<span class="nc" id="L437">    }</span>
+
+    /**
+     * Handle completion of ship placement for the current player.
+     */
+    public void handlePlacementComplete() {
+<span class="nc bnc" id="L443" title="All 2 branches missed.">        if(!shipsToPlace.isEmpty()) {</span>
+<span class="nc" id="L444">            return;</span>
+        }
+
+<span class="nc" id="L447">        markPlacementDone(currentSetupPlayerIndex);</span>
+
+<span class="nc" id="L449">        int nextPlayer = findNextHumanNeedingPlacement();</span>
+<span class="nc bnc" id="L450" title="All 2 branches missed.">        if(nextPlayer &gt;= 0) {</span>
+<span class="nc" id="L451">            currentSetupPlayerIndex = nextPlayer;</span>
+<span class="nc" id="L452">            initializeShipsToPlace();</span>
+<span class="nc" id="L453">            changeView(new SetupPlayerShipView(parent, this));</span>
+<span class="nc" id="L454">            return;</span>
+        }
+
+<span class="nc" id="L457">        autoPlaceAIShips();</span>
+<span class="nc" id="L458">        startGameAndTransition();</span>
+<span class="nc" id="L459">    }</span>
+
+    /**
+     * Auto place ships for AI player if needed.
+     */
+    private void autoPlaceAIShips() {
+<span class="nc" id="L465">        Player player = getPlayerByIndex(1);</span>
+<span class="nc bnc" id="L466" title="All 4 branches missed.">        if(player instanceof AIPlayer aiPlayer &amp;&amp; aiPlayer.getShips().isEmpty()) {</span>
+<span class="nc" id="L467">            aiPlayer.placeShipsRandomly(createDefaultFleet());</span>
+        }
+<span class="nc" id="L469">    }</span>
+
+    /**
+     * Start the game and transition to the game view.
+     */
+    private void startGameAndTransition() {
+<span class="nc" id="L475">        Player player1 = getPlayerByIndex(0);</span>
+<span class="nc" id="L476">        Player player2 = getPlayerByIndex(1);</span>
+<span class="nc bnc" id="L477" title="All 4 branches missed.">        if(player1 == null || player2 == null) {</span>
+<span class="nc" id="L478">            return;</span>
+        }
+
+<span class="nc" id="L481">        this.parent.app.game = new Game(player1, player2);</span>
+        try {
+<span class="nc" id="L483">            this.parent.app.game.start();</span>
+        }
+<span class="nc" id="L485">        catch (IllegalGameStateException e) {</span>
+<span class="nc" id="L486">            Dialogs.showErrorDialog(view.stage, &quot;Unable to start game: &quot; + e.getMessage());</span>
+<span class="nc" id="L487">            return;</span>
+<span class="nc" id="L488">        }</span>
+
+<span class="nc" id="L490">        names.clear();</span>
+<span class="nc" id="L491">        currentSetupPlayerIndex = 0;</span>
+<span class="nc" id="L492">        this.parent.changeController(GuiControllerEnum.GAME);</span>
+<span class="nc" id="L493">    }</span>
+
+    /**
+     * Mark placement as done for player at index.
+     * @param index player index
+     */
+    private void markPlacementDone(int index) {
+<span class="nc bnc" id="L500" title="All 4 branches missed.">        if(index &gt;= 0 &amp;&amp; index &lt; placementDone.length) {</span>
+<span class="nc" id="L501">            placementDone[index] = true;</span>
+        }
+<span class="nc" id="L503">    }</span>
+
+    /**
+     * Find the next human player needing ship placement.
+     *
+     * @return index of next human player needing placement, -1 if none found
+     */
+    private int findNextHumanNeedingPlacement() {
+<span class="nc bnc" id="L511" title="All 2 branches missed.">        for (int i = 0; i &lt; placementDone.length; i++) {</span>
+<span class="nc bnc" id="L512" title="All 4 branches missed.">            if(!placementDone[i] &amp;&amp; isHumanPlayer(i)) {</span>
+<span class="nc" id="L513">                return i;</span>
+            }
+        }
+<span class="nc" id="L516">        return -1;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

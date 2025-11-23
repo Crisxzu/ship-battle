@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AIPlayer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.model.ai</a> &gt; <span class="el_source">AIPlayer.java</span></div><h1>AIPlayer.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.model.ai;
+
+import com.par_28.ship_battle.model.*;
+import com.par_28.ship_battle.model.ai.enums.*;
+import com.par_28.ship_battle.model.enums.*;
+import com.par_28.ship_battle.model.exceptions.*;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * AI-controlled player
+ * &lt;p&gt;
+ * This player uses an AI strategy to automatically select shots during gameplay.
+ * The strategy can be configured by difficulty level (Easy, Medium, Hard).
+ * &lt;/p&gt;
+ */
+public class AIPlayer extends Player {
+    /**
+     * Strategy used for decision-making
+     */
+    private final AIStrategy strategy;
+
+    /**
+     * Difficulty level of this AI
+     */
+    private final AIDifficulty difficulty;
+
+    /**
+     * Create an AI player with difficulty-based strategy selection.
+     *
+     * @param name AI player's display name
+     * @param gridSize Size of the game grid
+     * @param difficulty Difficulty level (determines which strategy to use)
+     */
+    public AIPlayer(String name, int gridSize, AIDifficulty difficulty) {
+<span class="fc" id="L37">        super(name, gridSize);</span>
+<span class="fc" id="L38">        this.difficulty = difficulty;</span>
+<span class="fc" id="L39">        this.strategy = createStrategyFromDifficulty(difficulty);</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Create the appropriate strategy based on difficulty level.
+     *
+     * @param difficulty Desired difficulty
+     * @return Corresponding AI strategy
+     */
+    private static AIStrategy createStrategyFromDifficulty(AIDifficulty difficulty) {
+<span class="fc bfc" id="L49" title="All 3 branches covered.">        return switch (difficulty) {</span>
+<span class="fc" id="L50">            case EASY -&gt; new EasyAI();</span>
+<span class="fc" id="L51">            case MEDIUM -&gt; new MediumAI();</span>
+<span class="fc" id="L52">            case HARD -&gt; new HardAI();</span>
+        };
+    }
+
+    /**
+     * Chooses the next shot coordinate based on its strategy.
+     *
+     * @param opponentShips List of opponent's ships (to check which are still alive)
+     * @return Coordinate selected by the AI to attack
+     */
+    public Coordinate chooseShot(List&lt;Ship&gt; opponentShips) {
+<span class="fc" id="L63">        return strategy.chooseShot(getTrackingGrid(), opponentShips);</span>
+    }
+
+    /**
+     * Update the AI's internal state after a shot is made.
+     *
+     * @param shot The coordinate that was attacked
+     * @param response The result of the attack
+     */
+    public void notifyAttackResult(Coordinate shot, AttackResponse response) {
+<span class="fc" id="L73">        strategy.updateAfterShot(shot, response);</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Reset the AI's strategy state for a new game.
+     */
+    public void resetStrategy() {
+<span class="fc" id="L80">        strategy.reset();</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Get the AI's difficulty level.
+     *
+     * @return Difficulty level
+     */
+    public AIDifficulty getDifficulty() {
+<span class="fc" id="L89">        return difficulty;</span>
+    }
+
+    /**
+     * Get the AI's strategy.
+     *
+     * @return AI strategy
+     */
+    public AIStrategy getStrategy() {
+<span class="fc" id="L98">        return strategy;</span>
+    }
+
+    @Override
+    public boolean isAI() {
+<span class="fc" id="L103">        return true;</span>
+    }
+
+    /**
+     * Generate a random AI player name from a predefined list.
+     *
+     * @return Randomly selected AI name
+     */
+    static public String getRandomName() {
+<span class="fc" id="L112">        String[] aiNames = {</span>
+            &quot;Tanya&quot;,
+            &quot;Erza&quot;,
+            &quot;Azusa&quot;,
+            &quot;Rika&quot;,
+            &quot;Kanna&quot;,
+            &quot;Konata&quot;
+        };
+
+<span class="fc" id="L121">        Random random = new Random();</span>
+<span class="fc" id="L122">        int i = random.nextInt(aiNames.length);</span>
+
+<span class="fc" id="L124">        return aiNames[i];</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

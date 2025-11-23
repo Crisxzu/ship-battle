@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScreenController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.controller.gui</a> &gt; <span class="el_source">ScreenController.java</span></div><h1>ScreenController.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.controller.gui;
+
+import java.util.*;
+
+import com.par_28.ship_battle.ShipBattleApplication;
+
+/**
+ * Manager of screens and controllers.
+ */
+public class ScreenController extends GuiController {
+    /**
+     * Reference to the main application.
+     */
+    public ShipBattleApplication app;
+
+    /**
+     * Map of available GUI controllers.
+     */
+    Map&lt;GuiControllerEnum, GuiController&gt; controllers;
+
+    /**
+     * Currently active GUI controller.
+     */
+    GuiController currentController;
+
+    /**
+     * Initialize the screen controller with all GUI controllers.
+     *
+     * @param app Reference to the main application
+     */
+    public ScreenController(ShipBattleApplication app) {
+<span class="nc" id="L32">        super(null);</span>
+<span class="nc" id="L33">        this.app = app;</span>
+
+<span class="nc" id="L35">        controllers = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L37">        controllers.put(GuiControllerEnum.MAIN_MENU, new MainMenuController(this));</span>
+<span class="nc" id="L38">        controllers.put(GuiControllerEnum.SETUP_MENU, new SetupMenuController(this));</span>
+<span class="nc" id="L39">        controllers.put(GuiControllerEnum.GAME, new GameController(this));</span>
+<span class="nc" id="L40">        controllers.put(GuiControllerEnum.SETTINGS, new SettingsController(this));</span>
+
+<span class="nc" id="L42">        changeController(GuiControllerEnum.MAIN_MENU);</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Get the currently active GUI controller.
+     *
+     * @return the current controller
+     */
+    public GuiController getCurrentController() {
+<span class="nc" id="L51">        return currentController;</span>
+    }
+
+    /**
+     * Update the current controller.
+     *
+     * @param dt Delta time since last update
+     */
+    public void update(float dt){
+
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Render the current controller.
+     *
+     * @param dt Delta time since last render
+     */
+    @Override
+    public void render(float dt){
+<span class="nc" id="L70">        super.render(dt);</span>
+<span class="nc" id="L71">        currentController.render(dt);</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Change the active GUI controller.
+     *
+     * @param controller The new controller to activate
+     */
+    public void changeController(GuiControllerEnum controller){
+<span class="nc" id="L80">        currentController = controllers.get(controller);</span>
+<span class="nc" id="L81">        currentController.reset();</span>
+<span class="nc" id="L82">        currentController.view.show();</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * Handle resizing of the application window.
+     * &lt;p&gt;
+     * Delegates resize event to the current controller's view.
+     * &lt;/p&gt;
+     * @param width  new width
+     * @param height new height
+     */
+    @Override
+    public void resize(int width, int height) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if(currentController.view != null) {</span>
+<span class="nc" id="L96">            currentController.view.resize(width, height);</span>
+        }
+<span class="nc" id="L98">    }</span>
+
+    /**
+     * Dispose all controllers and their resources.
+     */
+    @Override
+    public void dispose() {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (GuiController controller : controllers.values()) {</span>
+<span class="nc" id="L106">            controller.dispose();</span>
+<span class="nc" id="L107">        }</span>
+<span class="nc" id="L108">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

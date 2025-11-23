@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InputHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.par_28.ship_battle.view.gui</a> &gt; <span class="el_source">InputHandler.java</span></div><h1>InputHandler.java</h1><pre class="source lang-java linenums">package com.par_28.ship_battle.view.gui;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.*;
+
+/**
+ * Handler for input in the GUI.
+ */
+public class InputHandler implements Handler{
+    /**
+     * Touch position
+     */
+    static Vector2 touchPos;
+
+    /**
+     * Initialize input handler
+     */
+<span class="nc" id="L22">    public InputHandler() {</span>
+<span class="nc" id="L23">        touchPos = new Vector2();</span>
+<span class="nc" id="L24">    }</span>
+
+    /**
+     * List of last pressed keys
+     */
+<span class="nc" id="L29">    static List&lt;Integer&gt; lastKeys = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Konami code key sequence
+     */
+<span class="nc" id="L34">    static int[] konamiCode = new int[]{</span>
+        Input.Keys.UP,
+        Input.Keys.UP,
+        Input.Keys.DOWN,
+        Input.Keys.DOWN,
+        Input.Keys.LEFT,
+        Input.Keys.RIGHT,
+        Input.Keys.LEFT,
+        Input.Keys.RIGHT,
+        Input.Keys.B,
+        Input.Keys.A,
+    };
+
+
+    /**
+     * Check if user just touched the screen
+     *
+     * @return true if user just touched, false otherwise
+     */
+    public static boolean userJustTouched(){
+<span class="nc" id="L54">        return Gdx.input.justTouched();</span>
+    }
+
+    /**
+     * Get touch position
+     *
+     * @param viewport viewport to unproject
+     * @return touch position
+     */
+    public static Vector2 getTouchPos(Viewport viewport) {
+<span class="nc" id="L64">        Vector2 touchPos = new Vector2();</span>
+
+<span class="nc" id="L66">        touchPos.set(Gdx.input.getX(), Gdx.input.getY());</span>
+<span class="nc" id="L67">        viewport.unproject(touchPos);</span>
+
+<span class="nc" id="L69">        return touchPos;</span>
+    }
+
+    /**
+     * Check if a key was just pressed
+     *
+     * @param keyCode key code to check
+     * @return true if key was just pressed, false otherwise
+     */
+    public static boolean isKeyJustPressed(int keyCode) {
+<span class="nc" id="L79">        return Gdx.input.isKeyJustPressed(keyCode);</span>
+    }
+
+    /**
+     * Save user pressed key
+     * 
+     * @param keyCode pressed key code
+     */
+    public static void saveUserPressedKey(int keyCode) {
+<span class="nc" id="L88">        lastKeys.add(keyCode);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(lastKeys.size() &gt; 10) {</span>
+<span class="nc" id="L91">            lastKeys.remove(0);</span>
+        }
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Check if konami code was just pressed
+     * 
+     * @return true if konami code was just pressed, false otherwise
+     */
+    public static boolean konamiCodeJustPressed() {
+<span class="nc" id="L101">        boolean konamiCodeJustPressed = true;</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if(lastKeys.size() != konamiCode.length) {</span>
+<span class="nc" id="L104">            konamiCodeJustPressed = false;</span>
+        }
+        else {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            for(int i = 0; i &lt; konamiCode.length; i++){</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                if(lastKeys.get(i) != konamiCode[i]) {</span>
+                    // Support case where A is Q, QWERTY Keyboard
+<span class="nc bnc" id="L110" title="All 4 branches missed.">                    if (konamiCode[i] == Input.Keys.A &amp;&amp; lastKeys.get(i) != Input.Keys.Q) {</span>
+<span class="nc" id="L111">                        konamiCodeJustPressed = false;</span>
+<span class="nc" id="L112">                        break;</span>
+                    }
+                }
+            }
+        }
+
+<span class="nc" id="L118">        return konamiCodeJustPressed;</span>
+    }
+
+    /**
+     * Clear saved keys
+     */
+    public static void clearSaveKeys() {
+<span class="nc" id="L125">        lastKeys.clear();</span>
+<span class="nc" id="L126">    }</span>
+
+    /**
+     * Dispose resources
+     */
+    @Override
+    public void dispose() {
+
+<span class="nc" id="L134">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

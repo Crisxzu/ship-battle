@@ -262,7 +262,3 @@ Part of ShipBattle project - Educational use
 
 - AI System Architecture: Claude Code
 - Integration Support: Development Team
-
----
-
-For detailed documentation, see: `AI_IMPLEMENTATION.md` in project root

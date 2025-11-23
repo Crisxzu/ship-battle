@@ -127,7 +127,7 @@ Les assets proviennent de sources open source :
 ## Documentation
 
 - **Game Design Document** : [game design document.md](game%20design%20document.md)
-- **Javadoc** : Générer avec `./gradlew javadoc`
+- **Javadoc** : [docs/javadoc/index.html](docs/javadoc/index.html)
 
 ### Diagrammes UML
 
@@ -139,12 +139,12 @@ Les assets proviennent de sources open source :
 
 - **Rapport HTML** : [docs/coverage/index.html](docs/coverage/index.html)
 
-| Package | Couverture Instructions | Couverture Branches |
-|---------|------------------------|---------------------|
-| `model` | 99% | 97% |
-| `model.ai` | 93% | 87% |
-| `model.enums` | 100% | n/a |
-| `model.exceptions` | 100% | n/a |
+| Package            | Couverture Instructions | Couverture Branches |
+|--------------------|-------------------------|---------------------|
+| `model`            | 99%                     | 97%                 |
+| `model.ai`         | 93%                     | 87%                 |
+| `model.enums`      | 100%                    | n/a                 |
+| `model.exceptions` | 100%                    | n/a                 |
 
 > Note : Les packages `view.gui` et `controller.gui` ne sont pas encore testés pour le moment, leur dépendance à libGDX rend la question plus délicate.
 
@@ -152,7 +152,13 @@ Généré via `./gradlew :core:test :core:jacocoTestReport`
 
 ## Auteurs
 
-Projet universitaire - 2025
+Projet universitaire Epitech - 2025
+
+| Nom                   | GitHub                                       |
+|-----------------------|----------------------------------------------|
+| Kouassi Chris Emerson | [@Crisxzu](https://github.com/Crisxzu)       |
+| James Pamara          | [@OhBadBoy](https://github.com/OhBadBoy)     |
+| Daouda Bamba          | [@Daoudbamba](https://github.com/Daoudbamba) |
 
 ## Licence
 
